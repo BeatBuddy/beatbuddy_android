@@ -1,6 +1,8 @@
-package be.kdg.teamd.beatbuddy.model;
+package be.kdg.teamd.beatbuddy.model.users;
 
 import java.util.Map;
+
+import be.kdg.teamd.beatbuddy.model.organisations.Organisation;
 
 public class User {
     private long id;

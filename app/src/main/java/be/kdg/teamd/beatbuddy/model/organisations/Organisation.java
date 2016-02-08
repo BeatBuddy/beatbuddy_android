@@ -1,6 +1,10 @@
-package be.kdg.teamd.beatbuddy.model;
+package be.kdg.teamd.beatbuddy.model.organisations;
 
 import java.util.Map;
+
+import be.kdg.teamd.beatbuddy.model.playlists.Playlist;
+import be.kdg.teamd.beatbuddy.model.users.Role;
+import be.kdg.teamd.beatbuddy.model.users.User;
 
 public class Organisation {
     private long id;

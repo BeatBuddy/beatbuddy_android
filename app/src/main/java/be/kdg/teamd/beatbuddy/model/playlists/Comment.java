@@ -1,18 +1,20 @@
-package be.kdg.teamd.beatbuddy.model;
+package be.kdg.teamd.beatbuddy.model.playlists;
 
 import java.util.Date;
+
+import be.kdg.teamd.beatbuddy.model.users.User;
 
 public class Comment {
     private User user;
     private String text;
-    private Date timestamp;
+    private Date timeStamp;
 
     public String getText() {
         return text;
     }
 
-    public Date getTimestamp() {
-        return timestamp;
+    public Date getTimeStamp() {
+        return timeStamp;
     }
 
     public User getUser() {

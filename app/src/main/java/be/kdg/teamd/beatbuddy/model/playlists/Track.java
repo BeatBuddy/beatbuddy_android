@@ -1,4 +1,4 @@
-package be.kdg.teamd.beatbuddy.model;
+package be.kdg.teamd.beatbuddy.model.playlists;
 
 public class Track {
     private long id;

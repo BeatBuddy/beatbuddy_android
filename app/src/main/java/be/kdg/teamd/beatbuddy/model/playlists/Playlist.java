@@ -1,4 +1,6 @@
-package be.kdg.teamd.beatbuddy.model;
+package be.kdg.teamd.beatbuddy.model.playlists;
+
+import be.kdg.teamd.beatbuddy.model.users.User;
 
 public class Playlist {
     private long id;
@@ -7,7 +9,8 @@ public class Playlist {
     private int maximumVotesPerUser;
     private boolean active;
     private PlaylistTrack[] playlistTracks;
-    private Comment[] comments;
+    private Comment[] comments,
+                      chatComments;
     private User playlistMaster;
 
     public boolean isActive() {
@@ -16,6 +19,10 @@ public class Playlist {
 
     public Comment[] getComments() {
         return comments;
+    }
+
+    public Comment[] getChatComments() {
+        return chatComments;
     }
 
     public long getId() {

@@ -1,4 +1,6 @@
-package be.kdg.teamd.beatbuddy.model;
+package be.kdg.teamd.beatbuddy.model.playlists;
+
+import be.kdg.teamd.beatbuddy.model.users.User;
 
 public class Vote {
     private long id;

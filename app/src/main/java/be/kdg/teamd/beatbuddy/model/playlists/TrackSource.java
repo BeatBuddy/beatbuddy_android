@@ -1,4 +1,4 @@
-package be.kdg.teamd.beatbuddy.model;
+package be.kdg.teamd.beatbuddy.model.playlists;
 
 public class TrackSource{
     private String url;
