@@ -7,5 +7,5 @@ import retrofit2.http.Query;
 
 public interface UserRepository {
     @GET("users/login")
-    Call<User> login(@Query("username") String username, @Query("password") String password);
+    Call<User> login(@Query("email") String email, @Query("password") String password);
 }
