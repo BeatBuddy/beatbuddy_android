@@ -36,13 +36,13 @@ public class TestLogin {
         );
         wireMockRule.stubFor(
                 get(urlPathEqualTo("/api/users/login"))
-                        .withQueryParam("username", equalTo("maarten"))
+                        .withQueryParam("email", equalTo("maarten.vangiel@email.com"))
                         .withQueryParam("password", equalTo("maartenpassword"))
                         .willReturn(aResponse()
                                 .withStatus(200)
                                 .withBody("{\n" +
                                         "\t\"id\":123456,\n" +
-                                        "\t\"email\":\"maarten.vangiel@hotmail.com\",\n" +
+                                        "\t\"email\":\"maarten.vangiel@email.com\",\n" +
                                         "\t\"firstName\":\"Maarten\",\n" +
                                         "\t\"lastName\":\"Van Giel\",\n" +
                                         "\t\"nickname\":\"Mavamaarten\",\n" +
@@ -57,7 +57,7 @@ public class TestLogin {
 
     @Test
     public void testLogin() throws IOException {
-        Response<User> user = userRepository.login("maarten", "maartenpassword")
+        Response<User> user = userRepository.login("maarten.vangiel@email.com", "maartenpassword")
                 .execute();
 
         Assert.assertEquals(200, user.code());
@@ -67,7 +67,7 @@ public class TestLogin {
 
     @Test
     public void testIncorrectPassword() throws IOException {
-        Response<User> user = userRepository.login("maarten", "asdf")
+        Response<User> user = userRepository.login("maarten@email.com", "asdf")
                 .execute();
 
         Assert.assertEquals(403, user.code());
@@ -75,7 +75,7 @@ public class TestLogin {
 
     @Test
     public void testIncorrectLogin() throws IOException {
-        Response<User> user = userRepository.login("asdf", "asdf")
+        Response<User> user = userRepository.login("asdf@asdf.asdf", "asdf")
                 .execute();
 
         Assert.assertEquals(403, user.code());

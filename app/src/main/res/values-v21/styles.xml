@@ -4,7 +4,7 @@
         <item name="windowNoTitle">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:actionMenuTextColor">#000</item>
+        <item name="android:actionMenuTextColor">@color/colorAccent</item>
     </style>
 
     <style name="MaterialButtonWhite">

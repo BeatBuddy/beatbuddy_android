@@ -63,7 +63,7 @@ public class TestLoginActivity {
     @Test
     public void testLogin() throws NoSuchFieldException, IllegalAccessException {
         onView(withId(R.id.edit_login_email))
-                .perform(typeText("maarten.vangiel@hotmail.com"));
+                .perform(typeText("maarten.vangiel@email.com"));
 
         onView(withId(R.id.edit_login_password))
                 .perform(typeText("maartenpassword"));
@@ -98,14 +98,14 @@ public class TestLoginActivity {
     }
 
     public class FakeInterceptor implements Interceptor {
-        private final static String USER_MAARTEN = "{\"id\":123456, \"email\":\"maarten.vangiel@hotmail.com\", \"firstName\":\"Maarten\", \"lastName\":\"Van Giel\", \"nickname\":\"Mavamaarten\", \"imageUrl\":\"http://www.google.com\" }";
+        private final static String USER_MAARTEN = "{\"id\":123456, \"email\":\"maarten.vangiel@email.com\", \"firstName\":\"Maarten\", \"lastName\":\"Van Giel\", \"nickname\":\"Mavamaarten\", \"imageUrl\":\"http://www.google.com\" }";
 
         @Override
         public Response intercept(Interceptor.Chain chain) throws IOException {
             Response response;
 
             final HttpUrl uri = chain.request().url();
-            if(uri.queryParameter("email").equals("maarten.vangiel@hotmail.com") && uri.queryParameter("password").equals("maartenpassword")){
+            if(uri.queryParameter("email").equals("maarten.vangiel@email.com") && uri.queryParameter("password").equals("maartenpassword")){
                 return new Response.Builder()
                         .code(200)
                         .message(USER_MAARTEN)
