@@ -6,10 +6,16 @@ import retrofit2.Retrofit;
 public class RepositoryFactory {
     private static Retrofit retrofit;
     private static UserRepository userRepository;
+    private static OrganisationRepository organisationRepository;
 
     public static UserRepository getUserRepository() {
         if(userRepository == null) userRepository = retrofit.create(UserRepository.class);
         return userRepository;
+    }
+
+    public static OrganisationRepository getOrganisationRepository() {
+        if(organisationRepository == null) organisationRepository = retrofit.create(OrganisationRepository.class);
+        return organisationRepository;
     }
 
     public static void setAPIEndpoint(String APIEndpoint) {

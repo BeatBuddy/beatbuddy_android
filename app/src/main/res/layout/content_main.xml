@@ -8,4 +8,15 @@
     tools:context=".activities.MainActivity"
     tools:showIn="@layout/app_bar_main">
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/main_organisations_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_group_add_24dp"
+        app:elevation="4dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="16dp"/>
+
+
 </RelativeLayout>
