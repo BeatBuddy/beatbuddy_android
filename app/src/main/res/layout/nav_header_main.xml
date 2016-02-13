@@ -32,7 +32,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_toEndOf="@+id/header_profile_image"
-        android:text="Maarten Van Giel"
+        android:text="Guest"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textSize="18sp" />
 
@@ -43,6 +43,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:text="contact@maarten.vg" />
+        android:text="Not logged in" />
 
 </RelativeLayout>

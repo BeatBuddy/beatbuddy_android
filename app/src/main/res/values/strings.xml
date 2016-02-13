@@ -10,4 +10,12 @@
     <string name="password">Password</string>
     <string name="register">Register</string>
     <string name="login">Login</string>
+    <string name="register_intro">Please enter the following details to complete your registration</string>
+    <string name="first_name">First name</string>
+    <string name="last_name">Last name</string>
+    <string name="User">User</string>
+    <string name="my_profile">My profile</string>
+    <string name="home">Home</string>
+    <string name="my_organisations">My organisations</string>
+    <string name="settings">Settings</string>
 </resources>

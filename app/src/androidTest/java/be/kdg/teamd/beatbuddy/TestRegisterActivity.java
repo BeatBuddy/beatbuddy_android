@@ -13,7 +13,7 @@ import org.junit.runner.RunWith;
 import java.io.IOException;
 import java.lang.reflect.Field;
 
-import be.kdg.teamd.beatbuddy.activities.LoginActivity;
+import be.kdg.teamd.beatbuddy.activities.RegisterActivity;
 import be.kdg.teamd.beatbuddy.dal.UserRepository;
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
@@ -29,20 +29,15 @@ import static android.support.test.espresso.Espresso.closeSoftKeyboard;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static junit.framework.Assert.assertTrue;
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.startsWith;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class TestLoginActivity {
+public class TestRegisterActivity {
 
     @Rule
-    public ActivityTestRule<LoginActivity> loginActivityActivityTestRule = new ActivityTestRule<LoginActivity>(LoginActivity.class);
+    public ActivityTestRule<RegisterActivity> registerActivityActivityTestRule = new ActivityTestRule<RegisterActivity>(RegisterActivity.class);
 
     @Before
     public void setup() {
@@ -57,52 +52,28 @@ public class TestLoginActivity {
                 .build();
 
         UserRepository userRepository = retrofit.create(UserRepository.class);
-        loginActivityActivityTestRule.getActivity().setUserRepository(userRepository);
+        registerActivityActivityTestRule.getActivity().setUserRepository(userRepository);
     }
 
     @Test
-    public void testLogin() throws NoSuchFieldException, IllegalAccessException {
-        onView(withId(R.id.edit_login_email))
+    public void testRegister() throws NoSuchFieldException, IllegalAccessException {
+        onView(withId(R.id.edit_register_firstname))
+                .perform(typeText("Maarten"));
+
+        onView(withId(R.id.edit_register_lastname))
+                .perform(typeText("Van Giel"));
+
+        onView(withId(R.id.edit_register_nickname))
+                .perform(typeText("Mavamaarten"));
+
+        closeSoftKeyboard();
+
+        onView(withId(R.id.edit_register_email))
                 .perform(typeText("maarten.vangiel@email.com"));
 
-        onView(withId(R.id.edit_login_password))
-                .perform(typeText("maartenpassword"));
-
         closeSoftKeyboard();
 
-        onView(withId(R.id.btn_login))
-                .perform(click());
-
-        Field f = Activity.class.getDeclaredField("mResultCode");
-        f.setAccessible(true);
-        int mResultCode = f.getInt(loginActivityActivityTestRule.getActivity());
-
-        assertTrue("The activity result is not RESULT_OK.", mResultCode == Activity.RESULT_OK);
-    }
-
-    @Test
-    public void testFailedLogin() throws NoSuchFieldException, IllegalAccessException {
-        onView(withId(R.id.edit_login_email))
-                .perform(typeText("maarten.vangiel@hotmail.com"));
-
-        onView(withId(R.id.edit_login_password))
-                .perform(typeText("maartenwrongpassword"));
-
-        closeSoftKeyboard();
-
-        onView(withId(R.id.btn_login))
-                .perform(click());
-
-        onView(allOf(withId(android.support.design.R.id.snackbar_text), withText(startsWith("Login failed."))))
-                .check(matches(isDisplayed()));
-    }
-
-    @Test
-    public void testRegisterCopiesFields() throws NoSuchFieldException, IllegalAccessException {
-        onView(withId(R.id.edit_login_email))
-                .perform(typeText("maarten.vangiel@hotmail.com"));
-
-        onView(withId(R.id.edit_login_password))
+        onView(withId(R.id.edit_register_password))
                 .perform(typeText("maartenpassword"));
 
         closeSoftKeyboard();
@@ -110,18 +81,18 @@ public class TestLoginActivity {
         onView(withId(R.id.btn_register))
                 .perform(click());
 
-        onView(withId(R.id.edit_register_email))
-                .check(matches(withText("maarten.vangiel@hotmail.com")));
+        Field f = Activity.class.getDeclaredField("mResultCode");
+        f.setAccessible(true);
+        int mResultCode = f.getInt(registerActivityActivityTestRule.getActivity());
 
-        onView(withId(R.id.edit_register_password))
-                .check(matches(withText("maartenpassword")));
+        assertTrue("The activity result is not RESULT_OK.", mResultCode == Activity.RESULT_OK);
     }
 
     public class FakeInterceptor implements Interceptor {
         private final static String USER_MAARTEN = "{\"id\":123456, \"email\":\"maarten.vangiel@email.com\", \"firstName\":\"Maarten\", \"lastName\":\"Van Giel\", \"nickname\":\"Mavamaarten\", \"imageUrl\":\"http://www.google.com\" }";
 
         @Override
-        public Response intercept(Interceptor.Chain chain) throws IOException {
+        public Response intercept(Chain chain) throws IOException {
             final HttpUrl uri = chain.request().url();
             if(uri.queryParameter("email").equals("maarten.vangiel@email.com") && uri.queryParameter("password").equals("maartenpassword")){
                 return new Response.Builder()
