@@ -1,38 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:title="@string/User">
-        <menu>
-            <item
-                android:id="@+id/nav_my_profile"
-                android:icon="@drawable/ic_menu_send"
-                android:title="@string/my_profile"
-                android:visible="true"/>
-            <item
-                android:id="@+id/nav_my_organisations"
-                android:icon="@drawable/ic_menu_gallery"
-                android:title="@string/my_organisations"
-                android:visible="true"/>
-            <item
-                android:id="@+id/nav_login"
-                android:icon="@drawable/ic_menu_share"
-                android:title="@string/login" />
-        </menu>
-    </item>
+    <group android:checkableBehavior="single" android:id="@+id/group_user">
+        <item
+            android:id="@+id/nav_my_profile"
+            android:icon="@drawable/ic_person_24dp"
+            android:title="@string/my_profile"
+            android:visible="true"/>
+        <item
+            android:id="@+id/nav_login"
+            android:icon="@drawable/ic_logout_24dp"
+            android:title="@string/login" />
+    </group>
 
-    <group android:checkableBehavior="single">
+    <group android:checkableBehavior="single" android:id="@+id/group_main">
         <item
             android:id="@+id/nav_home"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/home"
             android:title="@string/home" />
-        <item
-            android:id="@+id/nav_settings"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="@string/settings" />
-        <item
-            android:id="@+id/nav_about"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="About" />
     </group>
 
 
