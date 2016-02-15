@@ -19,7 +19,4 @@
             android:icon="@drawable/home"
             android:title="@string/home" />
     </group>
-
-
-
 </menu>
