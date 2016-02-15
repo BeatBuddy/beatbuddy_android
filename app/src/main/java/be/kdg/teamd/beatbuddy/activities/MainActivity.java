@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    @OnClick(R.id.main_organisations_fab) void onClickOrganisationsFab()
+    @OnClick(R.id.main_fab_create_playlist) void onClickOrganisationsFab()
     {
         startActivity(new Intent(this, CreateOrganisationActivity.class));
     }

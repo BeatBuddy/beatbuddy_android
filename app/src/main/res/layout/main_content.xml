@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                 xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -27,16 +28,39 @@
                     android:layout_height="match_parent"
                     app:layout_behavior="@string/appbar_scrolling_view_behavior"
                     tools:context=".activities.MainActivity">
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/main_organisations_fab"
+        <com.github.clans.fab.FloatingActionMenu
+            android:id="@+id/main_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_group_add_24dp"
-            app:elevation="4dp"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:layout_margin="16dp"/>
+            android:layout_alignParentRight="true"
+            android:layout_margin="16dp"
+            app:menu_colorNormal="@color/colorAccent"
+            app:menu_colorPressed="@color/colorAccent"
+            app:menu_colorRipple="#333333">
+
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/menu_item"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_key_24dp"
+                fab:fab_size="mini"
+                fab:fab_label="Join with a key"
+                app:fab_colorNormal="@color/colorAccent"
+                app:fab_colorPressed="@color/colorAccent"
+                app:fab_colorRipple="#333333"/>
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/main_fab_create_playlist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_group_add_24dp"
+                fab:fab_size="mini"
+                fab:fab_label="Start a Playlist"
+                app:fab_colorNormal="@color/colorAccent"
+                app:fab_colorPressed="@color/colorAccent"
+                app:fab_colorRipple="#333333"/>
+
+        </com.github.clans.fab.FloatingActionMenu>
     </RelativeLayout>
 
 
