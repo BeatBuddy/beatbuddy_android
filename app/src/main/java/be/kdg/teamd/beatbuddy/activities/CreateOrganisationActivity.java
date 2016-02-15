@@ -43,7 +43,6 @@ public class CreateOrganisationActivity extends AppCompatActivity implements Cre
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setTitleTextColor(Color.BLACK); //TODO: fix, zou in configs moete ma da doet vreemd
 
         organisationRepository = RepositoryFactory.getOrganisationRepository();
         presenter = new CreateOrganisationPresenter(this, organisationRepository);
