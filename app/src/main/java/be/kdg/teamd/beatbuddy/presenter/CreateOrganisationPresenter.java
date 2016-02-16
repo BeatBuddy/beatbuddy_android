@@ -1,5 +1,13 @@
 package be.kdg.teamd.beatbuddy.presenter;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.provider.MediaStore;
+import android.util.Base64;
+
+import java.io.ByteArrayOutputStream;
+
 import be.kdg.teamd.beatbuddy.dal.OrganisationRepository;
 import be.kdg.teamd.beatbuddy.dal.UserRepository;
 import be.kdg.teamd.beatbuddy.model.organisations.Organisation;
@@ -17,9 +25,9 @@ public class CreateOrganisationPresenter
         this.organisationRepository = organisationRepository;
     }
 
-    public void createOrganisation(String name, String bannerUrl, String colorScheme, String key)
+    public void createOrganisation(String name, String description, String colorHex, String bannerBase64)
     {
-        organisationRepository.createOrganisation(name, bannerUrl, colorScheme, key).enqueue(new Callback<Organisation>()
+        organisationRepository.createOrganisation(name, description, colorHex, bannerBase64).enqueue(new Callback<Organisation>()
         {
             @Override
             public void onResponse(Response<Organisation> response)

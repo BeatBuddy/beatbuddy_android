@@ -63,14 +63,16 @@
             android:layout_width="110dp"
             android:layout_height="wrap_content"
             android:text="@string/register"
-            style="@style/MaterialButtonWhite" />
+            style="@style/MaterialButtonWhite"
+            android:layout_margin="3dp"/>
 
         <Button
             android:id="@+id/btn_login"
             android:layout_width="110dp"
             android:layout_height="wrap_content"
             android:text="@string/login"
-            style="@style/MaterialButtonBlack"/>
+            style="@style/MaterialButtonBlack"
+            android:layout_margin="3dp"/>
 
     </LinearLayout>
 

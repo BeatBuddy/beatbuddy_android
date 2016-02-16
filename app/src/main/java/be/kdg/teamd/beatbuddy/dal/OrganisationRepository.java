@@ -12,5 +12,5 @@ import retrofit2.http.Query;
 public interface OrganisationRepository
 {
     @POST("organisations")
-    Call<Organisation> createOrganisation(@Query("name") String name, @Query("bannerUrl") String bannerUrl, @Query("colorScheme") String colorScheme, @Query("key") String key);
+    Call<Organisation> createOrganisation(@Query("name") String name, @Query("description") String description, @Query("color") String colorScheme, @Query("banner") String bannerBase64);
 }
