@@ -119,12 +119,12 @@ public class TestCreateOrganisationActivity
     public void testCreateOrganisation() throws NoSuchFieldException, IllegalAccessException {
         onView(withId(R.id.create_org_name))
                 .perform(typeText("Chiro"));
+        closeSoftKeyboard();
         onView(withId(R.id.create_org_description))
                 .perform(typeText("Dit is de chiro van wijnegem"));
+        closeSoftKeyboard();
         onView(withId(R.id.create_org_color_picker))
                 .perform(click());
-
-        closeSoftKeyboard();
 
         //Select banner image intent
         Intents.init();
