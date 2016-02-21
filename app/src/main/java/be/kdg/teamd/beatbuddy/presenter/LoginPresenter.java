@@ -1,6 +1,8 @@
 package be.kdg.teamd.beatbuddy.presenter;
 
+import be.kdg.teamd.beatbuddy.dal.RepositoryFactory;
 import be.kdg.teamd.beatbuddy.dal.UserRepository;
+import be.kdg.teamd.beatbuddy.model.users.AccessToken;
 import be.kdg.teamd.beatbuddy.model.users.User;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -15,13 +17,18 @@ public class LoginPresenter {
     }
 
     public void login(String email, String password){
-        userRepository.login(email, password).enqueue(new Callback<User>() {
+        userRepository.login(UserRepository.GRANT_TYPE, email, password).enqueue(new Callback<AccessToken>() {
             @Override
-            public void onResponse(Response<User> response) {
+            public void onResponse(Response<AccessToken> response) {
                 if(response.isSuccess())
-                    listener.onLoggedIn(response.body());
+                {
+                    RepositoryFactory.setAccessToken(response.body());
+                    listener.onLoggedIn(new User());// TODO: user info opvragen
+                }
                 else
-                    listener.onException("Login failed. Try again later.");
+                {
+                    listener.onException("Invalid username or password");
+                }
             }
 
             @Override
@@ -35,5 +42,4 @@ public class LoginPresenter {
         void onLoggedIn(User user);
         void onException(String message);
     }
-
 }
