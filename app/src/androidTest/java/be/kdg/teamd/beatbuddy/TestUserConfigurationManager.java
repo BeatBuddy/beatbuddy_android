@@ -1,20 +1,15 @@
 package be.kdg.teamd.beatbuddy;
 
-import android.app.Application;
-
-import be.kdg.teamd.beatbuddy.dal.RepositoryFactory;
 import be.kdg.teamd.beatbuddy.model.users.AccessToken;
 import be.kdg.teamd.beatbuddy.model.users.User;
 
-public class BeatBuddyApplication extends Application implements UserConfigurationManager
+/**
+ * Created by Ignace on 22/02/2016.
+ */
+public class TestUserConfigurationManager implements UserConfigurationManager
 {
     private AccessToken accessToken;
     private User user;
-
-    public BeatBuddyApplication() {
-        super();
-        RepositoryFactory.setAPIEndpoint("http://teamd.azurewebsites.net/api/");
-    }
 
     @Override
     public AccessToken getAccessToken()

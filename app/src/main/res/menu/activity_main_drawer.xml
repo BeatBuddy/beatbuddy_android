@@ -1,16 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="single" android:id="@+id/group_user">
-        <item
-            android:id="@+id/nav_my_profile"
-            android:icon="@drawable/ic_person_24dp"
-            android:title="@string/my_profile"
-            android:visible="true"/>
+    <group android:checkableBehavior="single" android:id="@+id/group_guest">
         <item
             android:id="@+id/nav_login"
             android:icon="@drawable/ic_logout_24dp"
             android:title="@string/login" />
+    </group>
+
+    <group android:checkableBehavior="single" android:id="@+id/group_logged_in" android:visible="false">
+        <item
+            android:id="@+id/nav_my_profile"
+            android:icon="@drawable/ic_person_24dp"
+            android:title="@string/my_profile"/>
+        <item
+            android:id="@+id/nav_logout"
+            android:icon="@drawable/ic_logout_24dp"
+            android:title="Logout"/>
     </group>
 
     <group android:checkableBehavior="single" android:id="@+id/group_main">

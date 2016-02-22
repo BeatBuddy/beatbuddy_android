@@ -8,7 +8,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import be.kdg.teamd.beatbuddy.BeatBuddyApplication;
 import be.kdg.teamd.beatbuddy.R;
+import be.kdg.teamd.beatbuddy.UserConfigurationManager;
 import be.kdg.teamd.beatbuddy.dal.RepositoryFactory;
 import be.kdg.teamd.beatbuddy.dal.UserRepository;
 import be.kdg.teamd.beatbuddy.model.users.User;
@@ -22,12 +24,13 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.L
     @Bind(R.id.edit_login_email) EditText login_email;
     @Bind(R.id.edit_login_password) EditText login_password;
 
-    UserRepository userRepository;
-    LoginPresenter presenter;
+    private UserRepository userRepository;
+    private LoginPresenter presenter;
+    private UserConfigurationManager userConfigurationManager;
 
-    public void setUserRepository(UserRepository userRepository) {
+    public void setTestImplementation(UserRepository userRepository, UserConfigurationManager userConfigurationManager) {
         this.userRepository = userRepository;
-        this.presenter = new LoginPresenter(this, userRepository);
+        this.presenter = new LoginPresenter(this, userRepository, userConfigurationManager);
     }
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,8 +38,9 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.L
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
 
+        userConfigurationManager = (BeatBuddyApplication) getApplication();
         userRepository = RepositoryFactory.getUserRepository();
-        presenter = new LoginPresenter(this, userRepository);
+        presenter = new LoginPresenter(this, userRepository, userConfigurationManager);
 
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override

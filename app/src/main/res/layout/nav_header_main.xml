@@ -39,7 +39,7 @@
     <TextView
         android:layout_below="@+id/header_name"
         android:layout_alignStart="@+id/header_name"
-        android:id="@+id/textView"
+        android:id="@+id/header_subname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
