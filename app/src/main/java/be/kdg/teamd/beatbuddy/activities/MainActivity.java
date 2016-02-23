@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.github.clans.fab.FloatingActionMenu;
 import com.squareup.picasso.Picasso;
 
 import be.kdg.teamd.beatbuddy.BeatBuddyApplication;
@@ -32,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Bind(R.id.toolbar) Toolbar toolbar;
     @Bind(R.id.nav_view) NavigationView navigationView;
     @Bind(R.id.drawer_layout) DrawerLayout drawer;
+    @Bind(R.id.main_fab) FloatingActionMenu fab;
 
     private UserConfigurationManager userConfigurationManager;
 
@@ -46,10 +48,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         userConfigurationManager = (BeatBuddyApplication) getApplication();
 
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
+
+        fab.hideMenu(false);
 
         navigationView.setNavigationItemSelectedListener(this);
     }
@@ -65,6 +68,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             navigationView.getMenu().setGroupVisible(R.id.group_guest, false);
             navigationView.getMenu().setGroupVisible(R.id.group_logged_in, true);
+            fab.showMenu(true);
+
         }
 
         super.onActivityResult(requestCode, resultCode, data);
