@@ -8,10 +8,12 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.squareup.picasso.Picasso;
 
 import be.kdg.teamd.beatbuddy.BeatBuddyApplication;
@@ -107,6 +109,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @OnClick(R.id.main_fab_create_playlist) void onClickCreatePlaylist()
     {
         startActivity(new Intent(this, CreatePlaylistActivity.class));
+    }
+
+    @OnClick(R.id.main_fab_join_playlist) void onClickJoinPlaylist()
+    {
+        new MaterialDialog.Builder(this)
+            .title("Join an organisation")
+            .content("Key")
+            .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD)
+            .input("Key", null, new MaterialDialog.InputCallback() {
+                @Override
+                public void onInput(MaterialDialog dialog, CharSequence input) {
+                    Intent intent = new Intent(MainActivity.this, PlaylistActivity.class);
+                    intent.putExtra(PlaylistActivity.EXTRA_PLAYLIST_KEY, input.toString());
+
+                    startActivity(intent);
+                }
+            }).show();
+
     }
 
     private void bindUserToNavigationView(User user)

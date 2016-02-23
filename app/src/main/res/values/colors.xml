@@ -4,4 +4,11 @@
     <color name="colorPrimaryDark">#DDDDDD</color>
     <color name="colorAccent">#000</color>
     <color name="windowBackground">#FAFAFA</color>
+
+    <color name="trackBackgroundEven">#FAFAFA</color>
+    <color name="trackBackgroundOdd">#F5F5F5</color>
+
+    <color name="colorTextPrimary">#000000</color>
+    <color name="colorTextSecondary">#333333</color>
+    <color name="colorTextInactive">#646464</color>
 </resources>

@@ -33,5 +33,35 @@ public class Track implements Serializable {
     public String getUrl() {
         return url;
     }
+
+    public void setId(long id)
+    {
+        this.id = id;
+    }
+
+    public void setArtist(String artist)
+    {
+        this.artist = artist;
+    }
+
+    public void setTitle(String title)
+    {
+        this.title = title;
+    }
+
+    public void setUrl(String url)
+    {
+        this.url = url;
+    }
+
+    public void setCoverArtUrl(String coverArtUrl)
+    {
+        this.coverArtUrl = coverArtUrl;
+    }
+
+    public void setTrackSource(TrackSource trackSource)
+    {
+        this.trackSource = trackSource;
+    }
 }
 
