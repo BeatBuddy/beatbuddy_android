@@ -1,10 +1,11 @@
 package be.kdg.teamd.beatbuddy.model.users;
 
+import java.io.Serializable;
 import java.util.Map;
 
 import be.kdg.teamd.beatbuddy.model.organisations.Organisation;
 
-public class User {
+public class User implements Serializable {
     private long id;
     private String email,
                    firstName,
