@@ -19,4 +19,14 @@
     <string name="my_organisations">My organisations</string>
     <string name="settings">Settings</string>
     <string name="title_activity_create_organisation">Create your organisation</string>
+    <string name="name">Name</string>
+    <string name="key">Key</string>
+    <string name="description">Description</string>
+    <string name="create_playlist_as">Create playlist as</string>
+    <string name="individual">Individual</string>
+    <string name="organisation">Organisation</string>
+    <string name="title_activity_create_playlist">Create playlist</string>
+    <string name="image">Image</string>
+    <string name="pick_image">Pick image</string>
+    <string name="create">Create</string>
 </resources>

@@ -1,5 +1,7 @@
 package be.kdg.teamd.beatbuddy.model.playlists;
 
-public enum SourceType {
+import java.io.Serializable;
+
+public enum SourceType implements Serializable {
     YOUTUBE
 }

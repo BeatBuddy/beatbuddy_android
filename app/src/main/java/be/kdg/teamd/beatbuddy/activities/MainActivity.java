@@ -2,7 +2,6 @@ package be.kdg.teamd.beatbuddy.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -105,9 +104,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    @OnClick(R.id.main_fab_create_playlist) void onClickOrganisationsFab()
+    @OnClick(R.id.main_fab_create_playlist) void onClickCreatePlaylist()
     {
-        startActivity(new Intent(this, CreateOrganisationActivity.class));
+        startActivity(new Intent(this, CreatePlaylistActivity.class));
     }
 
     private void bindUserToNavigationView(User user)

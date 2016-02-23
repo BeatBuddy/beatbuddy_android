@@ -1,12 +1,13 @@
 package be.kdg.teamd.beatbuddy.model.organisations;
 
+import java.io.Serializable;
 import java.util.Map;
 
 import be.kdg.teamd.beatbuddy.model.playlists.Playlist;
 import be.kdg.teamd.beatbuddy.model.users.Role;
 import be.kdg.teamd.beatbuddy.model.users.User;
 
-public class Organisation {
+public class Organisation implements Serializable {
     private long id;
     private String name,
                     bannerUrl,

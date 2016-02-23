@@ -1,6 +1,8 @@
 package be.kdg.teamd.beatbuddy.model.playlists;
 
-public class PlaylistTrack {
+import java.io.Serializable;
+
+public class PlaylistTrack implements Serializable {
     private Track track;
     private boolean alreadyPlayed;
     private Vote[] votes; // NOTE: keep score only?

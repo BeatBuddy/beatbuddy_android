@@ -16,6 +16,7 @@ public class RepositoryFactory {
 
     private static UserRepository userRepository;
     private static OrganisationRepository organisationRepository;
+    private static PlaylistRepository playlistRepository;
 
     public static UserRepository getUserRepository() {
         if(userRepository == null) userRepository = createServiceAuthenticated(UserRepository.class, null);
@@ -25,6 +26,11 @@ public class RepositoryFactory {
     public static OrganisationRepository getOrganisationRepository() {
         if(organisationRepository == null) organisationRepository = createServiceAuthenticated(OrganisationRepository.class, null);
         return organisationRepository;
+    }
+
+    public static PlaylistRepository getPlaylistRepository() {
+        if(playlistRepository == null) playlistRepository = createServiceAuthenticated(PlaylistRepository.class, null);
+        return playlistRepository;
     }
 
     public static void setAPIEndpoint(String APIEndpoint) {

@@ -1,8 +1,10 @@
 package be.kdg.teamd.beatbuddy.model.playlists;
 
+import java.io.Serializable;
+
 import be.kdg.teamd.beatbuddy.model.users.User;
 
-public class Playlist {
+public class Playlist implements Serializable {
     private long id;
     private String name,
                    imageUrl;

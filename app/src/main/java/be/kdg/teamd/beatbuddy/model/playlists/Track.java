@@ -1,6 +1,8 @@
 package be.kdg.teamd.beatbuddy.model.playlists;
 
-public class Track {
+import java.io.Serializable;
+
+public class Track implements Serializable {
     private long id;
     private String artist,
                    title,

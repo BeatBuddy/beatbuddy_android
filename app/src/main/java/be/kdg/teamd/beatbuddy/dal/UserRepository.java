@@ -1,13 +1,14 @@
 package be.kdg.teamd.beatbuddy.dal;
 
+import java.util.List;
+
+import be.kdg.teamd.beatbuddy.model.organisations.Organisation;
 import be.kdg.teamd.beatbuddy.model.users.AccessToken;
 import be.kdg.teamd.beatbuddy.model.users.User;
 import retrofit2.Call;
-import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
-import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
@@ -26,5 +27,7 @@ public interface UserRepository {
 
     @POST("users/register")
     Call<User> register(@Query("firstName") String firstName, @Query("lastName") String lastName, @Query("nickname") String nickname, @Query("email") String email, @Query("password") String password);
-    
+
+    @GET("users/{id}/organisations")
+    Call<List<Organisation>> getOrganisations(@Path("id") long currentUserId);
 }
