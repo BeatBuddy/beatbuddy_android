@@ -26,7 +26,9 @@ public class LoginPresenter {
                 if(response.isSuccess())
                 {
                     RepositoryFactory.setAccessToken(response.body());
+                    userRepository = RepositoryFactory.getUserRepository();
                     userConfigurationManager.setAccessToken(response.body());
+
                     userRepository.userInfo(email).enqueue(new Callback<User>()
                     {
                         @Override

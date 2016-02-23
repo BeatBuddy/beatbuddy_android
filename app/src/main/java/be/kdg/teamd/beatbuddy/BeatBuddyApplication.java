@@ -13,7 +13,7 @@ public class BeatBuddyApplication extends Application implements UserConfigurati
 
     public BeatBuddyApplication() {
         super();
-        RepositoryFactory.setAPIEndpoint("http://teamd.azurewebsites.net/api/");
+        RepositoryFactory.setAPIEndpoint("https://teamd.azurewebsites.net/api/");
     }
 
     @Override
