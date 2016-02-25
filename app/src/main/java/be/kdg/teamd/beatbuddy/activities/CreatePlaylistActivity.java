@@ -152,6 +152,15 @@ public class CreatePlaylistActivity extends AppCompatActivity implements CreateP
         for(Organisation org : organisations){
             this.organisationNames.add(org.getName());
         }
+        organisationAdapter.notifyDataSetChanged();
+
+        if(organisations.size() > 0){
+            radio_organisation.setEnabled(true);
+            spinner_organisations.setClickable(true);
+        } else {
+            radio_organisation.setEnabled(false);
+            spinner_organisations.setClickable(false);
+        }
     }
 
     @Override

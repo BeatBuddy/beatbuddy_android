@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        fab.hideMenu(false);
+        if(userConfigurationManager.getAccessToken() == null) fab.hideMenu(false);
 
         navigationView.setNavigationItemSelectedListener(this);
     }
@@ -58,16 +58,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        if (requestCode == RESULT_LOGIN && resultCode == RESULT_OK)
+        if (requestCode == RESULT_LOGIN && resultCode == RESULT_OK) // Login successful
         {
-            //Login is successful (aw yeah!), now put the user data in the navigation drawer!
             User user = userConfigurationManager.getUser();
             bindUserToNavigationView(user);
 
             navigationView.getMenu().setGroupVisible(R.id.group_guest, false);
             navigationView.getMenu().setGroupVisible(R.id.group_logged_in, true);
             fab.showMenu(true);
-
         }
 
         super.onActivityResult(requestCode, resultCode, data);
@@ -85,9 +83,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
         int id = item.getItemId();
-
         switch(id)
         {
             case R.id.nav_login:
