@@ -40,7 +40,7 @@
             app:menu_colorRipple="#333333">
 
             <com.github.clans.fab.FloatingActionButton
-                android:id="@+id/menu_item"
+                android:id="@+id/main_fab_join_playlist"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_key_24dp"

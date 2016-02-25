@@ -4,7 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-
+ 
     <application
         android:name=".BeatBuddyApplication"
         android:allowBackup="true"
@@ -35,6 +35,9 @@
             android:theme="@style/BeatBuddyTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
+                android:value="be.kdg.teamd.beatbuddy.activities.MainActivity"/>
+        </activity>
+        <activity android:name=".activities.PlaylistActivity">
                 android:value="be.kdg.teamd.beatbuddy.activities.MainActivity" />
         </activity>
         <activity
