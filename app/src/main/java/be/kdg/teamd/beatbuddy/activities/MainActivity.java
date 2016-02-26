@@ -52,7 +52,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        if(userConfigurationManager.getAccessToken() == null) fab.hideMenu(false);
+        User user = userConfigurationManager.getUser();
+        if(user != null){
+            bindUserToNavigationView(user);
+        } else {
+            fab.hideMenu(false);
+        }
 
         navigationView.setNavigationItemSelectedListener(this);
     }
@@ -92,6 +97,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Intent intent = new Intent(this, LoginActivity.class);
                 startActivityForResult(intent, RESULT_LOGIN);
                 break;
+
             case R.id.nav_logout:
                 userConfigurationManager.setUser(null);
                 userConfigurationManager.setAccessToken(null);
@@ -100,6 +106,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 navigationView.getMenu().setGroupVisible(R.id.group_logged_in, false);
                 navigationView.getMenu().setGroupVisible(R.id.group_guest, true);
+                fab.hideMenu(true);
                 break;
         }
 
