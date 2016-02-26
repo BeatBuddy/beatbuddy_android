@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 
 import be.kdg.teamd.beatbuddy.BeatBuddyApplication;
 import be.kdg.teamd.beatbuddy.R;
@@ -23,6 +24,7 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.L
     @Bind(R.id.btn_register) Button btn_register;
     @Bind(R.id.edit_login_email) EditText login_email;
     @Bind(R.id.edit_login_password) EditText login_password;
+    @Bind(R.id.ic_login_loading) ProgressBar progress_loading;
 
     private UserRepository userRepository;
     private LoginPresenter presenter;
@@ -46,6 +48,7 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.L
             @Override
             public void onClick(View view) {
                 presenter.login(login_email.getText().toString(), login_password.getText().toString());
+                progress_loading.setVisibility(View.VISIBLE);
             }
         });
         btn_register.setOnClickListener(new View.OnClickListener() {
@@ -62,11 +65,13 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.L
     @Override
     public void onLoggedIn(User user) {
         setResult(RESULT_OK);
+        progress_loading.setVisibility(View.GONE);
         finish();
     }
 
     @Override
     public void onException(String message) {
+        progress_loading.setVisibility(View.GONE);
         Snackbar.make(login_email, message, Snackbar.LENGTH_LONG).show();
     }
 }

@@ -2,9 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/BeatBuddyAndroid.iml" filepath="$PROJECT_DIR$/BeatBuddyAndroid.iml" />
+      <module fileurl="file://$PROJECT_DIR$/BeatBuddy_android.iml" filepath="$PROJECT_DIR$/BeatBuddy_android.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/beatbuddy_android.iml" filepath="$PROJECT_DIR$/beatbuddy_android.iml" />
     </modules>
   </component>
 </project>
