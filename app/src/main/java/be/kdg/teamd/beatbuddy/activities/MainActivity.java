@@ -147,8 +147,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (user == null)
         {
             userAvatar.setImageResource(R.mipmap.ic_launcher);
-            username.setText("Guest");
-            subname.setText("Not logged in");
+            username.setText(R.string.guest);
+            subname.setText(R.string.not_logged_in);
         }
         else
         {

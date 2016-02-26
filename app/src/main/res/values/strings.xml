@@ -32,4 +32,6 @@
     <string name="image">Image</string>
     <string name="pick_image">Pick image</string>
     <string name="create">Create</string>
+    <string name="guest">Guest</string>
+    <string name="not_logged_in">Not logged in</string>
 </resources>
