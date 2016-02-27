@@ -8,6 +8,7 @@ public class Track implements Serializable {
                    title,
                    url,
                    coverArtUrl;
+    private int duration;
     private TrackSource trackSource;
 
     public String getArtist() {
@@ -57,6 +58,14 @@ public class Track implements Serializable {
     public void setCoverArtUrl(String coverArtUrl)
     {
         this.coverArtUrl = coverArtUrl;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
     }
 
     public void setTrackSource(TrackSource trackSource)

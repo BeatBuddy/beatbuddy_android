@@ -24,9 +24,11 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.contrib.DrawerActions.openDrawer;
 import static android.support.test.espresso.intent.Intents.intending;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static android.support.test.espresso.matcher.ViewMatchers.isEnabled;
 import static android.support.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.not;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
@@ -43,8 +45,8 @@ public class TestMainActivity {
 
     @Test
     public void testFabShownWhenLoggedIn(){
-        onView(withId(R.id.main_fab))
-                .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.INVISIBLE)));
+        onView(withId(R.id.main_fab_create_playlist))
+                .check(matches(not(isEnabled())));
 
         openDrawer(R.id.drawer_layout);
 
@@ -71,7 +73,7 @@ public class TestMainActivity {
         onView(withText("Login"))
                 .perform(click());
 
-        onView(withId(R.id.main_fab))
-                .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+        onView(withId(R.id.main_fab_create_playlist))
+                .check(matches(isEnabled()));
     }
 }

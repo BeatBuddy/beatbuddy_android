@@ -1,6 +1,7 @@
 package be.kdg.teamd.beatbuddy.model.playlists;
 
 import java.io.Serializable;
+import java.util.List;
 
 import be.kdg.teamd.beatbuddy.model.users.User;
 
@@ -10,8 +11,8 @@ public class Playlist implements Serializable {
                    imageUrl;
     private int maximumVotesPerUser;
     private boolean active;
-    private PlaylistTrack[] playlistTracks;
-    private Comment[] comments,
+    private List<PlaylistTrack> playlistTracks;
+    private List<Comment> comments,
                       chatComments;
     private User playlistMaster;
 
@@ -19,11 +20,11 @@ public class Playlist implements Serializable {
         return active;
     }
 
-    public Comment[] getComments() {
+    public List<Comment> getComments() {
         return comments;
     }
 
-    public Comment[] getChatComments() {
+    public List<Comment> getChatComments() {
         return chatComments;
     }
 
@@ -47,7 +48,7 @@ public class Playlist implements Serializable {
         return playlistMaster;
     }
 
-    public PlaylistTrack[] getPlaylistTracks() {
+    public List<PlaylistTrack> getPlaylistTracks() {
         return playlistTracks;
     }
 }

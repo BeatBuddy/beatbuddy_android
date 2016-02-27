@@ -4,23 +4,17 @@ import android.app.Activity;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
-import android.util.Log;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
 
 import be.kdg.teamd.beatbuddy.activities.LoginActivity;
 import be.kdg.teamd.beatbuddy.dal.UserRepository;
-import be.kdg.teamd.beatbuddy.model.users.AccessToken;
-import be.kdg.teamd.beatbuddy.model.users.User;
-import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -35,14 +29,11 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.startsWith;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
@@ -64,7 +55,7 @@ public class TestLoginActivity {
                 .build();
 
         UserRepository userRepository = retrofit.create(UserRepository.class);
-        UserConfigurationManager userConfigurationManager = new TestUserConfigurationManager();
+        UserConfigurationManager userConfigurationManager = new FakeUserConfigurationManager();
 
         loginActivityActivityTestRule.getActivity().setTestImplementation(userRepository, userConfigurationManager);
     }

@@ -14,15 +14,17 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import be.kdg.teamd.beatbuddy.R;
+import be.kdg.teamd.beatbuddy.model.playlists.PlaylistTrack;
 import be.kdg.teamd.beatbuddy.model.playlists.Track;
+import be.kdg.teamd.beatbuddy.util.DateUtil;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.TrackHolder>
+public class PlaylistTrackAdapter extends RecyclerView.Adapter<PlaylistTrackAdapter.TrackHolder>
 {
-    private List<Track> tracks;
+    private List<PlaylistTrack> tracks;
 
-    public TrackAdapter(List<Track> tracks)
+    public PlaylistTrackAdapter(List<PlaylistTrack> tracks)
     {
         this.tracks = tracks;
     }
@@ -37,7 +39,7 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.TrackHolder>
     @Override
     public void onBindViewHolder(TrackHolder holder, int position)
     {
-        Track track = tracks.get(position);
+        Track track = tracks.get(position).getTrack();
         Context context = holder.itemView.getContext();
 
         Picasso.with(context)
@@ -47,7 +49,7 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.TrackHolder>
         holder.songTitle.setText(track.getTitle());
         holder.songArtist.setText(track.getArtist());
         holder.songAlbum.setText("Album");
-        //TODO: holder.songDuration.setText(track.);
+        holder.songDuration.setText(DateUtil.secondsToFormattedString(track.getDuration()));
 
         holder.itemView.setBackgroundColor(position % 2 == 0 ? Color.rgb(250, 250, 250) : Color.rgb(245, 245, 245));
     }

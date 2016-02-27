@@ -6,7 +6,7 @@ import be.kdg.teamd.beatbuddy.model.users.User;
 /**
  * Created by Ignace on 22/02/2016.
  */
-public class TestUserConfigurationManager implements UserConfigurationManager
+public class FakeUserConfigurationManager implements UserConfigurationManager
 {
     private AccessToken accessToken;
     private User user;

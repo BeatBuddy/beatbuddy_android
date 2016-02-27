@@ -1,11 +1,12 @@
 package be.kdg.teamd.beatbuddy.model.playlists;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class PlaylistTrack implements Serializable {
     private Track track;
     private boolean alreadyPlayed;
-    private Vote[] votes; // NOTE: keep score only?
+    private List<Vote> votes; // NOTE: keep score only?
 
     public boolean isAlreadyPlayed() {
         return alreadyPlayed;
@@ -15,7 +16,7 @@ public class PlaylistTrack implements Serializable {
         return track;
     }
 
-    public Vote[] getVotes() {
+    public List<Vote> getVotes() {
         return votes;
     }
 }

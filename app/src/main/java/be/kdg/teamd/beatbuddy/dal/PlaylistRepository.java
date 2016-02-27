@@ -5,11 +5,16 @@ import be.kdg.teamd.beatbuddy.model.playlists.SourceType;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface PlaylistRepository {
-    @POST("playlists/{id}/addTrack")
+    @GET("Playlist/{id}")
+    Call<Playlist> getPlaylist(@Path("id") long playlistId);
+
+    @POST("Playlist/{id}/addTrack")
     Call<Playlist> addTrack(@Query("id") String trackId, @Query("sourceType") SourceType sourceType);
 
     @POST("Playlist/createPlaylist")

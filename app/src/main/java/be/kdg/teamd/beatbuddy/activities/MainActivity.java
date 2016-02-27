@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.squareup.picasso.Picasso;
 
@@ -34,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Bind(R.id.nav_view) NavigationView navigationView;
     @Bind(R.id.drawer_layout) DrawerLayout drawer;
     @Bind(R.id.main_fab) FloatingActionMenu fab;
+    @Bind(R.id.main_fab_create_playlist) FloatingActionButton fab_create_playlist;
 
     private UserConfigurationManager userConfigurationManager;
 
@@ -56,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if(user != null){
             bindUserToNavigationView(user);
         } else {
-            fab.hideMenu(false);
+            fab_create_playlist.setEnabled(false);
         }
 
         navigationView.setNavigationItemSelectedListener(this);
@@ -72,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             navigationView.getMenu().setGroupVisible(R.id.group_guest, false);
             navigationView.getMenu().setGroupVisible(R.id.group_logged_in, true);
-            fab.showMenu(true);
+            fab_create_playlist.setEnabled(true);
         }
 
         super.onActivityResult(requestCode, resultCode, data);
@@ -106,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 navigationView.getMenu().setGroupVisible(R.id.group_logged_in, false);
                 navigationView.getMenu().setGroupVisible(R.id.group_guest, true);
-                fab.hideMenu(true);
+                fab_create_playlist.setEnabled(false);
                 break;
         }
 
