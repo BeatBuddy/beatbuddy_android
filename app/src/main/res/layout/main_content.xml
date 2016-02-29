@@ -59,6 +59,16 @@
                 app:fab_colorNormal="@color/colorAccent"
                 app:fab_colorPressed="@color/colorAccent"
                 app:fab_colorRipple="#333333"/>
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/main_fab_create_organisation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_group_add_24dp"
+                fab:fab_size="mini"
+                fab:fab_label="Create an organisation"
+                app:fab_colorNormal="@color/colorAccent"
+                app:fab_colorPressed="@color/colorAccent"
+                app:fab_colorRipple="#333333"/>
 
         </com.github.clans.fab.FloatingActionMenu>
     </RelativeLayout>

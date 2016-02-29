@@ -6,9 +6,10 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -37,10 +38,9 @@ public class CreatePlaylistActivity extends AppCompatActivity implements CreateP
     @Bind(R.id.edit_playlist_key) EditText edit_playlistKey;
     @Bind(R.id.edit_playlist_description) EditText edit_playlistDescription;
     @Bind(R.id.text_playlist_image) TextView text_playlistImage;
-    @Bind(R.id.btn_playlist_pick_img) Button btn_playlistPickImg;
-    @Bind(R.id.btn_create_playlist) Button btn_createPlaylist;
     @Bind(R.id.radio_playlist_individual) RadioButton radio_individual;
     @Bind(R.id.radio_playlist_organisation) RadioButton radio_organisation;
+    @Bind(R.id.ic_createplaylist_loading) ProgressBar loadingIndicator;
 
     private final static int PICK_IMAGE = 2;
 
@@ -89,6 +89,7 @@ public class CreatePlaylistActivity extends AppCompatActivity implements CreateP
         User currentUser = userConfigurationManager.getUser();
         if(currentUser != null){
             presenter.fetchOrganisations(currentUser.getId());
+            loadingIndicator.setVisibility(View.VISIBLE);
         }
     }
 
@@ -117,16 +118,13 @@ public class CreatePlaylistActivity extends AppCompatActivity implements CreateP
         }
 
         if(radio_individual.isChecked()){
-
             presenter.createPlaylistAsUser(
                     edit_playlistName.getText().toString(),
                     edit_playlistKey.getText().toString(),
                     edit_playlistDescription.getText().toString(),
                     base64Image
             );
-
         } else {
-
             long organidationId = -1;
             for(Organisation organisation : organisations){
                 if(organisation.getName().equals(spinner_organisations.getSelectedItem().toString())) organidationId = organisation.getId();
@@ -139,8 +137,9 @@ public class CreatePlaylistActivity extends AppCompatActivity implements CreateP
                     edit_playlistDescription.getText().toString(),
                     base64Image
             );
-
         }
+
+        loadingIndicator.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -161,10 +160,13 @@ public class CreatePlaylistActivity extends AppCompatActivity implements CreateP
             radio_organisation.setEnabled(false);
             spinner_organisations.setClickable(false);
         }
+
+        loadingIndicator.setVisibility(View.GONE);
     }
 
     @Override
     public void onPlaylistCreated(Playlist playlist) {
+        loadingIndicator.setVisibility(View.GONE);
         Intent intent = new Intent();
         intent.putExtra("playlist", playlist);
         setResult(RESULT_OK, intent);
@@ -173,6 +175,7 @@ public class CreatePlaylistActivity extends AppCompatActivity implements CreateP
 
     @Override
     public void onException(String message) {
+        loadingIndicator.setVisibility(View.GONE);
         Snackbar.make(edit_playlistName, message, Snackbar.LENGTH_LONG).show();
     }
 }

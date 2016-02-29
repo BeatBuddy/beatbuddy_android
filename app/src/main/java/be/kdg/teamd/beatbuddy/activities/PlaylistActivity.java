@@ -21,6 +21,7 @@ import butterknife.ButterKnife;
 
 public class PlaylistActivity extends AppCompatActivity implements PlaylistPresenter.PlaylistPresenterListener, QueueFragment.QueueFragmentListener {
     public static final String EXTRA_PLAYLIST_KEY = "KEY";
+    public static final String EXTRA_PLAYLIST_TEST = "TEST";
 
     @Bind(R.id.toolbar) Toolbar toolbar;
     @Bind(R.id.tablayout) TabLayout tabLayout;
@@ -51,14 +52,15 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
         presenter = new PlaylistPresenter(this, playlistRepository);
 
         String playlistKey = getIntent().getStringExtra(EXTRA_PLAYLIST_KEY);
-        playlistId = Long.parseLong(playlistKey);
+        boolean isTesting = getIntent().getBooleanExtra(EXTRA_PLAYLIST_TEST, false);
+        if(playlistKey != null) playlistId = Long.parseLong(playlistKey);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle(playlistKey);
 
         setupViewPager(viewPager);
-        presenter.loadPlaylist(playlistId); // TODO: join by key, not by ID
+        if(!isTesting) presenter.loadPlaylist(playlistId); // TODO: join by key, not by ID
     }
 
     private void setupViewPager(final ViewPager viewPager)

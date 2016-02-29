@@ -21,7 +21,7 @@ public class RegisterPresenter {
                 if(response.isSuccess())
                     listener.onRegistered(response.body());
                 else
-                    listener.onException("Register failed. Try again later.");
+                    listener.onException("Register failed. Make sure all information is valid.");
             }
 
             @Override

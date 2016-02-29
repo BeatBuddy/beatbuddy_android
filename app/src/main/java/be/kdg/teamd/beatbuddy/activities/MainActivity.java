@@ -9,6 +9,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -36,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Bind(R.id.drawer_layout) DrawerLayout drawer;
     @Bind(R.id.main_fab) FloatingActionMenu fab;
     @Bind(R.id.main_fab_create_playlist) FloatingActionButton fab_create_playlist;
+    @Bind(R.id.main_fab_create_organisation) FloatingActionButton fab_create_organisation;
 
     private UserConfigurationManager userConfigurationManager;
 
@@ -59,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             bindUserToNavigationView(user);
         } else {
             fab_create_playlist.setEnabled(false);
+            fab_create_organisation.setEnabled(false);
         }
 
         navigationView.setNavigationItemSelectedListener(this);
@@ -75,6 +78,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             navigationView.getMenu().setGroupVisible(R.id.group_guest, false);
             navigationView.getMenu().setGroupVisible(R.id.group_logged_in, true);
             fab_create_playlist.setEnabled(true);
+            fab_create_organisation.setEnabled(true);
         }
 
         super.onActivityResult(requestCode, resultCode, data);
@@ -109,6 +113,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 navigationView.getMenu().setGroupVisible(R.id.group_logged_in, false);
                 navigationView.getMenu().setGroupVisible(R.id.group_guest, true);
                 fab_create_playlist.setEnabled(false);
+                fab_create_organisation.setEnabled(false);
                 break;
         }
 
@@ -132,11 +137,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 public void onInput(MaterialDialog dialog, CharSequence input) {
                     Intent intent = new Intent(MainActivity.this, PlaylistActivity.class);
                     intent.putExtra(PlaylistActivity.EXTRA_PLAYLIST_KEY, input.toString());
-
                     startActivity(intent);
                 }
             }).show();
 
+    }
+
+    @OnClick(R.id.main_fab_create_organisation) public void onCreateOrganisationClick(){
+        startActivity(new Intent(this, CreateOrganisationActivity.class));
     }
 
     private void bindUserToNavigationView(User user)
@@ -154,9 +162,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         else
         {
-            Picasso.with(this)
-                    .load(user.getImageUrl())
-                    .into(userAvatar);
+            if(!TextUtils.isEmpty(user.getImageUrl()))
+                Picasso.with(this)
+                        .load(user.getImageUrl())
+                        .into(userAvatar);
+
             username.setText(user.getNickname());
             subname.setText(user.getFirstName() + " " + user.getLastName());
         }

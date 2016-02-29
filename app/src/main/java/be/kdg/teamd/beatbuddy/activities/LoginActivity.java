@@ -18,6 +18,7 @@ import be.kdg.teamd.beatbuddy.model.users.User;
 import be.kdg.teamd.beatbuddy.presenter.LoginPresenter;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class LoginActivity extends AppCompatActivity implements LoginPresenter.LoginPresenterListener{
     @Bind(R.id.btn_login) Button btn_login;
@@ -25,6 +26,8 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.L
     @Bind(R.id.edit_login_email) EditText login_email;
     @Bind(R.id.edit_login_password) EditText login_password;
     @Bind(R.id.ic_login_loading) ProgressBar progress_loading;
+
+    private final static int REQ_REGISTER = 4;
 
     private UserRepository userRepository;
     private LoginPresenter presenter;
@@ -43,23 +46,32 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.L
         userConfigurationManager = (BeatBuddyApplication) getApplication();
         userRepository = RepositoryFactory.getUserRepository();
         presenter = new LoginPresenter(this, userRepository, userConfigurationManager);
+    }
 
-        btn_login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                presenter.login(login_email.getText().toString(), login_password.getText().toString());
-                progress_loading.setVisibility(View.VISIBLE);
-            }
-        });
-        btn_register.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
-                intent.putExtra("email", login_email.getText().toString());
-                intent.putExtra("password", login_password.getText().toString());
-                startActivity(intent);
-            }
-        });
+    @OnClick(R.id.btn_login) public void onLoginClicked(){
+        presenter.login(login_email.getText().toString(), login_password.getText().toString());
+        progress_loading.setVisibility(View.VISIBLE);
+    }
+
+    @OnClick(R.id.btn_register) public void onRegisterClicked(){
+        Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+        intent.putExtra("email", login_email.getText().toString());
+        intent.putExtra("password", login_password.getText().toString());
+        startActivityForResult(intent, REQ_REGISTER);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(resultCode != RESULT_OK) return;
+
+        switch(requestCode){
+            case REQ_REGISTER:
+                User user = (User) data.getSerializableExtra("user");
+                String password = data.getStringExtra("password");
+                login_email.setText(user.getEmail());
+                login_password.setText(password);
+                onLoginClicked();
+        }
     }
 
     @Override

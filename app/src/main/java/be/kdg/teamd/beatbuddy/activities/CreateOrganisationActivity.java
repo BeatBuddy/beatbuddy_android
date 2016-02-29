@@ -9,8 +9,11 @@ import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import java.io.IOException;
 
@@ -34,6 +37,7 @@ public class CreateOrganisationActivity extends AppCompatActivity implements Cre
     @Bind(R.id.create_org_description) EditText description;
     @Bind(R.id.create_org_banner) ImageView banner;
     @Bind(R.id.create_org_color_picker) LineColorPicker colorPicker;
+    @Bind(R.id.ic_createorg_loading) ProgressBar loadingProgressbar;
 
     private OrganisationRepository organisationRepository;
     private CreateOrganisationPresenter presenter;
@@ -65,6 +69,11 @@ public class CreateOrganisationActivity extends AppCompatActivity implements Cre
 
     @OnClick(R.id.create_org_create) void onCreateOrganisation()
     {
+        if(TextUtils.isEmpty(name.getText()) || TextUtils.isEmpty(description.getText())){
+            Snackbar.make(toolbar, "Please fill in all fields.", Snackbar.LENGTH_LONG).show();
+            return;
+        }
+
         String bannerInBase64;
         try
         {
@@ -79,12 +88,13 @@ public class CreateOrganisationActivity extends AppCompatActivity implements Cre
                 description.getText().toString(),
                 Integer.toHexString(colorPicker.getColor()),
                 bannerInBase64);
+
+        loadingProgressbar.setVisibility(View.VISIBLE);
     }
 
     @OnClick(R.id.create_org_banner_add) void onAddBannerImage()
     {
-        Intent i = new Intent(Intent.ACTION_PICK,
-                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(i, BANNER_REQUEST);
     }
 
@@ -113,6 +123,7 @@ public class CreateOrganisationActivity extends AppCompatActivity implements Cre
     @Override
     public void onCreated(Organisation organisation)
     {
+        loadingProgressbar.setVisibility(View.GONE);
         setResult(RESULT_OK);
         finish();
     }
@@ -120,6 +131,7 @@ public class CreateOrganisationActivity extends AppCompatActivity implements Cre
     @Override
     public void onException(String message)
     {
+        loadingProgressbar.setVisibility(View.GONE);
         Snackbar.make(name, message, Snackbar.LENGTH_LONG).show();
     }
 }
