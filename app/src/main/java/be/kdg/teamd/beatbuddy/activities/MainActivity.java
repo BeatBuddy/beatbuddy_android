@@ -3,6 +3,7 @@ package be.kdg.teamd.beatbuddy.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -19,16 +20,25 @@ import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import be.kdg.teamd.beatbuddy.BeatBuddyApplication;
 import be.kdg.teamd.beatbuddy.R;
 import be.kdg.teamd.beatbuddy.UserConfigurationManager;
+import be.kdg.teamd.beatbuddy.dal.PlaylistRepository;
+import be.kdg.teamd.beatbuddy.dal.RepositoryFactory;
+import be.kdg.teamd.beatbuddy.dal.UserRepository;
+import be.kdg.teamd.beatbuddy.model.organisations.Organisation;
+import be.kdg.teamd.beatbuddy.model.playlists.Playlist;
 import be.kdg.teamd.beatbuddy.model.users.User;
+import be.kdg.teamd.beatbuddy.presenter.MainPresenter;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, MainPresenter.MainPresenterListener {
 
     public static final int RESULT_LOGIN = 1;
 
@@ -39,7 +49,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Bind(R.id.main_fab_create_playlist) FloatingActionButton fab_create_playlist;
     @Bind(R.id.main_fab_create_organisation) FloatingActionButton fab_create_organisation;
 
+    private PlaylistRepository playlistRepository;
+    private UserRepository userRepository;
+    private MainPresenter presenter;
     private UserConfigurationManager userConfigurationManager;
+
+    private List<Playlist> userPlaylists;
+    private List<Playlist> recommendedPlaylists;
+    private List<Organisation> userOrganisations;
+
+    public void setPlaylistRepository(PlaylistRepository playlistRepository) {
+        this.playlistRepository = playlistRepository;
+        this.presenter = new MainPresenter(this, userRepository, playlistRepository);
+    }
+
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
+        this.presenter = new MainPresenter(this, userRepository, playlistRepository);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +78,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setTitle("BeatBuddy");
 
         userConfigurationManager = (BeatBuddyApplication) getApplication();
+        playlistRepository = RepositoryFactory.getPlaylistRepository();
+        userRepository = RepositoryFactory.getUserRepository();
+        presenter = new MainPresenter(this, userRepository, playlistRepository);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
@@ -63,6 +93,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             fab_create_playlist.setEnabled(false);
             fab_create_organisation.setEnabled(false);
         }
+
+        userPlaylists = new ArrayList<>();
+        recommendedPlaylists = new ArrayList<>();
+        userOrganisations = new ArrayList<>();
 
         navigationView.setNavigationItemSelectedListener(this);
     }
@@ -170,5 +204,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             username.setText(user.getNickname());
             subname.setText(user.getFirstName() + " " + user.getLastName());
         }
+    }
+
+    @Override
+    public void onRecommendedPlaylistsLoaded(List<Playlist> playlists) {
+        this.recommendedPlaylists.clear();
+        this.recommendedPlaylists.addAll(playlists);
+    }
+
+    @Override
+    public void onUserPlaylistsLoaded(List<Playlist> playlists) {
+        this.userPlaylists.clear();
+        this.userPlaylists.addAll(playlists);
+    }
+
+    @Override
+    public void onUserOrganisationsLoaded(List<Organisation> organisations) {
+        this.userOrganisations.clear();
+        this.userOrganisations.addAll(organisations);
+    }
+
+    @Override
+    public void onException(String message) {
+        Snackbar.make(drawer, message, Snackbar.LENGTH_LONG).show();
     }
 }

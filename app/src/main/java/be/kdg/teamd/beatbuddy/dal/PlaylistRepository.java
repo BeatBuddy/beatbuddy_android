@@ -1,5 +1,7 @@
 package be.kdg.teamd.beatbuddy.dal;
 
+import java.util.List;
+
 import be.kdg.teamd.beatbuddy.model.playlists.Playlist;
 import be.kdg.teamd.beatbuddy.model.playlists.SourceType;
 import retrofit2.Call;
@@ -24,4 +26,7 @@ public interface PlaylistRepository {
     @POST("Playlist/createPlaylist")
     @FormUrlEncoded
     Call<Playlist> createPlaylist(@Field("organisationId") long organisationId, @Field("name") String name, @Field("key") String key, @Field("description") String description, @Field("image") String imageBase64);
+
+    @GET("Playlist/recommendations")
+    Call<List<Playlist>> getRecommendedPlaylists(@Query("count") int count);
 }

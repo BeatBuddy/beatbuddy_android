@@ -22,8 +22,8 @@ public class CreatePlaylistPresenter {
         this.listener  = listener;
     }
 
-    public void fetchOrganisations(long currentUserId) {
-        userRepository.getOrganisations(currentUserId).enqueue(new Callback<List<Organisation>>() {
+    public void fetchUserOrganisations() {
+        userRepository.getUserOrganisations().enqueue(new Callback<List<Organisation>>() {
             @Override
             public void onResponse(Response<List<Organisation>> response) {
                 if(!response.isSuccess()){

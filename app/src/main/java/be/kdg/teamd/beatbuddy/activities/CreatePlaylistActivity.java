@@ -88,7 +88,7 @@ public class CreatePlaylistActivity extends AppCompatActivity implements CreateP
 
         User currentUser = userConfigurationManager.getUser();
         if(currentUser != null){
-            presenter.fetchOrganisations(currentUser.getId());
+            presenter.fetchUserOrganisations();
             loadingIndicator.setVisibility(View.VISIBLE);
         }
     }
