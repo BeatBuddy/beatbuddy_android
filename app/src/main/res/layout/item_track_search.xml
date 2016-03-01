@@ -30,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Waves"
-            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"/>
+            android:textColor="@color/colorTextPrimary"/>
         <TextView
             android:id="@+id/track_song_artist"
             android:layout_width="wrap_content"

@@ -45,4 +45,11 @@ public class BeatBuddyApplication extends Application implements UserConfigurati
     {
         return accessToken != null;
     }
+
+    @Override
+    public void logout()
+    {
+        accessToken = null;
+        user = null;
+    }
 }

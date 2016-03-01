@@ -48,7 +48,6 @@ public class PlaylistTrackAdapter extends RecyclerView.Adapter<PlaylistTrackAdap
 
         holder.songTitle.setText(track.getTitle());
         holder.songArtist.setText(track.getArtist());
-        holder.songAlbum.setText("Album");
         holder.songDuration.setText(DateUtil.secondsToFormattedString(track.getDuration()));
 
         holder.itemView.setBackgroundColor(position % 2 == 0 ? Color.rgb(250, 250, 250) : Color.rgb(245, 245, 245));
@@ -66,7 +65,6 @@ public class PlaylistTrackAdapter extends RecyclerView.Adapter<PlaylistTrackAdap
 
         @Bind(R.id.track_song_title) TextView songTitle;
         @Bind(R.id.track_song_artist) TextView songArtist;
-        @Bind(R.id.track_song_album) TextView songAlbum;
         @Bind(R.id.track_song_duration) TextView songDuration;
 
         @Bind(R.id.track_score) TextView score;

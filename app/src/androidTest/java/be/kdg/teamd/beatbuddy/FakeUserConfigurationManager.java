@@ -40,4 +40,11 @@ public class FakeUserConfigurationManager implements UserConfigurationManager
     {
         return accessToken != null;
     }
+
+    @Override
+    public void logout()
+    {
+        accessToken = null;
+        user = null;
+    }
 }
