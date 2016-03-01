@@ -15,4 +15,6 @@ public interface UserConfigurationManager
     User getUser();
 
     void setUser(User user);
+
+    boolean isLoggedIn();
 }

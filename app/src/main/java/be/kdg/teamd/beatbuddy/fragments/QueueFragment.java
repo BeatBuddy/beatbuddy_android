@@ -1,6 +1,9 @@
 package be.kdg.teamd.beatbuddy.fragments;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,26 +16,33 @@ import java.util.LinkedList;
 import java.util.List;
 
 import be.kdg.teamd.beatbuddy.R;
+import be.kdg.teamd.beatbuddy.UserConfigurationManager;
+import be.kdg.teamd.beatbuddy.activities.AddTrackActivity;
 import be.kdg.teamd.beatbuddy.adapters.PlaylistTrackAdapter;
 import be.kdg.teamd.beatbuddy.model.playlists.PlaylistTrack;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class QueueFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+    public static final int RESULT_ADD_TRACK = 1;
+    public static final String ARG_PLAYLIST_ID = "playlistid";
+
     @Bind(R.id.swiperefresh_queue) SwipeRefreshLayout swipeRefreshLayout;
     @Bind(R.id.playlist_recyclerview) RecyclerView recyclerView;
+    @Bind(R.id.queue_add_track_fab) FloatingActionButton addTrackFab;
 
-    private String playlistKey;
+    private long playlistId;
     private List<PlaylistTrack> tracks;
     private PlaylistTrackAdapter trackAdapter;
     private QueueFragmentListener listener;
+    private UserConfigurationManager userConfigurationManager;
 
-    public String getPlaylistKey() {
-        return playlistKey;
-    }
-
-    public void setPlaylistKey(String playlistKey) {
-        this.playlistKey = playlistKey;
+    @Override
+    public void setArguments(Bundle args)
+    {
+        super.setArguments(args);
+        playlistId = (long) args.get(ARG_PLAYLIST_ID);
     }
 
     public void setTracks(List<PlaylistTrack> tracks) {
@@ -56,8 +66,13 @@ public class QueueFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         View view = inflater.inflate(R.layout.fragment_queue, container, false);
         ButterKnife.bind(this, view);
 
+        playlistId = getArguments().getLong(ARG_PLAYLIST_ID);
+
         initializeRecyclerView();
         swipeRefreshLayout.setOnRefreshListener(this);
+
+        userConfigurationManager = (UserConfigurationManager) getActivity().getApplication();
+        addTrackFab.setVisibility(userConfigurationManager.isLoggedIn() ? View.VISIBLE : View.GONE);
 
         return view;
     }
@@ -72,6 +87,23 @@ public class QueueFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         recyclerView.setAdapter(trackAdapter);
 
         swipeRefreshLayout.setRefreshing(true);
+    }
+
+    @OnClick(R.id.queue_add_track_fab) void addTrack()
+    {
+        Intent intent = new Intent(getContext(), AddTrackActivity.class);
+        intent.putExtra(AddTrackActivity.EXTRA_PLAYLIST_ID, playlistId);
+
+        startActivityForResult(intent, RESULT_ADD_TRACK);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        if (requestCode == RESULT_ADD_TRACK && resultCode == Activity.RESULT_OK)
+            listener.onQueueRefreshRequested();
+
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override

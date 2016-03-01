@@ -86,8 +86,8 @@ public class CreatePlaylistActivity extends AppCompatActivity implements CreateP
         organisationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner_organisations.setAdapter(organisationAdapter);
 
-        User currentUser = userConfigurationManager.getUser();
-        if(currentUser != null){
+        if(userConfigurationManager.isLoggedIn()){
+            User currentUser = userConfigurationManager.getUser();
             presenter.fetchOrganisations(currentUser.getId());
             loadingIndicator.setVisibility(View.VISIBLE);
         }

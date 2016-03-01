@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
+
+    <ImageView
+        android:id="@+id/track_coverart"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:src="@drawable/header_default"
+        android:scaleType="centerCrop"/>
+
+    <RelativeLayout
+        android:id="@+id/track_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_alignBottom="@+id/track_coverart"
+        android:layout_alignTop="@+id/track_coverart"
+        android:layout_toEndOf="@+id/track_coverart"
+        android:layout_toStartOf="@+id/track_vote">
+
+        <TextView
+            android:id="@+id/track_song_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Waves"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"/>
+        <TextView
+            android:id="@+id/track_song_artist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Joey Bada$$"
+            android:layout_below="@id/track_song_title"/>
+    </RelativeLayout>
+
+</RelativeLayout>

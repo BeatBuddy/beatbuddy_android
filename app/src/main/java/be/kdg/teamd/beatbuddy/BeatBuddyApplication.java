@@ -39,4 +39,10 @@ public class BeatBuddyApplication extends Application implements UserConfigurati
     {
         this.user = user;
     }
+
+    @Override
+    public boolean isLoggedIn()
+    {
+        return accessToken != null;
+    }
 }
