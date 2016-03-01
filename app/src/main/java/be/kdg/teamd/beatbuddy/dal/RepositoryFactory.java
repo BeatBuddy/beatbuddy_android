@@ -41,9 +41,10 @@ public class RepositoryFactory {
 
     public static void setAccessToken(AccessToken token)
     {
-        //TODO: refactor, should recreate all current repo's with authenticated versions. This is a quick (dirty) fix.
+        //TODO: refactor, should recreate all current repo's with authenticated versions.
         userRepository = createServiceAuthenticated(UserRepository.class, token);
         organisationRepository = createServiceAuthenticated(OrganisationRepository.class, token);
+        playlistRepository = createServiceAuthenticated(PlaylistRepository.class, token);
     }
 
     private static <S> S createServiceAuthenticated(Class<S> serviceClass, final AccessToken token) {

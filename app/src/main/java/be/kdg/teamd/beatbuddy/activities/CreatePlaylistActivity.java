@@ -87,7 +87,7 @@ public class CreatePlaylistActivity extends AppCompatActivity implements CreateP
         spinner_organisations.setAdapter(organisationAdapter);
 
         User currentUser = userConfigurationManager.getUser();
-        if(currentUser != null){
+        if(userConfigurationManager.isLoggedIn()){
             presenter.fetchUserOrganisations();
             loadingIndicator.setVisibility(View.VISIBLE);
         }

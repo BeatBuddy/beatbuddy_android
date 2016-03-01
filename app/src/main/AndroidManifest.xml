@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="be.kdg.teamd.beatbuddy">
+<manifest package="be.kdg.teamd.beatbuddy"
+          xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
- 
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
     <application
         android:name=".BeatBuddyApplication"
         android:allowBackup="true"
@@ -17,17 +17,17 @@
             android:label="@string/app_name"
             android:theme="@style/BeatBuddyTheme">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity
             android:name=".activities.LoginActivity"
-            android:theme="@style/BeatBuddyTheme" />
+            android:theme="@style/BeatBuddyTheme"/>
         <activity
             android:name=".activities.RegisterActivity"
-            android:theme="@style/BeatBuddyTheme" />
+            android:theme="@style/BeatBuddyTheme"/>
         <activity
             android:name=".activities.CreateOrganisationActivity"
             android:label="@string/title_activity_create_organisation"
@@ -38,7 +38,7 @@
                 android:value="be.kdg.teamd.beatbuddy.activities.MainActivity"/>
         </activity>
         <activity android:name=".activities.PlaylistActivity">
-                android:value="be.kdg.teamd.beatbuddy.activities.MainActivity" />
+            android:value="be.kdg.teamd.beatbuddy.activities.MainActivity" />
         </activity>
         <activity
             android:name=".activities.CreatePlaylistActivity"
@@ -46,7 +46,16 @@
             android:theme="@style/BeatBuddyTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="be.kdg.teamd.beatbuddy.activities.MainActivity" />
+                android:value="be.kdg.teamd.beatbuddy.activities.MainActivity"/>
+        </activity>
+        <activity
+            android:name=".activities.AddTrackActivity"
+            android:label="@string/title_activity_add_track"
+            android:parentActivityName=".activities.PlaylistActivity"
+            android:theme="@style/BeatBuddyTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="be.kdg.teamd.beatbuddy.activities.PlaylistActivity"/>
         </activity>
     </application>
 

@@ -14,32 +14,33 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import be.kdg.teamd.beatbuddy.R;
-import be.kdg.teamd.beatbuddy.model.playlists.PlaylistTrack;
 import be.kdg.teamd.beatbuddy.model.playlists.Track;
 import be.kdg.teamd.beatbuddy.util.DateUtil;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class PlaylistTrackAdapter extends RecyclerView.Adapter<PlaylistTrackAdapter.TrackHolder>
+public class SearchTrackAdapter extends RecyclerView.Adapter<SearchTrackAdapter.TrackHolder>
 {
-    private List<PlaylistTrack> tracks;
+    private List<Track> tracks;
+    private SearchTrackListener listener;
 
-    public PlaylistTrackAdapter(List<PlaylistTrack> tracks)
+    public SearchTrackAdapter(List<Track> tracks, SearchTrackListener listener)
     {
         this.tracks = tracks;
+        this.listener = listener;
     }
 
     @Override
     public TrackHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_track, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_track_search, parent, false);
         return new TrackHolder(view);
     }
 
     @Override
     public void onBindViewHolder(TrackHolder holder, int position)
     {
-        Track track = tracks.get(position).getTrack();
+        final Track track = tracks.get(position);
         Context context = holder.itemView.getContext();
 
         Picasso.with(context)
@@ -48,9 +49,16 @@ public class PlaylistTrackAdapter extends RecyclerView.Adapter<PlaylistTrackAdap
 
         holder.songTitle.setText(track.getTitle());
         holder.songArtist.setText(track.getArtist());
-        holder.songDuration.setText(DateUtil.secondsToFormattedString(track.getDuration()));
 
         holder.itemView.setBackgroundColor(position % 2 == 0 ? Color.rgb(250, 250, 250) : Color.rgb(245, 245, 245));
+        holder.itemView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                listener.onClickTrack(track);
+            }
+        });
     }
 
     @Override
@@ -59,22 +67,28 @@ public class PlaylistTrackAdapter extends RecyclerView.Adapter<PlaylistTrackAdap
         return tracks.size();
     }
 
+    public void updateTracks(List<Track> tracks)
+    {
+        this.tracks = tracks;
+        notifyDataSetChanged();
+    }
+
     public class TrackHolder extends RecyclerView.ViewHolder
     {
         @Bind(R.id.track_coverart) ImageView coverArt;
 
         @Bind(R.id.track_song_title) TextView songTitle;
         @Bind(R.id.track_song_artist) TextView songArtist;
-        @Bind(R.id.track_song_duration) TextView songDuration;
-
-        @Bind(R.id.track_score) TextView score;
-        @Bind(R.id.track_upvote) ImageView upvote;
-        @Bind(R.id.track_downvote) ImageView downvote;
 
         public TrackHolder(View itemView)
         {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
+    }
+
+    public interface SearchTrackListener
+    {
+        void onClickTrack(Track track);
     }
 }

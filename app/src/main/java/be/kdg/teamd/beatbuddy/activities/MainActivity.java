@@ -139,8 +139,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
 
             case R.id.nav_logout:
-                userConfigurationManager.setUser(null);
-                userConfigurationManager.setAccessToken(null);
+                userConfigurationManager.logout();
                 User user = userConfigurationManager.getUser();
                 bindUserToNavigationView(user);
 
@@ -164,7 +163,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     {
         new MaterialDialog.Builder(this)
             .title("Join an organisation")
-            .content("Key")
             .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD)
             .input("Key", null, new MaterialDialog.InputCallback() {
                 @Override

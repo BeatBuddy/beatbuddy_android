@@ -34,4 +34,17 @@ public class FakeUserConfigurationManager implements UserConfigurationManager
     {
         this.user = user;
     }
+
+    @Override
+    public boolean isLoggedIn()
+    {
+        return accessToken != null;
+    }
+
+    @Override
+    public void logout()
+    {
+        accessToken = null;
+        user = null;
+    }
 }

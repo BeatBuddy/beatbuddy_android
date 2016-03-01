@@ -67,6 +67,9 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
     {
         queueFragment = new QueueFragment();
         queueFragment.setListener(this);
+        Bundle arguments = new Bundle();
+        arguments.putLong(QueueFragment.ARG_PLAYLIST_ID, playlistId);
+        queueFragment.setArguments(arguments);
 
         chatFragment = new ChatFragment();
 

@@ -4,6 +4,7 @@ import java.util.List;
 
 import be.kdg.teamd.beatbuddy.model.playlists.Playlist;
 import be.kdg.teamd.beatbuddy.model.playlists.SourceType;
+import be.kdg.teamd.beatbuddy.model.playlists.Track;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -16,8 +17,8 @@ public interface PlaylistRepository {
     @GET("Playlist/{id}")
     Call<Playlist> getPlaylist(@Path("id") long playlistId);
 
-    @POST("Playlist/{id}/addTrack")
-    Call<Playlist> addTrack(@Query("id") String trackId, @Query("sourceType") SourceType sourceType);
+    @POST("Playlist/{id}/addTrack/")
+    Call<Track> addTrack(@Path("id") long playlistId, @Query("trackId") String trackId);
 
     @POST("Playlist/createPlaylist")
     @FormUrlEncoded
@@ -29,4 +30,7 @@ public interface PlaylistRepository {
 
     @GET("Playlist/recommendations")
     Call<List<Playlist>> getRecommendedPlaylists(@Query("count") int count);
+
+    @GET("Playlist/searchTrack")
+    Call<List<Track>> getTracks(@Query("query") String query);
 }
