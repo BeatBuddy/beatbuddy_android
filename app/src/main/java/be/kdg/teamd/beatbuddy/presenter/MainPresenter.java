@@ -20,6 +20,14 @@ public class MainPresenter {
         this.playlistRepository = playlistRepository;
     }
 
+    public void setPlaylistRepository(PlaylistRepository playlistRepository) {
+        this.playlistRepository = playlistRepository;
+    }
+
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
     public void loadRecommendedPlaylists(int count){
         playlistRepository.getRecommendedPlaylists(count).enqueue(new Callback<List<Playlist>>() {
             @Override

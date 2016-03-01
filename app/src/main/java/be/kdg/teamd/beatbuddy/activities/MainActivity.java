@@ -13,11 +13,11 @@ import android.text.InputType;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.clans.fab.FloatingActionButton;
-import com.github.clans.fab.FloatingActionMenu;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -26,6 +26,7 @@ import java.util.List;
 import be.kdg.teamd.beatbuddy.BeatBuddyApplication;
 import be.kdg.teamd.beatbuddy.R;
 import be.kdg.teamd.beatbuddy.UserConfigurationManager;
+import be.kdg.teamd.beatbuddy.adapters.OrganisationLinearLayoutAdapter;
 import be.kdg.teamd.beatbuddy.dal.PlaylistRepository;
 import be.kdg.teamd.beatbuddy.dal.RepositoryFactory;
 import be.kdg.teamd.beatbuddy.dal.UserRepository;
@@ -38,16 +39,18 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, MainPresenter.MainPresenterListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, MainPresenter.MainPresenterListener, OrganisationLinearLayoutAdapter.OrganisationClickListener {
 
     public static final int RESULT_LOGIN = 1;
 
     @Bind(R.id.toolbar) Toolbar toolbar;
     @Bind(R.id.nav_view) NavigationView navigationView;
     @Bind(R.id.drawer_layout) DrawerLayout drawer;
-    @Bind(R.id.main_fab) FloatingActionMenu fab;
     @Bind(R.id.main_fab_create_playlist) FloatingActionButton fab_create_playlist;
     @Bind(R.id.main_fab_create_organisation) FloatingActionButton fab_create_organisation;
+    @Bind(R.id.list_main_yourorganisations) LinearLayout list_yourorganisations;
+    @Bind(R.id.text_main_notloggedin1) TextView textNotLoggedInPlaylists1;
+    @Bind(R.id.text_main_notloggedin2) TextView textNotLoggedInPlaylists2;
 
     private PlaylistRepository playlistRepository;
     private UserRepository userRepository;
@@ -57,6 +60,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private List<Playlist> userPlaylists;
     private List<Playlist> recommendedPlaylists;
     private List<Organisation> userOrganisations;
+
+    private OrganisationLinearLayoutAdapter organisationAdapter;
 
     public void setPlaylistRepository(PlaylistRepository playlistRepository) {
         this.playlistRepository = playlistRepository;
@@ -98,6 +103,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         recommendedPlaylists = new ArrayList<>();
         userOrganisations = new ArrayList<>();
 
+        organisationAdapter = new OrganisationLinearLayoutAdapter(list_yourorganisations, userOrganisations, this);
+
         navigationView.setNavigationItemSelectedListener(this);
     }
 
@@ -113,6 +120,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             navigationView.getMenu().setGroupVisible(R.id.group_logged_in, true);
             fab_create_playlist.setEnabled(true);
             fab_create_organisation.setEnabled(true);
+
+            presenter.setUserRepository(RepositoryFactory.getUserRepository());
+            presenter.setPlaylistRepository(RepositoryFactory.getPlaylistRepository());
+
+            presenter.loadUserPlaylists();
+            presenter.loadUserOrganisations();
+            presenter.loadRecommendedPlaylists(5);
+
+            textNotLoggedInPlaylists1.setVisibility(View.GONE);
+            textNotLoggedInPlaylists2.setVisibility(View.GONE);
         }
 
         super.onActivityResult(requestCode, resultCode, data);
@@ -220,10 +237,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void onUserOrganisationsLoaded(List<Organisation> organisations) {
         this.userOrganisations.clear();
         this.userOrganisations.addAll(organisations);
+        organisationAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void onException(String message) {
         Snackbar.make(drawer, message, Snackbar.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onOrganisationClicked(Organisation organisation) {
+        Snackbar.make(drawer, organisation.getName() + " clicked!" , Snackbar.LENGTH_LONG).show();
     }
 }

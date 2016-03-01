@@ -36,7 +36,9 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp"
+                android:layout_margin="12dp"
+                android:paddingStart="2dp"
+                android:paddingEnd="2dp"
                 android:orientation="vertical">
 
                 <TextView
@@ -44,43 +46,58 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="4dp"
+                    android:layout_marginStart="4dp"
                     android:text="Your playlists" />
 
                 <TextView
+                    android:id="@+id/text_main_notloggedin1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
                     android:text="You are not logged in." />
 
-                <ListView
+                <LinearLayout
                     android:id="@+id/list_main_yourplaylists"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
 
                 <TextView
                     style="?android:textAppearanceSearchResultTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="4dp"
+                    android:layout_marginStart="4dp"
                     android:layout_marginTop="16dp"
                     android:text="Your organisations" />
 
                 <TextView
+                    android:id="@+id/text_main_notloggedin2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
                     android:text="You are not logged in." />
+
+                <LinearLayout
+                    android:id="@+id/list_main_yourorganisations"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
 
                 <TextView
                     style="?android:textAppearanceSearchResultTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="4dp"
+                    android:layout_marginStart="4dp"
                     android:layout_marginTop="16dp"
                     android:text="Playlists you might enjoy" />
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:id="@+id/list_main_recommendedplaylists"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="You are not logged in." />
+                    android:orientation="vertical" />
 
             </LinearLayout>
 

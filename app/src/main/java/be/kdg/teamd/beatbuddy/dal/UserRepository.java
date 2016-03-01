@@ -29,9 +29,9 @@ public interface UserRepository {
     @POST("users/register")
     Call<User> register(@Query("firstName") String firstName, @Query("lastName") String lastName, @Query("nickname") String nickname, @Query("email") String email, @Query("password") String password);
 
-    @GET("userOrganisations")
+    @GET("users/userOrganisations")
     Call<List<Organisation>> getUserOrganisations();
 
-    @GET("userPlaylists")
+    @GET("users/userPlaylists")
     Call<List<Playlist>> getUserPlaylists();
 }
