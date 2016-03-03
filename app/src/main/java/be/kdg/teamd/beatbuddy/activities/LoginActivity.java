@@ -5,13 +5,13 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 
 import be.kdg.teamd.beatbuddy.BeatBuddyApplication;
 import be.kdg.teamd.beatbuddy.R;
-import be.kdg.teamd.beatbuddy.UserConfigurationManager;
+import be.kdg.teamd.beatbuddy.userconfiguration.UserConfigurationManager;
 import be.kdg.teamd.beatbuddy.dal.RepositoryFactory;
 import be.kdg.teamd.beatbuddy.dal.UserRepository;
 import be.kdg.teamd.beatbuddy.model.users.User;
@@ -21,11 +21,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class LoginActivity extends AppCompatActivity implements LoginPresenter.LoginPresenterListener{
-    @Bind(R.id.btn_login) Button btn_login;
-    @Bind(R.id.btn_register) Button btn_register;
     @Bind(R.id.edit_login_email) EditText login_email;
     @Bind(R.id.edit_login_password) EditText login_password;
     @Bind(R.id.ic_login_loading) ProgressBar progress_loading;
+    @Bind(R.id.login_remember) CheckBox loginRemember;
 
     private final static int REQ_REGISTER = 4;
 
@@ -43,13 +42,13 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.L
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
 
-        userConfigurationManager = (BeatBuddyApplication) getApplication();
+        userConfigurationManager = ((BeatBuddyApplication) getApplication()).getUserConfigurationManager();
         userRepository = RepositoryFactory.getUserRepository();
         presenter = new LoginPresenter(this, userRepository, userConfigurationManager);
     }
 
     @OnClick(R.id.btn_login) public void onLoginClicked(){
-        presenter.login(login_email.getText().toString(), login_password.getText().toString());
+        presenter.login(login_email.getText().toString(), login_password.getText().toString(), loginRemember.isChecked());
         progress_loading.setVisibility(View.VISIBLE);
     }
 

@@ -25,7 +25,7 @@ import java.util.List;
 
 import be.kdg.teamd.beatbuddy.BeatBuddyApplication;
 import be.kdg.teamd.beatbuddy.R;
-import be.kdg.teamd.beatbuddy.UserConfigurationManager;
+import be.kdg.teamd.beatbuddy.userconfiguration.UserConfigurationManager;
 import be.kdg.teamd.beatbuddy.adapters.OrganisationLinearLayoutAdapter;
 import be.kdg.teamd.beatbuddy.dal.PlaylistRepository;
 import be.kdg.teamd.beatbuddy.dal.RepositoryFactory;
@@ -82,7 +82,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(toolbar);
         setTitle("BeatBuddy");
 
-        userConfigurationManager = (BeatBuddyApplication) getApplication();
+        ((BeatBuddyApplication) getApplication()).initializeUserConfiguration();
+        userConfigurationManager = ((BeatBuddyApplication) getApplication()).getUserConfigurationManager();
         playlistRepository = RepositoryFactory.getPlaylistRepository();
         userRepository = RepositoryFactory.getUserRepository();
         presenter = new MainPresenter(this, userRepository, playlistRepository);
@@ -94,9 +95,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         User user = userConfigurationManager.getUser();
         if(user != null){
             bindUserToNavigationView(user);
-        } else {
-            fab_create_playlist.setEnabled(false);
-            fab_create_organisation.setEnabled(false);
+            changeVisibleStates(true);
         }
 
         userPlaylists = new ArrayList<>();
@@ -115,11 +114,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         {
             User user = userConfigurationManager.getUser();
             bindUserToNavigationView(user);
-
-            navigationView.getMenu().setGroupVisible(R.id.group_guest, false);
-            navigationView.getMenu().setGroupVisible(R.id.group_logged_in, true);
-            fab_create_playlist.setEnabled(true);
-            fab_create_organisation.setEnabled(true);
+            changeVisibleStates(true);
 
             presenter.setUserRepository(RepositoryFactory.getUserRepository());
             presenter.setPlaylistRepository(RepositoryFactory.getPlaylistRepository());
@@ -127,9 +122,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             presenter.loadUserPlaylists();
             presenter.loadUserOrganisations();
             presenter.loadRecommendedPlaylists(5);
-
-            textNotLoggedInPlaylists1.setVisibility(View.GONE);
-            textNotLoggedInPlaylists2.setVisibility(View.GONE);
         }
 
         super.onActivityResult(requestCode, resultCode, data);
@@ -157,13 +149,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             case R.id.nav_logout:
                 userConfigurationManager.logout();
+                RepositoryFactory.setAccessToken(userConfigurationManager.getAccessToken());
                 User user = userConfigurationManager.getUser();
                 bindUserToNavigationView(user);
-
-                navigationView.getMenu().setGroupVisible(R.id.group_logged_in, false);
-                navigationView.getMenu().setGroupVisible(R.id.group_guest, true);
-                fab_create_playlist.setEnabled(false);
-                fab_create_organisation.setEnabled(false);
+                changeVisibleStates(false);
                 break;
         }
 
@@ -194,6 +183,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @OnClick(R.id.main_fab_create_organisation) public void onCreateOrganisationClick(){
         startActivity(new Intent(this, CreateOrganisationActivity.class));
+    }
+
+    private void changeVisibleStates(boolean loggedIn)
+    {
+        navigationView.getMenu().setGroupVisible(R.id.group_guest, !loggedIn);
+        navigationView.getMenu().setGroupVisible(R.id.group_logged_in, loggedIn);
+        fab_create_playlist.setEnabled(loggedIn);
+        fab_create_organisation.setEnabled(loggedIn);
+
+        textNotLoggedInPlaylists1.setVisibility(loggedIn ? View.GONE : View.VISIBLE);
+        textNotLoggedInPlaylists2.setVisibility(loggedIn ? View.GONE : View.VISIBLE);
     }
 
     private void bindUserToNavigationView(User user)

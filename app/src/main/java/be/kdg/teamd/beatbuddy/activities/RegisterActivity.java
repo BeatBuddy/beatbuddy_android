@@ -19,7 +19,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class RegisterActivity extends AppCompatActivity implements RegisterPresenter.RegisterPresenterListener {
-    @Bind(R.id.btn_register) Button btn_register;
     @Bind(R.id.edit_register_email) EditText register_email;
     @Bind(R.id.edit_register_password) EditText register_password;
     @Bind(R.id.edit_register_firstname) EditText register_firstName;

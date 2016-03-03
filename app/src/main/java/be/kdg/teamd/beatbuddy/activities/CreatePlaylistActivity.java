@@ -17,8 +17,9 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import be.kdg.teamd.beatbuddy.BeatBuddyApplication;
 import be.kdg.teamd.beatbuddy.R;
-import be.kdg.teamd.beatbuddy.UserConfigurationManager;
+import be.kdg.teamd.beatbuddy.userconfiguration.UserConfigurationManager;
 import be.kdg.teamd.beatbuddy.dal.PlaylistRepository;
 import be.kdg.teamd.beatbuddy.dal.RepositoryFactory;
 import be.kdg.teamd.beatbuddy.dal.UserRepository;
@@ -74,7 +75,13 @@ public class CreatePlaylistActivity extends AppCompatActivity implements CreateP
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        userConfigurationManager = (UserConfigurationManager) getApplication();
+        userConfigurationManager = ((BeatBuddyApplication) getApplication()).getUserConfigurationManager();
+        if (userConfigurationManager == null)
+        {
+            //Kan enkel bij testen, maar onCreate komt voor andere methode dus dit is fix
+            ((BeatBuddyApplication) getApplication()).initializeUserConfiguration();
+            userConfigurationManager = ((BeatBuddyApplication) getApplication()).getUserConfigurationManager();
+        }
         playlistRepository = RepositoryFactory.getPlaylistRepository();
         userRepository = RepositoryFactory.getUserRepository();
         presenter = new CreatePlaylistPresenter(playlistRepository, userRepository, this);
@@ -86,7 +93,6 @@ public class CreatePlaylistActivity extends AppCompatActivity implements CreateP
         organisationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner_organisations.setAdapter(organisationAdapter);
 
-        User currentUser = userConfigurationManager.getUser();
         if(userConfigurationManager.isLoggedIn()){
             presenter.fetchUserOrganisations();
             loadingIndicator.setVisibility(View.VISIBLE);

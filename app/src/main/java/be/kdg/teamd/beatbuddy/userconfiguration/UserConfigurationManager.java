@@ -1,4 +1,4 @@
-package be.kdg.teamd.beatbuddy;
+package be.kdg.teamd.beatbuddy.userconfiguration;
 
 import be.kdg.teamd.beatbuddy.model.users.AccessToken;
 import be.kdg.teamd.beatbuddy.model.users.User;
@@ -10,13 +10,13 @@ public interface UserConfigurationManager
 {
     AccessToken getAccessToken();
 
-    void setAccessToken(AccessToken accessToken);
-
     User getUser();
-
-    void setUser(User user);
 
     boolean isLoggedIn();
 
     void logout();
+
+    void login(AccessToken accessToken, User user, boolean storeUser);
+
+    void restore();
 }

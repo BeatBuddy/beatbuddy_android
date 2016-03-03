@@ -15,8 +15,9 @@ import android.view.ViewGroup;
 import java.util.LinkedList;
 import java.util.List;
 
+import be.kdg.teamd.beatbuddy.BeatBuddyApplication;
 import be.kdg.teamd.beatbuddy.R;
-import be.kdg.teamd.beatbuddy.UserConfigurationManager;
+import be.kdg.teamd.beatbuddy.userconfiguration.UserConfigurationManager;
 import be.kdg.teamd.beatbuddy.activities.AddTrackActivity;
 import be.kdg.teamd.beatbuddy.adapters.PlaylistTrackAdapter;
 import be.kdg.teamd.beatbuddy.model.playlists.PlaylistTrack;
@@ -71,7 +72,7 @@ public class QueueFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         initializeRecyclerView();
         swipeRefreshLayout.setOnRefreshListener(this);
 
-        userConfigurationManager = (UserConfigurationManager) getActivity().getApplication();
+        userConfigurationManager = ((BeatBuddyApplication) getActivity().getApplication()).getUserConfigurationManager();
         addTrackFab.setVisibility(userConfigurationManager.isLoggedIn() ? View.VISIBLE : View.GONE);
 
         return view;

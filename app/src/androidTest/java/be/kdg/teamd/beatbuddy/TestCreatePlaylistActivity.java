@@ -149,6 +149,8 @@ public class TestCreatePlaylistActivity
 
     @Test
     public void testCreateEmpty() throws NoSuchFieldException, IllegalAccessException {
+        closeSoftKeyboard();
+
         onView(withId(R.id.btn_create_playlist))
             .perform(click());
 

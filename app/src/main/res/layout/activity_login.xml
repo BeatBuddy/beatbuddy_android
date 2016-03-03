@@ -50,12 +50,22 @@
         android:inputType="textPassword"
         android:textSize="14sp" />
 
+    <CheckBox
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/login_remember"
+        android:text="Remember me"
+        android:layout_below="@+id/edit_login_password"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="8dp"
+        android:checked="true"/>
+
     <LinearLayout
         android:id="@+id/login_buttons"
-        android:layout_below="@id/edit_login_password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:layout_below="@+id/login_remember"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="16dp">
 

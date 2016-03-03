@@ -17,6 +17,7 @@ import be.kdg.teamd.beatbuddy.activities.LoginActivity;
 import be.kdg.teamd.beatbuddy.activities.MainActivity;
 import be.kdg.teamd.beatbuddy.model.users.AccessToken;
 import be.kdg.teamd.beatbuddy.model.users.User;
+import be.kdg.teamd.beatbuddy.userconfiguration.UserConfigurationManager;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -60,8 +61,7 @@ public class TestMainActivity {
         user.setNickname("Mavamaarten");
 
         UserConfigurationManager userConfigurationManager = (UserConfigurationManager)mainActivityActivityTestRule.getActivity().getApplication();
-        userConfigurationManager.setUser(user);
-        userConfigurationManager.setAccessToken(new AccessToken());
+        userConfigurationManager.login(new AccessToken(), user, false);
 
         Intent resultIntent = new Intent();
         resultIntent.putExtra("user", user);

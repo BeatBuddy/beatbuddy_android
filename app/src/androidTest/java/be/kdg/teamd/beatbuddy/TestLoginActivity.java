@@ -15,6 +15,8 @@ import java.lang.reflect.Field;
 
 import be.kdg.teamd.beatbuddy.activities.LoginActivity;
 import be.kdg.teamd.beatbuddy.dal.UserRepository;
+import be.kdg.teamd.beatbuddy.userconfiguration.FakeUserConfigurationManager;
+import be.kdg.teamd.beatbuddy.userconfiguration.UserConfigurationManager;
 import okhttp3.Interceptor;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;

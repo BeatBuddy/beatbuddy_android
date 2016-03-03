@@ -1,55 +1,37 @@
 package be.kdg.teamd.beatbuddy;
 
 import android.app.Application;
+import android.content.Context;
 
 import be.kdg.teamd.beatbuddy.dal.RepositoryFactory;
 import be.kdg.teamd.beatbuddy.model.users.AccessToken;
 import be.kdg.teamd.beatbuddy.model.users.User;
+import be.kdg.teamd.beatbuddy.userconfiguration.UserConfigurationManager;
+import be.kdg.teamd.beatbuddy.userconfiguration.UserConfigurationManagerImpl;
+import be.kdg.teamd.beatbuddy.userconfiguration.UserStore;
+import be.kdg.teamd.beatbuddy.userconfiguration.UserStoreSharedPref;
 
-public class BeatBuddyApplication extends Application implements UserConfigurationManager
+public class BeatBuddyApplication extends Application
 {
-    private AccessToken accessToken;
-    private User user;
+    private UserConfigurationManager userConfigurationManager;
 
     public BeatBuddyApplication() {
         super();
         RepositoryFactory.setAPIEndpoint("https://teamd.azurewebsites.net/api/");
     }
 
-    @Override
-    public AccessToken getAccessToken()
+    public void initializeUserConfiguration()
     {
-        return accessToken;
+        UserStore userStore = new UserStoreSharedPref(this);
+        userConfigurationManager = new UserConfigurationManagerImpl(userStore);
+        userConfigurationManager.restore();
+
+        if (userConfigurationManager.isLoggedIn())
+            RepositoryFactory.setAccessToken(userConfigurationManager.getAccessToken());
     }
 
-    @Override
-    public void setAccessToken(AccessToken accessToken)
+    public UserConfigurationManager getUserConfigurationManager()
     {
-        this.accessToken = accessToken;
-    }
-
-    @Override
-    public User getUser()
-    {
-        return user;
-    }
-
-    @Override
-    public void setUser(User user)
-    {
-        this.user = user;
-    }
-
-    @Override
-    public boolean isLoggedIn()
-    {
-        return accessToken != null;
-    }
-
-    @Override
-    public void logout()
-    {
-        accessToken = null;
-        user = null;
+        return userConfigurationManager;
     }
 }

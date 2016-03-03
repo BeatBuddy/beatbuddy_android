@@ -1,6 +1,6 @@
 package be.kdg.teamd.beatbuddy.presenter;
 
-import be.kdg.teamd.beatbuddy.UserConfigurationManager;
+import be.kdg.teamd.beatbuddy.userconfiguration.UserConfigurationManager;
 import be.kdg.teamd.beatbuddy.dal.RepositoryFactory;
 import be.kdg.teamd.beatbuddy.dal.UserRepository;
 import be.kdg.teamd.beatbuddy.model.users.AccessToken;
@@ -19,15 +19,15 @@ public class LoginPresenter {
         this.userConfigurationManager = userConfigurationManager;
     }
 
-    public void login(final String email, String password){
+    public void login(final String email, String password, final boolean rememberMe) {
         userRepository.login(UserRepository.GRANT_TYPE, email, password).enqueue(new Callback<AccessToken>() {
             @Override
             public void onResponse(Response<AccessToken> response) {
                 if(response.isSuccess())
                 {
-                    RepositoryFactory.setAccessToken(response.body());
+                    final AccessToken accessToken = response.body();
+                    RepositoryFactory.setAccessToken(accessToken);
                     userRepository = RepositoryFactory.getUserRepository();
-                    userConfigurationManager.setAccessToken(response.body());
 
                     userRepository.userInfo(email).enqueue(new Callback<User>()
                     {
@@ -36,7 +36,7 @@ public class LoginPresenter {
                         {
                             if (response.isSuccess())
                             {
-                                userConfigurationManager.setUser(response.body());
+                                userConfigurationManager.login(accessToken, response.body(), rememberMe);
                                 listener.onLoggedIn(response.body());
                             }
                             else
