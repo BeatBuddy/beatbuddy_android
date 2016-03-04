@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -12,12 +12,21 @@
         android:src="@drawable/header_default"
         android:scaleType="centerCrop"/>
 
+    <VideoView
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:id="@+id/musicplayer_videoview"/>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="16dp"
-        android:layout_marginTop="4dp">
+        android:layout_marginTop="4dp"
+        android:layout_alignBottom="@+id/musicplayer_cover_art"
+        android:id="@+id/musicplayer_song_info"
+        android:layout_toStartOf="@+id/musicplayer_play_pause"
+        android:layout_toEndOf="@+id/musicplayer_cover_art">
 
         <TextView
             android:id="@+id/musicplayer_song_title"
@@ -31,12 +40,6 @@
             android:layout_height="wrap_content"
             android:text="Joey Bada$$"
             android:layout_below="@id/musicplayer_song_title"/>
-        <TextView
-            android:id="@+id/musicplayer_song_album"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="1999."
-            android:layout_below="@id/musicplayer_song_artist"/>
 
         <TextView
             android:id="@+id/musicplayer_song_timeleft"
@@ -45,6 +48,29 @@
             android:text="-1:04"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"/>
-
     </RelativeLayout>
-</LinearLayout>
+
+    <ImageView
+        android:id="@+id/musicplayer_play_pause"
+        android:layout_width="56dp"
+        android:layout_height="match_parent"
+        android:src="@drawable/ic_play_arrow_24dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignBottom="@+id/musicplayer_song_info"
+        android:scaleType="centerCrop"
+        android:padding="16dp"
+        android:layout_marginRight="16dp"/>
+
+    <ProgressBar
+        android:id="@+id/musicplayer_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="9dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="-4dp"
+        android:layout_toEndOf="@+id/musicplayer_cover_art"
+        android:max="100"
+        android:progress="50"
+        style="?android:progressBarStyleHorizontal"/>
+</RelativeLayout>

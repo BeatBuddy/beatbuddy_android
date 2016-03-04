@@ -33,4 +33,7 @@ public interface PlaylistRepository {
 
     @GET("Playlist/searchTrack")
     Call<List<Track>> getTracks(@Query("query") String query);
+
+    @GET("Playlist/{id}/nextTrack")
+    Call<Track> getNextTrack(@Path("id") long playlistId);
 }

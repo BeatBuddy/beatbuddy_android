@@ -2,6 +2,8 @@ package be.kdg.teamd.beatbuddy.presenter;
 
 import be.kdg.teamd.beatbuddy.dal.PlaylistRepository;
 import be.kdg.teamd.beatbuddy.model.playlists.Playlist;
+import be.kdg.teamd.beatbuddy.model.playlists.Track;
+import be.kdg.teamd.beatbuddy.model.playlists.TrackSource;
 import retrofit2.Callback;
 import retrofit2.Response;
 
@@ -33,9 +35,34 @@ public class PlaylistPresenter {
         });
     }
 
-    public interface PlaylistPresenterListener{
-        void onPlaylistLoaded(Playlist playlist);
-        void onException(String message);
+    public void playNextSong(long playlistId)
+    {
+        playlistRepository.getNextTrack(playlistId).enqueue(new Callback<Track>()
+        {
+            @Override
+            public void onResponse(Response<Track> response)
+            {
+                if (response.isSuccess())
+                {
+                    listener.onPlaySong(response.body());
+                }
+                else
+                {
+                    listener.onException("Error retrieving next song");
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t)
+            {
+                listener.onException("Error: " + t.getMessage());
+            }
+        });
     }
 
+    public interface PlaylistPresenterListener{
+        void onPlaylistLoaded(Playlist playlist);
+        void onPlaySong(Track track);
+        void onException(String message);
+    }
 }
