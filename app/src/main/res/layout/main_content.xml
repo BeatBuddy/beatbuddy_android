@@ -37,9 +37,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="12dp"
-                android:paddingStart="2dp"
+                android:orientation="vertical"
                 android:paddingEnd="2dp"
-                android:orientation="vertical">
+                android:paddingStart="2dp"
+                android:paddingTop="6dp">
 
                 <TextView
                     style="?android:textAppearanceSearchResultTitle"
@@ -49,18 +50,24 @@
                     android:layout_marginStart="4dp"
                     android:text="Your playlists" />
 
+                <ProgressBar
+                    android:id="@+id/loading_yourplaylists"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:indeterminate="true"
+                    android:visibility="gone" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/list_main_yourplaylists"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
                 <TextView
                     android:id="@+id/text_main_notloggedin1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
                     android:text="You are not logged in." />
-
-                <LinearLayout
-                    android:id="@+id/list_main_yourplaylists"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical" />
 
                 <TextView
                     style="?android:textAppearanceSearchResultTitle"
@@ -70,6 +77,13 @@
                     android:layout_marginStart="4dp"
                     android:layout_marginTop="16dp"
                     android:text="Your organisations" />
+
+                <ProgressBar
+                    android:id="@+id/loading_yourorganisations"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:indeterminate="true"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/text_main_notloggedin2"
@@ -93,14 +107,19 @@
                     android:layout_marginTop="16dp"
                     android:text="Playlists you might enjoy" />
 
-                <LinearLayout
+                <ProgressBar
+                    android:id="@+id/loading_recommendations"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:indeterminate="true"
+                    android:visibility="gone" />
+
+                <android.support.v7.widget.RecyclerView
                     android:id="@+id/list_main_recommendedplaylists"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical" />
-
+                    android:layout_marginBottom="24dp" />
             </LinearLayout>
-
         </ScrollView>
 
         <com.github.clans.fab.FloatingActionMenu
