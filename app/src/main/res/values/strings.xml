@@ -36,4 +36,6 @@
     <string name="not_logged_in">Not logged in</string>
     <string name="title_activity_add_track">Search for a track</string>
     <string name="user_no_organisations">You are not a member of any organisation</string>
+    <string name="playlistImageLocation">https://teamd.azurewebsites.net/Content/img/Playlists/</string>
+    <string name="organisationImageLocation">https://teamd.azurewebsites.net/Content/img/Organisations/</string>
 </resources>

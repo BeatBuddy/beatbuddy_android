@@ -8,12 +8,15 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -25,8 +28,8 @@ import java.util.List;
 
 import be.kdg.teamd.beatbuddy.BeatBuddyApplication;
 import be.kdg.teamd.beatbuddy.R;
-import be.kdg.teamd.beatbuddy.userconfiguration.UserConfigurationManager;
 import be.kdg.teamd.beatbuddy.adapters.OrganisationLinearLayoutAdapter;
+import be.kdg.teamd.beatbuddy.adapters.PlaylistAdapter;
 import be.kdg.teamd.beatbuddy.dal.PlaylistRepository;
 import be.kdg.teamd.beatbuddy.dal.RepositoryFactory;
 import be.kdg.teamd.beatbuddy.dal.UserRepository;
@@ -34,12 +37,14 @@ import be.kdg.teamd.beatbuddy.model.organisations.Organisation;
 import be.kdg.teamd.beatbuddy.model.playlists.Playlist;
 import be.kdg.teamd.beatbuddy.model.users.User;
 import be.kdg.teamd.beatbuddy.presenter.MainPresenter;
+import be.kdg.teamd.beatbuddy.userconfiguration.UserConfigurationManager;
+import be.kdg.teamd.beatbuddy.util.SizeUtil;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, MainPresenter.MainPresenterListener, OrganisationLinearLayoutAdapter.OrganisationClickListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, MainPresenter.MainPresenterListener, OrganisationLinearLayoutAdapter.OrganisationClickListener, PlaylistAdapter.PlaylistClickedListener {
 
     public static final int RESULT_LOGIN = 1;
 
@@ -49,8 +54,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Bind(R.id.main_fab_create_playlist) FloatingActionButton fab_create_playlist;
     @Bind(R.id.main_fab_create_organisation) FloatingActionButton fab_create_organisation;
     @Bind(R.id.list_main_yourorganisations) LinearLayout list_yourorganisations;
+    @Bind(R.id.list_main_yourplaylists) RecyclerView list_yourplaylists;
+    @Bind(R.id.list_main_recommendedplaylists) RecyclerView list_recommendedplaylists;
     @Bind(R.id.text_main_notloggedin1) TextView textNotLoggedInPlaylists1;
     @Bind(R.id.text_main_notloggedin2) TextView textNotLoggedInPlaylists2;
+    @Bind(R.id.loading_yourplaylists) ProgressBar loadingYourPlaylists;
+    @Bind(R.id.loading_yourorganisations) ProgressBar loadingYourOrganisations;
+    @Bind(R.id.loading_recommendations) ProgressBar loadingRecommendations;
 
     private PlaylistRepository playlistRepository;
     private UserRepository userRepository;
@@ -62,6 +72,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private List<Organisation> userOrganisations;
 
     private OrganisationLinearLayoutAdapter organisationAdapter;
+    private PlaylistAdapter yourPlaylistAdapter;
+    private PlaylistAdapter recommendedPlaylistAdapter;
 
     public void setPlaylistRepository(PlaylistRepository playlistRepository) {
         this.playlistRepository = playlistRepository;
@@ -96,13 +108,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if(user != null){
             bindUserToNavigationView(user);
             changeVisibleStates(true);
+            loadUserPlaylistsAndOrganisations();
+        } else {
+            presenter.loadRecommendedPlaylists(6);
+            loadingRecommendations.setVisibility(View.VISIBLE);
         }
 
         userPlaylists = new ArrayList<>();
         recommendedPlaylists = new ArrayList<>();
         userOrganisations = new ArrayList<>();
 
-        organisationAdapter = new OrganisationLinearLayoutAdapter(list_yourorganisations, userOrganisations, this);
+        organisationAdapter = new OrganisationLinearLayoutAdapter(list_yourorganisations, userOrganisations, this, this);
+
+        yourPlaylistAdapter = new PlaylistAdapter(this, userPlaylists, this);
+        list_yourplaylists.setHasFixedSize(true);
+        list_yourplaylists.setLayoutManager(new GridLayoutManager(this, 2));
+        list_yourplaylists.setAdapter(yourPlaylistAdapter);
+        list_yourplaylists.setNestedScrollingEnabled(false);
+
+        recommendedPlaylistAdapter = new PlaylistAdapter(this, recommendedPlaylists, this);
+        list_recommendedplaylists.setHasFixedSize(true);
+        list_recommendedplaylists.setLayoutManager(new GridLayoutManager(this, 2));
+        list_recommendedplaylists.setAdapter(recommendedPlaylistAdapter);
+        list_recommendedplaylists.setNestedScrollingEnabled(false);
 
         navigationView.setNavigationItemSelectedListener(this);
     }
@@ -119,12 +147,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             presenter.setUserRepository(RepositoryFactory.getUserRepository());
             presenter.setPlaylistRepository(RepositoryFactory.getPlaylistRepository());
 
-            presenter.loadUserPlaylists();
-            presenter.loadUserOrganisations();
-            presenter.loadRecommendedPlaylists(5);
+            loadUserPlaylistsAndOrganisations();
         }
 
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void loadUserPlaylistsAndOrganisations(){
+        presenter.loadUserPlaylists();
+        presenter.loadUserOrganisations();
+        presenter.loadRecommendedPlaylists(6);
+
+        loadingYourPlaylists.setVisibility(View.VISIBLE);
+        loadingYourOrganisations.setVisibility(View.VISIBLE);
+        loadingRecommendations.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -153,11 +189,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 User user = userConfigurationManager.getUser();
                 bindUserToNavigationView(user);
                 changeVisibleStates(false);
+                clearUserPlaylistsAndOrganisations();
                 break;
         }
 
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void clearUserPlaylistsAndOrganisations() {
+        userOrganisations.clear();
+        userPlaylists.clear();
+
+        yourPlaylistAdapter.notifyDataSetChanged();
+        organisationAdapter.notifyDataSetChanged();
+
+        list_yourplaylists.getLayoutParams().height = 0;
+        list_yourorganisations.getLayoutParams().height = 0;
     }
 
     @OnClick(R.id.main_fab_create_playlist) void onClickCreatePlaylist()
@@ -178,7 +226,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     startActivity(intent);
                 }
             }).show();
-
     }
 
     @OnClick(R.id.main_fab_create_organisation) public void onCreateOrganisationClick(){
@@ -225,12 +272,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void onRecommendedPlaylistsLoaded(List<Playlist> playlists) {
         this.recommendedPlaylists.clear();
         this.recommendedPlaylists.addAll(playlists);
+        recommendedPlaylistAdapter.notifyDataSetChanged();
+
+        int viewHeight = (int) (SizeUtil.convertDpToPixel(172, this));
+        viewHeight = viewHeight * (((recommendedPlaylists.size() - (recommendedPlaylists.size() % 2)) / 2) + 1);
+        list_recommendedplaylists.getLayoutParams().height = viewHeight;
+        loadingRecommendations.setVisibility(View.GONE);
     }
 
     @Override
     public void onUserPlaylistsLoaded(List<Playlist> playlists) {
         this.userPlaylists.clear();
         this.userPlaylists.addAll(playlists);
+        yourPlaylistAdapter.notifyDataSetChanged();
+
+        int viewHeight = (int) (SizeUtil.convertDpToPixel(172, this));
+        viewHeight = viewHeight * (((userPlaylists.size() - (userPlaylists.size() % 2)) / 2) + 1);
+        list_yourplaylists.getLayoutParams().height = viewHeight;
+        loadingYourPlaylists.setVisibility(View.GONE);
     }
 
     @Override
@@ -238,6 +297,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.userOrganisations.clear();
         this.userOrganisations.addAll(organisations);
         organisationAdapter.notifyDataSetChanged();
+        loadingYourOrganisations.setVisibility(View.GONE);
     }
 
     @Override
@@ -248,5 +308,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onOrganisationClicked(Organisation organisation) {
         Snackbar.make(drawer, organisation.getName() + " clicked!" , Snackbar.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onPlaylistClicked(Playlist playlist) {
+        Snackbar.make(drawer, playlist.getName() + " clicked!" , Snackbar.LENGTH_LONG).show();
     }
 }

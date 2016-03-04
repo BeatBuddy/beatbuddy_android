@@ -1,5 +1,6 @@
 package be.kdg.teamd.beatbuddy.adapters;
 
+import android.content.Context;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,10 +20,12 @@ import butterknife.ButterKnife;
 public class OrganisationLinearLayoutAdapter {
     private LinearLayout linearLayout;
     private List<Organisation> organisations;
+    private Context context;
     private OrganisationClickListener clickListener;
 
-    public OrganisationLinearLayoutAdapter(LinearLayout linearLayout, List<Organisation> organisations, OrganisationClickListener clickListener) {
+    public OrganisationLinearLayoutAdapter(LinearLayout linearLayout, List<Organisation> organisations, Context context, OrganisationClickListener clickListener) {
         this.linearLayout = linearLayout;
+        this.context = context;
         this.clickListener = clickListener;
         this.organisations = organisations;
     }
@@ -47,7 +50,7 @@ public class OrganisationLinearLayoutAdapter {
 
             if (!TextUtils.isEmpty(organisation.getBannerUrl()))
                 Picasso.with(linearLayout.getContext())
-                        .load(organisation.getBannerUrl())
+                        .load(context.getString(R.string.organisationImageLocation) + organisation.getBannerUrl())
                         .into(viewHolder.organisationBanner);
         }
 
