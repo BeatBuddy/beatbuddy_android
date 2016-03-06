@@ -5,7 +5,8 @@
                 android:paddingTop="16dp"
                 android:paddingBottom="16dp"
                 android:paddingLeft="16dp"
-                android:paddingRight="16dp">
+                android:paddingRight="16dp"
+                android:clickable="true">
 
     <ImageView
         android:id="@+id/track_coverart"
@@ -29,13 +30,13 @@
             android:id="@+id/track_song_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Waves"
+            android:text="Title"
             android:textColor="@color/colorTextPrimary"/>
         <TextView
             android:id="@+id/track_song_artist"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Joey Bada$$"
+            android:text="Artist"
             android:layout_below="@id/track_song_title"/>
     </RelativeLayout>
 

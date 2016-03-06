@@ -28,7 +28,9 @@ import be.kdg.teamd.beatbuddy.fragments.ChatFragment;
 import be.kdg.teamd.beatbuddy.fragments.QueueFragment;
 import be.kdg.teamd.beatbuddy.model.playlists.Playlist;
 import be.kdg.teamd.beatbuddy.model.playlists.Track;
+import be.kdg.teamd.beatbuddy.model.users.User;
 import be.kdg.teamd.beatbuddy.presenter.PlaylistPresenter;
+import be.kdg.teamd.beatbuddy.util.DateUtil;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -143,7 +145,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
                 );
         songTitle.setText(track.getTitle());
         songArtist.setText(track.getArtist());
-        songTimeLeft.setText(track.getDuration() + "");
+        songTimeLeft.setText("-" + track.getDuration());
         songProgress.setMax(track.getDuration());
     }
 
@@ -157,7 +159,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
         presenter.loadPlaylist(playlistId);
     }
 
-    @OnClick(R.id.playlist_playing_control) void onClickPlayPause()
+    @OnClick(R.id.musicplayer_play_pause) void onClickPlayPause()
     {
         if (videoView.isPlaying())
         {
@@ -177,7 +179,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
         try {
             MediaController mediaController = new MediaController(this);
             mediaController.setAnchorView(videoView);
-            Uri video = Uri.parse(url);
+            final Uri video = Uri.parse(url);
             videoView.setMediaController(mediaController);
             videoView.setVideoURI(video);
             videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener()
@@ -194,6 +196,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
                             {
                                 int progress = videoView.getCurrentPosition() / 1000;
                                 songProgress.setProgress(progress);
+                                songTimeLeft.setText("-" + DateUtil.secondsToFormattedString((videoView.getDuration() - videoView.getCurrentPosition()) / 1000));
                             }
                             if (videoView.isPlaying())
                             {
