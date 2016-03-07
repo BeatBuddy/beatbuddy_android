@@ -333,7 +333,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onPlaylistClicked(Playlist playlist) {
-        Snackbar.make(drawer, playlist.getName() + " clicked!" , Snackbar.LENGTH_LONG).show();
+        Intent intent = new Intent(MainActivity.this, PlaylistActivity.class);
+        intent.putExtra(PlaylistActivity.EXTRA_PLAYLIST_KEY, playlist.getId() + "");
+        startActivity(intent);
     }
 
     @Override

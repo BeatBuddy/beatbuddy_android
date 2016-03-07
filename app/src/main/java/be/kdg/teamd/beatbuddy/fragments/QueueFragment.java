@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,6 +18,9 @@ import java.util.List;
 
 import be.kdg.teamd.beatbuddy.BeatBuddyApplication;
 import be.kdg.teamd.beatbuddy.R;
+import be.kdg.teamd.beatbuddy.dal.RepositoryFactory;
+import be.kdg.teamd.beatbuddy.model.playlists.Vote;
+import be.kdg.teamd.beatbuddy.presenter.QueuePresenter;
 import be.kdg.teamd.beatbuddy.userconfiguration.UserConfigurationManager;
 import be.kdg.teamd.beatbuddy.activities.AddTrackActivity;
 import be.kdg.teamd.beatbuddy.adapters.PlaylistTrackAdapter;
@@ -25,7 +29,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class QueueFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class QueueFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, PlaylistTrackAdapter.TrackInteractionListener, QueuePresenter.QueuePresenterListener
+{
     public static final int RESULT_ADD_TRACK = 1;
     public static final String ARG_PLAYLIST_ID = "playlistid";
 
@@ -38,6 +43,7 @@ public class QueueFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private PlaylistTrackAdapter trackAdapter;
     private QueueFragmentListener listener;
     private UserConfigurationManager userConfigurationManager;
+    private QueuePresenter presenter;
 
     @Override
     public void setArguments(Bundle args)
@@ -67,6 +73,8 @@ public class QueueFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         View view = inflater.inflate(R.layout.fragment_queue, container, false);
         ButterKnife.bind(this, view);
 
+        presenter = new QueuePresenter(this, RepositoryFactory.getPlaylistRepository());
+
         playlistId = getArguments().getLong(ARG_PLAYLIST_ID);
 
         initializeRecyclerView();
@@ -84,7 +92,7 @@ public class QueueFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         recyclerView.setLayoutManager(manager);
 
         tracks = new LinkedList<>();
-        trackAdapter = new PlaylistTrackAdapter(tracks);
+        trackAdapter = new PlaylistTrackAdapter(tracks, this);
         recyclerView.setAdapter(trackAdapter);
 
         swipeRefreshLayout.setRefreshing(true);
@@ -110,6 +118,36 @@ public class QueueFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     @Override
     public void onRefresh() {
         listener.onQueueRefreshRequested();
+    }
+
+    @Override
+    public void onUpvoteTrackClicked(long trackId)
+    {
+        presenter.upvoteTrack(playlistId, trackId);
+    }
+
+    @Override
+    public void onDownvoteTrackClicked(long trackId)
+    {
+        presenter.downvoteTrack(playlistId, trackId);
+    }
+
+    @Override
+    public void onTrackUpvoted(Vote vote)
+    {
+        Snackbar.make(recyclerView, "Upvoted: " + vote.getId(), Snackbar.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onTrackDownvoted(Vote vote)
+    {
+        Snackbar.make(recyclerView, "Downvoted: " + vote.getId(), Snackbar.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onException(String message)
+    {
+        Snackbar.make(recyclerView, message, Snackbar.LENGTH_LONG).show();
     }
 
     public interface QueueFragmentListener{

@@ -20,6 +20,7 @@ import android.widget.VideoView;
 import com.github.florent37.picassopalette.PicassoPalette;
 import com.squareup.picasso.Picasso;
 
+import be.kdg.teamd.beatbuddy.BeatBuddyApplication;
 import be.kdg.teamd.beatbuddy.R;
 import be.kdg.teamd.beatbuddy.adapters.PlaylistTabAdapter;
 import be.kdg.teamd.beatbuddy.dal.PlaylistRepository;
@@ -30,6 +31,7 @@ import be.kdg.teamd.beatbuddy.model.playlists.Playlist;
 import be.kdg.teamd.beatbuddy.model.playlists.Track;
 import be.kdg.teamd.beatbuddy.model.users.User;
 import be.kdg.teamd.beatbuddy.presenter.PlaylistPresenter;
+import be.kdg.teamd.beatbuddy.userconfiguration.UserConfigurationManager;
 import be.kdg.teamd.beatbuddy.util.DateUtil;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -50,6 +52,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
     @Bind(R.id.musicplayer_song_timeleft) TextView songTimeLeft;
     @Bind(R.id.musicplayer_progress) ProgressBar songProgress;
 
+    private UserConfigurationManager userConfigurationManager;
     private PlaylistRepository playlistRepository;
     private PlaylistPresenter presenter;
 
@@ -59,9 +62,10 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
     private long playlistId;
     private Playlist playlist;
 
-    public void setPlaylistRepository(PlaylistRepository playlistRepository) {
+    public void setPlaylistRepository(PlaylistRepository playlistRepository, UserConfigurationManager userConfigurationManager) {
         this.playlistRepository = playlistRepository;
-        this.presenter = new PlaylistPresenter(this, playlistRepository);
+        this.userConfigurationManager = userConfigurationManager;
+        this.presenter = new PlaylistPresenter(this, playlistRepository, userConfigurationManager);
     }
 
     @Override
@@ -72,7 +76,8 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
         ButterKnife.bind(this);
 
         playlistRepository = RepositoryFactory.getPlaylistRepository();
-        presenter = new PlaylistPresenter(this, playlistRepository);
+        userConfigurationManager = ((BeatBuddyApplication) getApplication()).getUserConfigurationManager();
+        presenter = new PlaylistPresenter(this, playlistRepository, userConfigurationManager);
 
         String playlistKey = getIntent().getStringExtra(EXTRA_PLAYLIST_KEY);
         boolean isTesting = getIntent().getBooleanExtra(EXTRA_PLAYLIST_TEST, false);
@@ -145,8 +150,11 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
                 );
         songTitle.setText(track.getTitle());
         songArtist.setText(track.getArtist());
-        songTimeLeft.setText("-" + track.getDuration());
+        songTimeLeft.setText("-" + DateUtil.secondsToFormattedString((videoView.getDuration() - videoView.getCurrentPosition()) / 1000));
         songProgress.setMax(track.getDuration());
+
+        //Temp fix: should get pushed by SinglR
+        onQueueRefreshRequested();
     }
 
     @Override

@@ -17,6 +17,7 @@ import java.io.IOException;
 
 import be.kdg.teamd.beatbuddy.activities.PlaylistActivity;
 import be.kdg.teamd.beatbuddy.dal.PlaylistRepository;
+import be.kdg.teamd.beatbuddy.userconfiguration.FakeUserConfigurationManager;
 import okhttp3.Interceptor;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -64,7 +65,7 @@ public class TestPlaylistActivity {
         intent.putExtra(PlaylistActivity.EXTRA_PLAYLIST_TEST, true);
 
         playlistActivityTestRule.launchActivity(intent);
-        playlistActivityTestRule.getActivity().setPlaylistRepository(playlistRepository);
+        playlistActivityTestRule.getActivity().setPlaylistRepository(playlistRepository, new FakeUserConfigurationManager());
 
         wait(500);
 

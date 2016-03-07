@@ -23,10 +23,12 @@ import butterknife.ButterKnife;
 public class PlaylistTrackAdapter extends RecyclerView.Adapter<PlaylistTrackAdapter.TrackHolder>
 {
     private List<PlaylistTrack> tracks;
+    private TrackInteractionListener listener;
 
-    public PlaylistTrackAdapter(List<PlaylistTrack> tracks)
+    public PlaylistTrackAdapter(List<PlaylistTrack> tracks, TrackInteractionListener listener)
     {
         this.tracks = tracks;
+        this.listener = listener;
     }
 
     @Override
@@ -39,7 +41,8 @@ public class PlaylistTrackAdapter extends RecyclerView.Adapter<PlaylistTrackAdap
     @Override
     public void onBindViewHolder(TrackHolder holder, int position)
     {
-        Track track = tracks.get(position).getTrack();
+        final PlaylistTrack playlistTrack = tracks.get(position);
+        final Track track = playlistTrack.getTrack();
         Context context = holder.itemView.getContext();
 
         Picasso.with(context)
@@ -49,6 +52,28 @@ public class PlaylistTrackAdapter extends RecyclerView.Adapter<PlaylistTrackAdap
         holder.songTitle.setText(track.getTitle());
         holder.songArtist.setText(track.getArtist());
         holder.songDuration.setText(DateUtil.secondsToFormattedString(track.getDuration()));
+
+        holder.score.setText(playlistTrack.getScore() + " points");
+        holder.upvote.setImageResource(playlistTrack.getPersonalScore() > 0 ? R.drawable.ic_thumb_up_24dp : R.drawable.ic_thumb_up_outline_grey600_24dp);
+        holder.upvote.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                listener.onUpvoteTrackClicked(track.getId());
+                ((ImageView) v).setImageResource(playlistTrack.getPersonalScore() > 0 ? R.drawable.ic_thumb_up_24dp : R.drawable.ic_thumb_up_outline_grey600_24dp);
+            }
+        });
+        holder.downvote.setImageResource(playlistTrack.getPersonalScore() < 0 ? R.drawable.ic_thumb_down_24dp : R.drawable.ic_thumb_down_outline_grey600_24dp);
+        holder.downvote.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                listener.onDownvoteTrackClicked(track.getId());
+                ((ImageView) v).setImageResource(playlistTrack.getPersonalScore() < 0 ? R.drawable.ic_thumb_down_24dp : R.drawable.ic_thumb_down_outline_grey600_24dp);
+            }
+        });
 
         holder.itemView.setBackgroundColor(position % 2 == 0 ? Color.rgb(250, 250, 250) : Color.rgb(245, 245, 245));
     }
@@ -76,5 +101,11 @@ public class PlaylistTrackAdapter extends RecyclerView.Adapter<PlaylistTrackAdap
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
+    }
+
+    public interface TrackInteractionListener
+    {
+        void onUpvoteTrackClicked(long trackId);
+        void onDownvoteTrackClicked(long trackId);
     }
 }
