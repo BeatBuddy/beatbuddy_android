@@ -6,6 +6,7 @@ import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -44,7 +45,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, MainPresenter.MainPresenterListener, OrganisationLinearLayoutAdapter.OrganisationClickListener, PlaylistAdapter.PlaylistClickedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, MainPresenter.MainPresenterListener, OrganisationLinearLayoutAdapter.OrganisationClickListener, PlaylistAdapter.PlaylistClickedListener, SwipeRefreshLayout.OnRefreshListener {
 
     public static final int RESULT_LOGIN = 1;
 
@@ -61,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Bind(R.id.loading_yourplaylists) ProgressBar loadingYourPlaylists;
     @Bind(R.id.loading_yourorganisations) ProgressBar loadingYourOrganisations;
     @Bind(R.id.loading_recommendations) ProgressBar loadingRecommendations;
+    @Bind(R.id.swiperefresh_main) SwipeRefreshLayout swipeRefreshLayout;
 
     private PlaylistRepository playlistRepository;
     private UserRepository userRepository;
@@ -133,6 +135,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         list_recommendedplaylists.setNestedScrollingEnabled(false);
 
         navigationView.setNavigationItemSelectedListener(this);
+        swipeRefreshLayout.setOnRefreshListener(this);
     }
 
     @Override
@@ -206,6 +209,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         list_yourplaylists.getLayoutParams().height = 0;
         list_yourorganisations.getLayoutParams().height = 0;
+
+        loadingRecommendations.setVisibility(View.GONE);
+        loadingYourPlaylists.setVisibility(View.GONE);
+        loadingYourOrganisations.setVisibility(View.GONE);
     }
 
     @OnClick(R.id.main_fab_create_playlist) void onClickCreatePlaylist()
@@ -301,9 +308,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public void onException(String message) {
+    public void onRecommendedPlaylistsException(String message) {
         Snackbar.make(drawer, message, Snackbar.LENGTH_LONG).show();
+        loadingYourPlaylists.setVisibility(View.GONE);
     }
+
+    @Override
+    public void onUserPlaylistsException(String message) {
+        Snackbar.make(drawer, message, Snackbar.LENGTH_LONG).show();
+        loadingYourPlaylists.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onUserOrganisationsException(String message) {
+        Snackbar.make(drawer, message, Snackbar.LENGTH_LONG).show();
+        loadingYourOrganisations.setVisibility(View.GONE);
+    }
+
 
     @Override
     public void onOrganisationClicked(Organisation organisation) {
@@ -313,5 +334,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onPlaylistClicked(Playlist playlist) {
         Snackbar.make(drawer, playlist.getName() + " clicked!" , Snackbar.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onRefresh() {
+        swipeRefreshLayout.setRefreshing(false);
+        if(userConfigurationManager.isLoggedIn()) loadUserPlaylistsAndOrganisations();
     }
 }

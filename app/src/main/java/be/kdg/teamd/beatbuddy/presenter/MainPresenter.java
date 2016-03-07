@@ -33,7 +33,7 @@ public class MainPresenter {
             @Override
             public void onResponse(Response<List<Playlist>> response) {
                 if(!response.isSuccess()){
-                    listener.onException("Error fetching recommended playlists");
+                    listener.onRecommendedPlaylistsException("Error fetching recommended playlists");
                     return;
                 }
 
@@ -42,7 +42,7 @@ public class MainPresenter {
 
             @Override
             public void onFailure(Throwable t) {
-                listener.onException(t.getMessage());
+                listener.onRecommendedPlaylistsException(t.getMessage());
             }
         });
     }
@@ -52,7 +52,7 @@ public class MainPresenter {
             @Override
             public void onResponse(Response<List<Playlist>> response) {
                 if(!response.isSuccess()){
-                    listener.onException("Error fetching user playlists");
+                    listener.onUserPlaylistsException("Error fetching user playlists");
                     return;
                 }
                 listener.onUserPlaylistsLoaded(response.body());
@@ -60,7 +60,7 @@ public class MainPresenter {
 
             @Override
             public void onFailure(Throwable t) {
-                listener.onException(t.getMessage());
+                listener.onUserPlaylistsException(t.getMessage());
             }
         });
     }
@@ -70,7 +70,7 @@ public class MainPresenter {
             @Override
             public void onResponse(Response<List<Organisation>> response) {
                 if(!response.isSuccess()){
-                    listener.onException("Error fetching user organisations");
+                    listener.onUserOrganisationsException("Error fetching user organisations");
                     return;
                 }
 
@@ -79,7 +79,7 @@ public class MainPresenter {
 
             @Override
             public void onFailure(Throwable t) {
-                listener.onException(t.getMessage());
+                listener.onUserOrganisationsException(t.getMessage());
             }
         });
     }
@@ -88,6 +88,8 @@ public class MainPresenter {
         void onRecommendedPlaylistsLoaded(List<Playlist> playlists);
         void onUserPlaylistsLoaded(List<Playlist> playlists);
         void onUserOrganisationsLoaded(List<Organisation> organisations);
-        void onException(String message);
+        void onRecommendedPlaylistsException(String message);
+        void onUserPlaylistsException(String message);
+        void onUserOrganisationsException(String message);
     }
 }
