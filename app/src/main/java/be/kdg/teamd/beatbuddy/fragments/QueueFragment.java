@@ -53,6 +53,8 @@ public class QueueFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     }
 
     public void setTracks(List<PlaylistTrack> tracks) {
+        if (tracks == null) return;
+
         this.tracks.clear();
         this.tracks.addAll(tracks);
         trackAdapter.notifyDataSetChanged();
@@ -133,14 +135,16 @@ public class QueueFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     }
 
     @Override
-    public void onTrackUpvoted(Vote vote)
+    public void onTrackUpvoted(Vote vote, long trackId)
     {
+        updateTrackScoreLocal(vote, trackId);
         Snackbar.make(recyclerView, "Upvoted: " + vote.getId(), Snackbar.LENGTH_LONG).show();
     }
 
     @Override
-    public void onTrackDownvoted(Vote vote)
+    public void onTrackDownvoted(Vote vote, long trackId)
     {
+        updateTrackScoreLocal(vote, trackId);
         Snackbar.make(recyclerView, "Downvoted: " + vote.getId(), Snackbar.LENGTH_LONG).show();
     }
 
@@ -148,6 +152,20 @@ public class QueueFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     public void onException(String message)
     {
         Snackbar.make(recyclerView, message, Snackbar.LENGTH_LONG).show();
+    }
+
+    private void updateTrackScoreLocal(Vote vote, long trackId)
+    {
+        for (PlaylistTrack track : tracks)
+        {
+            if (track.getTrack().getId() == trackId)
+            {
+                track.setPersonalScore(vote.getScore());
+                track.setScore(track.getScore() + vote.getScore());
+                trackAdapter.notifyDataSetChanged();
+                break;
+            }
+        }
     }
 
     public interface QueueFragmentListener{

@@ -4,6 +4,7 @@ import be.kdg.teamd.beatbuddy.dal.PlaylistRepository;
 import be.kdg.teamd.beatbuddy.model.playlists.Playlist;
 import be.kdg.teamd.beatbuddy.model.playlists.Track;
 import be.kdg.teamd.beatbuddy.model.playlists.TrackSource;
+import be.kdg.teamd.beatbuddy.signalr.PlaylistSignalr;
 import be.kdg.teamd.beatbuddy.userconfiguration.UserConfigurationManager;
 import retrofit2.Callback;
 import retrofit2.Response;

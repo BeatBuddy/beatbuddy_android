@@ -52,4 +52,6 @@ dependencies {
     compile 'com.android.support:cardview-v7:23.1.1'
     compile 'com.github.florent37:picassopalette:1.0.2@aar'
     compile 'com.android.support:palette-v7:23.1.1'
+    compile project (path: ':signalr-client-sdk')
+    compile project (path: ':signalr-client-sdk-android')
 }

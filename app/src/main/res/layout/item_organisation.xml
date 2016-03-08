@@ -20,7 +20,8 @@
                 android:id="@+id/item_organisation_banner"
                 android:layout_width="match_parent"
                 android:layout_height="108dp"
-                android:background="#666" />
+                android:background="#666"
+                android:scaleType="centerCrop"/>
 
             <TextView
                 android:id="@+id/item_organisation_name"

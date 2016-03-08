@@ -20,7 +20,7 @@ public class QueuePresenter
         this.playlistRepository = playlistRepository;
     }
 
-    public void upvoteTrack(long playlistId, long trackId)
+    public void upvoteTrack(long playlistId, final long trackId)
     {
         playlistRepository.upvoteTrack(playlistId, trackId).enqueue(new Callback<Vote>()
         {
@@ -29,7 +29,7 @@ public class QueuePresenter
             {
                 if (response.isSuccess())
                 {
-                    listener.onTrackUpvoted(response.body());
+                    listener.onTrackUpvoted(response.body(), trackId);
                 }
                 else
                 {
@@ -44,7 +44,7 @@ public class QueuePresenter
         });
     }
 
-    public void downvoteTrack(long playlistId, long trackId)
+    public void downvoteTrack(long playlistId, final long trackId)
     {
         playlistRepository.downvoteTrack(playlistId, trackId).enqueue(new Callback<Vote>()
         {
@@ -53,7 +53,7 @@ public class QueuePresenter
             {
                 if (response.isSuccess())
                 {
-                    listener.onTrackDownvoted(response.body());
+                    listener.onTrackDownvoted(response.body(), trackId);
                 }
                 else
                 {
@@ -70,8 +70,8 @@ public class QueuePresenter
 
     public interface QueuePresenterListener
     {
-        void onTrackUpvoted(Vote vote);
-        void onTrackDownvoted(Vote vote);
+        void onTrackUpvoted(Vote vote, long trackId);
+        void onTrackDownvoted(Vote vote, long trackId);
         void onException(String message);
     }
 }

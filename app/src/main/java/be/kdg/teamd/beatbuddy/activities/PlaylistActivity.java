@@ -29,15 +29,16 @@ import be.kdg.teamd.beatbuddy.fragments.ChatFragment;
 import be.kdg.teamd.beatbuddy.fragments.QueueFragment;
 import be.kdg.teamd.beatbuddy.model.playlists.Playlist;
 import be.kdg.teamd.beatbuddy.model.playlists.Track;
-import be.kdg.teamd.beatbuddy.model.users.User;
 import be.kdg.teamd.beatbuddy.presenter.PlaylistPresenter;
+import be.kdg.teamd.beatbuddy.signalr.PlaylistSignalr;
 import be.kdg.teamd.beatbuddy.userconfiguration.UserConfigurationManager;
 import be.kdg.teamd.beatbuddy.util.DateUtil;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class PlaylistActivity extends AppCompatActivity implements PlaylistPresenter.PlaylistPresenterListener, QueueFragment.QueueFragmentListener {
+public class PlaylistActivity extends AppCompatActivity implements PlaylistPresenter.PlaylistPresenterListener, QueueFragment.QueueFragmentListener, PlaylistSignalr.PlaylistSignalrListener
+{
     public static final String EXTRA_PLAYLIST_KEY = "KEY";
     public static final String EXTRA_PLAYLIST_TEST = "TEST";
 
@@ -55,6 +56,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
     private UserConfigurationManager userConfigurationManager;
     private PlaylistRepository playlistRepository;
     private PlaylistPresenter presenter;
+    private PlaylistSignalr signalr;
 
     private QueueFragment queueFragment;
     private ChatFragment chatFragment;
@@ -83,11 +85,15 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
         boolean isTesting = getIntent().getBooleanExtra(EXTRA_PLAYLIST_TEST, false);
         if(playlistKey != null) playlistId = Long.parseLong(playlistKey);
 
+        setupViewPager(viewPager);
+
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle(playlistKey);
 
-        setupViewPager(viewPager);
+        signalr = new PlaylistSignalr(this);
+        signalr.connect(playlistId + "");
+
         if(!isTesting) presenter.loadPlaylist(playlistId); // TODO: join by key, not by ID
     }
 
@@ -132,8 +138,11 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
     @Override
     public void onPlaySong(Track track)
     {
-        String link = track.getTrackSource().getUrl();
-        playSongFromUrl(link);
+        if (track.getTrackSource() != null)
+        {
+            String link = track.getTrackSource().getUrl();
+            playSongFromUrl(link);
+        }
 
         Picasso.with(this)
                 .load(track.getCoverArtUrl())
@@ -150,10 +159,10 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
                 );
         songTitle.setText(track.getTitle());
         songArtist.setText(track.getArtist());
-        songTimeLeft.setText("-" + DateUtil.secondsToFormattedString((videoView.getDuration() - videoView.getCurrentPosition()) / 1000));
+        songTimeLeft.setText("-" + DateUtil.secondsToFormattedString(track.getDuration() / 1000));
         songProgress.setMax(track.getDuration());
 
-        //Temp fix: should get pushed by SinglR
+        //Temp fix: should get pushed by SignalR
         onQueueRefreshRequested();
     }
 
@@ -226,7 +235,39 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
             });
             videoView.requestFocus();
         } catch (Exception e) {
-            Snackbar.make(playPauseButton, "Error playing music", Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(playPauseButton, "Error playing music: " + e.getMessage(), Snackbar.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void onTrackAdded()
+    {
+        onQueueRefreshRequested();
+    }
+
+    @Override
+    public void onNewTrackPlaying(final Track track)
+    {
+        runOnUiThread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                onPlaySong(track);
+            }
+        });
+    }
+
+    @Override
+    public void onPlaylinkFetched(final String playlink)
+    {
+        runOnUiThread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                playSongFromUrl(playlink);
+            }
+        });
     }
 }
