@@ -171,8 +171,8 @@
                 app:fab_colorRipple="#333333"
                 fab:fab_label="Create an organisation"
                 fab:fab_size="mini" />
-
         </com.github.clans.fab.FloatingActionMenu>
+
     </RelativeLayout>
 
 

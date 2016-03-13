@@ -282,7 +282,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         recommendedPlaylistAdapter.notifyDataSetChanged();
 
         int viewHeight = (int) (SizeUtil.convertDpToPixel(172, this));
-        viewHeight = viewHeight * (((recommendedPlaylists.size() - (recommendedPlaylists.size() % 2)) / 2) + 1);
+        viewHeight = viewHeight * ((recommendedPlaylists.size() + 1) / 2);
         list_recommendedplaylists.getLayoutParams().height = viewHeight;
         loadingRecommendations.setVisibility(View.GONE);
     }
@@ -294,7 +294,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         yourPlaylistAdapter.notifyDataSetChanged();
 
         int viewHeight = (int) (SizeUtil.convertDpToPixel(172, this));
-        viewHeight = viewHeight * (((userPlaylists.size() - (userPlaylists.size() % 2)) / 2) + 1);
+        viewHeight = viewHeight * ((userPlaylists.size() + 1) / 2);
         list_yourplaylists.getLayoutParams().height = viewHeight;
         loadingYourPlaylists.setVisibility(View.GONE);
     }
@@ -328,7 +328,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onOrganisationClicked(Organisation organisation) {
-        Snackbar.make(drawer, organisation.getName() + " clicked!" , Snackbar.LENGTH_LONG).show();
+        Intent intent = new Intent(this, OrganisationActivity.class);
+        intent.putExtra("Organisation", organisation);
+        intent.putExtra("OrganisationId", organisation.getId());
+        startActivity(intent);
     }
 
     @Override

@@ -42,7 +42,7 @@ public class MainPresenter {
 
             @Override
             public void onFailure(Throwable t) {
-                listener.onRecommendedPlaylistsException(t.getMessage());
+                listener.onRecommendedPlaylistsException("Error fetching recommended playlists: " + t.getMessage());
             }
         });
     }
@@ -60,7 +60,7 @@ public class MainPresenter {
 
             @Override
             public void onFailure(Throwable t) {
-                listener.onUserPlaylistsException(t.getMessage());
+                listener.onUserPlaylistsException("Error fetching user playlists: " + t.getMessage());
             }
         });
     }
@@ -79,7 +79,7 @@ public class MainPresenter {
 
             @Override
             public void onFailure(Throwable t) {
-                listener.onUserOrganisationsException(t.getMessage());
+                listener.onUserOrganisationsException("Error fetching user organisations: " + t.getMessage());
             }
         });
     }

@@ -4,7 +4,9 @@ import be.kdg.teamd.beatbuddy.model.organisations.Organisation;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
@@ -15,4 +17,7 @@ public interface OrganisationRepository
     @POST("organisations")
     @FormUrlEncoded
     Call<Organisation> createOrganisation(@Query("name") String name, @Query("description") String description, @Query("color") String colorScheme, @Field("banner") String bannerBase64);
+
+    @GET("organisations/{id}")
+    Call<Organisation> getOrganisation(@Path("id") long id);
 }

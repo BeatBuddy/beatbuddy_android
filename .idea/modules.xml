@@ -2,8 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/BeatBuddy_android.iml" filepath="$PROJECT_DIR$/BeatBuddy_android.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/beatbuddy_android.iml" filepath="$PROJECT_DIR$/beatbuddy_android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/signalr-client-sdk/signalr-client-sdk.iml" filepath="$PROJECT_DIR$/signalr-client-sdk/signalr-client-sdk.iml" />
+      <module fileurl="file://$PROJECT_DIR$/signalr-client-sdk-android/signalr-client-sdk-android.iml" filepath="$PROJECT_DIR$/signalr-client-sdk-android/signalr-client-sdk-android.iml" />
     </modules>
   </component>
 </project>
