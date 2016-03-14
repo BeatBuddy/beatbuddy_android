@@ -3,7 +3,7 @@ package be.kdg.teamd.beatbuddy.dal;
 import java.util.List;
 
 import be.kdg.teamd.beatbuddy.model.playlists.Playlist;
-import be.kdg.teamd.beatbuddy.model.playlists.SourceType;
+import be.kdg.teamd.beatbuddy.model.playlists.PlaylistTrack;
 import be.kdg.teamd.beatbuddy.model.playlists.Track;
 import be.kdg.teamd.beatbuddy.model.playlists.Vote;
 import retrofit2.Call;
@@ -38,6 +38,9 @@ public interface PlaylistRepository {
     @GET("Playlist/searchTrack")
     Call<List<Track>> getTracks(@Query("query") String query);
 
+    @GET("Playlist/{id}/history")
+    Call<List<PlaylistTrack>> getHistory(@Path("id") long playlistId);
+
     @GET("Playlist/{id}/nextTrack")
     Call<Track> getNextTrack(@Path("id") long playlistId);
 
@@ -46,4 +49,7 @@ public interface PlaylistRepository {
 
     @POST("Playlist/{id}/track/{trackId}/downvote")
     Call<Vote> downvoteTrack(@Path("id") long playlistId, @Path("trackId") long trackId);
+
+    @GET("Playlist/getYoutubePlaybackUrl/{id}")
+    Call<Track> getPlaybackTrack(@Path("id") long trackId);
 }

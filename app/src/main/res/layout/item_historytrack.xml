@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/historytrack_item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="16dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="16dp">
+
+    <ImageView
+        android:id="@+id/track_coverart"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/header_default" />
+
+    <RelativeLayout
+        android:id="@+id/track_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/track_coverart"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_toEndOf="@+id/track_coverart"
+        android:layout_toStartOf="@+id/track_score">
+
+        <TextView
+            android:id="@+id/track_song_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Waves"
+            android:textColor="@color/colorTextPrimary" />
+
+        <TextView
+            android:id="@+id/track_song_artist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/track_song_title"
+            android:text="Joey Bada$$" />
+
+        <TextView
+            android:id="@+id/track_song_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:layout_below="@id/track_song_artist"
+            android:text="5:34" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/track_score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="8dp"
+        android:text="4 points"
+        android:textColor="@color/colorTextPrimary" />
+
+</RelativeLayout>

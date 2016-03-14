@@ -3,8 +3,6 @@ package be.kdg.teamd.beatbuddy.presenter;
 import be.kdg.teamd.beatbuddy.dal.PlaylistRepository;
 import be.kdg.teamd.beatbuddy.model.playlists.Playlist;
 import be.kdg.teamd.beatbuddy.model.playlists.Track;
-import be.kdg.teamd.beatbuddy.model.playlists.TrackSource;
-import be.kdg.teamd.beatbuddy.signalr.PlaylistSignalr;
 import be.kdg.teamd.beatbuddy.userconfiguration.UserConfigurationManager;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -88,7 +86,27 @@ public class PlaylistPresenter {
         });
     }
 
+    public void getPlaybackTrack(long trackId){
+        playlistRepository.getPlaybackTrack(trackId).enqueue(new Callback<Track>() {
+            @Override
+            public void onResponse(Response<Track> response) {
+                if(!response.isSuccess()){
+                    listener.onException("Error retrieving track");
+                    return;
+                }
+
+                listener.onPlaybackTrackLoaded(response.body());
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                listener.onException("Error retrieving track: " + t.getMessage());
+            }
+        });
+    }
+
     public interface PlaylistPresenterListener{
+        void onPlaybackTrackLoaded(Track track);
         void onPlaylistLoaded(Playlist playlist);
         void onPlaySong(Track track);
         void onException(String message);

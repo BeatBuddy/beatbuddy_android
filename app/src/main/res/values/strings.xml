@@ -43,4 +43,7 @@
     <string name="org_no_playlists">This organisation has no playlists</string>
     <string name="create_org">Create an organisation</string>
     <string name="create_playlist">Create a Playlist</string>
+    <string name="queue">Queue</string>
+    <string name="chat">Chat</string>
+    <string name="history">History</string>
 </resources>
