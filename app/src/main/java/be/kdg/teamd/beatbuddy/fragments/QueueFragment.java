@@ -112,7 +112,7 @@ public class QueueFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         if (requestCode == RESULT_ADD_TRACK && resultCode == Activity.RESULT_OK)
-            listener.onQueueRefreshRequested();
+            listener.onTrackAddedCallback();
 
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -170,5 +170,6 @@ public class QueueFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     public interface QueueFragmentListener{
         void onQueueRefreshRequested();
+        void onTrackAddedCallback();
     }
 }

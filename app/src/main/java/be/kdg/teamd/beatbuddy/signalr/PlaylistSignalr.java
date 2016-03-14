@@ -22,18 +22,21 @@ public class PlaylistSignalr
 {
     public static final String SERVER = "https://teamd.azurewebsites.net/";
     private PlaylistSignalrListener listener;
+    private HubProxy proxy;
+    private String groupName;
 
     public PlaylistSignalr(PlaylistSignalrListener listener)
     {
         this.listener = listener;
     }
 
-    public void connect(final String groupName)
+    public void connect(String groupNameId)
     {
+        this.groupName = groupNameId;
         Log.d("SignalR", "Connecting to Signalr with group " + groupName);
 
         HubConnection connection = new HubConnection(SERVER);
-        final HubProxy proxy = connection.createHubProxy("playlistHub");
+        proxy = connection.createHubProxy("playlistHub");
 
         SignalRFuture<Void> awaitConnection = connection.start();
         awaitConnection.done(new Action<Void>()
@@ -87,6 +90,99 @@ public class PlaylistSignalr
                 listener.onPlaylinkFetched(playlink);
             }
         }, String.class);
+    }
+
+    public void addTrack()
+    {
+        SignalRFuture<Void> addTrack = proxy.invoke("StartPlaying", groupName);
+        addTrack.done(new Action<Void>()
+        {
+            @Override
+            public void run(Void aVoid) throws Exception
+            {
+                Log.d("SignalR", "added track: " + groupName);
+            }
+        });
+        addTrack.onError(new ErrorCallback()
+        {
+            @Override
+            public void onError(Throwable throwable)
+            {
+                Log.d("SignalR", "Error adding track: " + throwable.getMessage());
+            }
+        });
+        try {
+            addTrack.get();
+        } catch (InterruptedException | ExecutionException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    public void startPlaying(String artist, String coverArtUrl, int nextTracks, String title, String trackId)
+    {
+        CurrentPlayingViewModel currentPlayingViewModel = new CurrentPlayingViewModel();
+        currentPlayingViewModel.setArtist(artist);
+        currentPlayingViewModel.setCoverArtUrl(coverArtUrl);
+        currentPlayingViewModel.setNextTracks(nextTracks);
+        currentPlayingViewModel.setTitle(title);
+        currentPlayingViewModel.setTrackId(trackId);
+
+        SignalRFuture<Void> addTrack = proxy.invoke("StartPlaying", currentPlayingViewModel, groupName);
+        addTrack.done(new Action<Void>()
+        {
+            @Override
+            public void run(Void aVoid) throws Exception
+            {
+                Log.d("SignalR", "Started playing: " + groupName);
+            }
+        });
+        addTrack.onError(new ErrorCallback()
+        {
+            @Override
+            public void onError(Throwable throwable)
+            {
+                Log.d("SignalR", "Error playing: " + throwable.getMessage());
+            }
+        });
+        try {
+            addTrack.get();
+        } catch (InterruptedException | ExecutionException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    public void pausePlaying()
+    {
+        SignalRFuture<Void> addTrack = proxy.invoke("PausePlaying", groupName);
+        addTrack.done(new Action<Void>()
+        {
+            @Override
+            public void run(Void aVoid) throws Exception
+            {
+                Log.d("SignalR", "Paused playing: " + groupName);
+            }
+        });
+        addTrack.onError(new ErrorCallback()
+        {
+            @Override
+            public void onError(Throwable throwable)
+            {
+                Log.d("SignalR", "Error playing: " + throwable.getMessage());
+            }
+        });
+        try {
+            addTrack.get();
+        } catch (InterruptedException | ExecutionException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    public void resumePlaying(long durationAt)
+    {
+        proxy.invoke("ResumePlaying", durationAt, groupName);
     }
 
     public interface PlaylistSignalrListener

@@ -57,12 +57,14 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
     private PlaylistRepository playlistRepository;
     private PlaylistPresenter presenter;
     private PlaylistSignalr signalr;
+    private Track track;
 
     private QueueFragment queueFragment;
     private ChatFragment chatFragment;
 
     private long playlistId;
     private Playlist playlist;
+    private boolean isPlaylistMaster;
 
     public void setPlaylistRepository(PlaylistRepository playlistRepository, UserConfigurationManager userConfigurationManager) {
         this.playlistRepository = playlistRepository;
@@ -138,6 +140,8 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
     @Override
     public void onPlaySong(Track track)
     {
+        this.track = track;
+
         if (track.getTrackSource() != null)
         {
             String link = track.getTrackSource().getUrl();
@@ -162,7 +166,6 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
         songTimeLeft.setText("-" + DateUtil.secondsToFormattedString(track.getDuration() / 1000));
         songProgress.setMax(track.getDuration());
 
-        //Temp fix: should get pushed by SignalR
         onQueueRefreshRequested();
     }
 
@@ -176,17 +179,35 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
         presenter.loadPlaylist(playlistId);
     }
 
+    @Override
+    public void onTrackAddedCallback()
+    {
+        //Sends the add track event to everyone through SignalR
+        signalr.addTrack();
+        onQueueRefreshRequested();
+    }
+
     @OnClick(R.id.musicplayer_play_pause) void onClickPlayPause()
     {
         if (videoView.isPlaying())
         {
             playPauseButton.setImageResource(R.drawable.ic_play_arrow_24dp);
             videoView.pause();
+            signalr.pausePlaying();
         }
         else
         {
             playPauseButton.setImageResource(R.drawable.ic_pause_24dp);
-            presenter.playNextSong(playlistId);
+            if (!isPlaylistMaster)
+            {
+                // First time playing, fetching song
+                presenter.playNextSong(playlistId);
+            }
+            else
+            {
+                videoView.resume();
+                signalr.resumePlaying(videoView.getCurrentPosition() / 1000);
+            }
         }
     }
 
@@ -205,6 +226,8 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
                 public void onPrepared(MediaPlayer mp)
                 {
                     videoView.start();
+                    isPlaylistMaster = true;
+                    signalr.startPlaying(track.getArtist(), track.getCoverArtUrl(), 2, track.getTitle(), track.getTrackSource().getTrackId());
 
                     //This will update the progress bar
                     updateProgressBarThread = new Runnable() {

@@ -15,6 +15,7 @@ import java.util.List;
 
 import be.kdg.teamd.beatbuddy.R;
 import be.kdg.teamd.beatbuddy.model.playlists.Playlist;
+import be.kdg.teamd.beatbuddy.util.ImageEncoder;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -52,8 +53,8 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.Playli
 
         if(!TextUtils.isEmpty(playlist.getImageUrl()))
             Picasso.with(context)
-                .load(context.getString(R.string.playlistImageLocation) + playlist.getImageUrl())
-                .into(holder.playlistImage);
+                .load(context.getString(R.string.playlistImageLocation) + ImageEncoder.encodeImageUrl(playlist.getImageUrl()))
+                    .into(holder.playlistImage);
         else
             holder.playlistImage = null;
 

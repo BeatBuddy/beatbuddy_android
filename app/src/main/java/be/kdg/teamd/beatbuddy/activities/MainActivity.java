@@ -39,6 +39,7 @@ import be.kdg.teamd.beatbuddy.model.playlists.Playlist;
 import be.kdg.teamd.beatbuddy.model.users.User;
 import be.kdg.teamd.beatbuddy.presenter.MainPresenter;
 import be.kdg.teamd.beatbuddy.userconfiguration.UserConfigurationManager;
+import be.kdg.teamd.beatbuddy.util.ImageEncoder;
 import be.kdg.teamd.beatbuddy.util.SizeUtil;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -265,10 +266,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         else
         {
-            if(!TextUtils.isEmpty(user.getImageUrl()))
-                Picasso.with(this)
-                        .load(user.getImageUrl())
-                        .into(userAvatar);
+            String avatarUrl = getString(R.string.avatarImageLocation) + ImageEncoder.encodeImageUrl(user.getImageUrl());
+            Picasso.with(this)
+                    .load(avatarUrl)
+                    .into(userAvatar);
 
             username.setText(user.getNickname());
             subname.setText(user.getFirstName() + " " + user.getLastName());

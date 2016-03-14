@@ -38,6 +38,7 @@
     <string name="user_no_organisations">You are not a member of any organisation</string>
     <string name="playlistImageLocation">https://teamd.azurewebsites.net/Content/img/Playlists/</string>
     <string name="organisationImageLocation">https://teamd.azurewebsites.net/Content/img/Organisations/</string>
+    <string name="avatarImageLocation">https://teamd.azurewebsites.net/Content/img/Users/</string>
     <string name="playlists">Playlists</string>
     <string name="org_no_playlists">This organisation has no playlists</string>
     <string name="create_org">Create an organisation</string>

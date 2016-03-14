@@ -14,6 +14,7 @@ import java.util.List;
 
 import be.kdg.teamd.beatbuddy.R;
 import be.kdg.teamd.beatbuddy.model.organisations.Organisation;
+import be.kdg.teamd.beatbuddy.util.ImageEncoder;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -50,7 +51,7 @@ public class OrganisationLinearLayoutAdapter {
 
             if (!TextUtils.isEmpty(organisation.getBannerUrl()))
                 Picasso.with(linearLayout.getContext())
-                        .load(context.getString(R.string.organisationImageLocation) + organisation.getBannerUrl())
+                        .load(context.getString(R.string.organisationImageLocation) + ImageEncoder.encodeImageUrl(organisation.getBannerUrl()))
                         .into(viewHolder.organisationBanner);
         }
 

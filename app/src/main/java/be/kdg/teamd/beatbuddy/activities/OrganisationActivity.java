@@ -27,6 +27,7 @@ import be.kdg.teamd.beatbuddy.dal.RepositoryFactory;
 import be.kdg.teamd.beatbuddy.model.organisations.Organisation;
 import be.kdg.teamd.beatbuddy.model.playlists.Playlist;
 import be.kdg.teamd.beatbuddy.presenter.OrganisationPresenter;
+import be.kdg.teamd.beatbuddy.util.ImageEncoder;
 import be.kdg.teamd.beatbuddy.util.SizeUtil;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -83,7 +84,7 @@ public class OrganisationActivity extends AppCompatActivity implements Organisat
 
         if(!TextUtils.isEmpty(organisation.getBannerUrl()))
             Picasso.with(this)
-                    .load(organisation.getBannerUrl())
+                    .load(getString(R.string.organisationImageLocation) + ImageEncoder.encodeImageUrl(organisation.getBannerUrl()))
                     .into(organisationBanner);
     }
 
