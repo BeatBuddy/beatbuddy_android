@@ -20,14 +20,19 @@ import android.widget.VideoView;
 import com.github.florent37.picassopalette.PicassoPalette;
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
+
 import be.kdg.teamd.beatbuddy.BeatBuddyApplication;
 import be.kdg.teamd.beatbuddy.R;
 import be.kdg.teamd.beatbuddy.adapters.PlaylistTabAdapter;
 import be.kdg.teamd.beatbuddy.dal.PlaylistRepository;
 import be.kdg.teamd.beatbuddy.dal.RepositoryFactory;
 import be.kdg.teamd.beatbuddy.fragments.ChatFragment;
+import be.kdg.teamd.beatbuddy.fragments.HistoryFragment;
 import be.kdg.teamd.beatbuddy.fragments.QueueFragment;
+import be.kdg.teamd.beatbuddy.model.playlists.PlaybackType;
 import be.kdg.teamd.beatbuddy.model.playlists.Playlist;
+import be.kdg.teamd.beatbuddy.model.playlists.PlaylistTrack;
 import be.kdg.teamd.beatbuddy.model.playlists.Track;
 import be.kdg.teamd.beatbuddy.presenter.PlaylistPresenter;
 import be.kdg.teamd.beatbuddy.signalr.PlaylistSignalr;
@@ -37,8 +42,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class PlaylistActivity extends AppCompatActivity implements PlaylistPresenter.PlaylistPresenterListener, QueueFragment.QueueFragmentListener, PlaylistSignalr.PlaylistSignalrListener
-{
+public class PlaylistActivity extends AppCompatActivity implements PlaylistPresenter.PlaylistPresenterListener, QueueFragment.QueueFragmentListener, PlaylistSignalr.PlaylistSignalrListener, HistoryFragment.HistoryInteractionListener, MediaPlayer.OnCompletionListener {
     public static final String EXTRA_PLAYLIST_KEY = "KEY";
     public static final String EXTRA_PLAYLIST_TEST = "TEST";
 
@@ -61,10 +65,14 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
 
     private QueueFragment queueFragment;
     private ChatFragment chatFragment;
+    private HistoryFragment historyFragment;
 
     private long playlistId;
     private Playlist playlist;
     private boolean isPlaylistMaster;
+
+    private PlaybackType lastPlaybackType = PlaybackType.PLAYLIST;
+    private int historyPosition = 0;
 
     public void setPlaylistRepository(PlaylistRepository playlistRepository, UserConfigurationManager userConfigurationManager) {
         this.playlistRepository = playlistRepository;
@@ -96,7 +104,9 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
         signalr = new PlaylistSignalr(this);
         signalr.connect(playlistId + "");
 
-        if(!isTesting) presenter.loadPlaylist(playlistId); // TODO: join by key, not by ID
+        if(!isTesting){
+            presenter.loadPlaylist(playlistId); // TODO: join by key, not by ID
+        }
     }
 
     private void setupViewPager(final ViewPager viewPager)
@@ -107,11 +117,18 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
         arguments.putLong(QueueFragment.ARG_PLAYLIST_ID, playlistId);
         queueFragment.setArguments(arguments);
 
+        historyFragment = new HistoryFragment();
+        Bundle historyArguments = new Bundle();
+        historyArguments.putLong(HistoryFragment.ARG_PLAYLIST_ID, playlistId);
+        historyFragment.setArguments(arguments);
+        historyFragment.setListener(this);
+
         chatFragment = new ChatFragment();
 
         PlaylistTabAdapter adapter = new PlaylistTabAdapter(getSupportFragmentManager());
-        adapter.addFrag(queueFragment, "Queue");
-        adapter.addFrag(chatFragment, "Chat");
+        adapter.addFrag(queueFragment, getString(R.string.queue));
+        adapter.addFrag(chatFragment, getString(R.string.chat));
+        adapter.addFrag(historyFragment, getString(R.string.history));
 
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
@@ -142,11 +159,13 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
     {
         this.track = track;
 
-        if (track.getTrackSource() != null)
+        if (track.getUrl() != null)
         {
-            String link = track.getTrackSource().getUrl();
+            String link = track.getUrl();
             playSongFromUrl(link);
         }
+
+        lastPlaybackType = PlaybackType.PLAYLIST;
 
         Picasso.with(this)
                 .load(track.getCoverArtUrl())
@@ -193,20 +212,26 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
         {
             playPauseButton.setImageResource(R.drawable.ic_play_arrow_24dp);
             videoView.pause();
-            signalr.pausePlaying();
+            if(lastPlaybackType == PlaybackType.PLAYLIST) signalr.pausePlaying();
         }
         else
         {
             playPauseButton.setImageResource(R.drawable.ic_pause_24dp);
-            if (!isPlaylistMaster)
-            {
-                // First time playing, fetching song
-                presenter.playNextSong(playlistId);
-            }
-            else
-            {
-                videoView.resume();
-                signalr.resumePlaying(videoView.getCurrentPosition() / 1000);
+
+            if(lastPlaybackType == PlaybackType.PLAYLIST){
+                if (!isPlaylistMaster)
+                {
+                    // First time playing, fetching song
+                    presenter.playNextSong(playlistId);
+                }
+                else
+                {
+                    presenter.playNextSong(playlistId);
+                    signalr.resumePlaying(videoView.getCurrentPosition() / 1000);
+                }
+            } else {
+                videoView.start();
+                songProgress.postDelayed(updateProgressBarThread, 1000);
             }
         }
     }
@@ -220,26 +245,24 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
             final Uri video = Uri.parse(url);
             videoView.setMediaController(mediaController);
             videoView.setVideoURI(video);
-            videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener()
-            {
+            videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
-                public void onPrepared(MediaPlayer mp)
-                {
+                public void onPrepared(MediaPlayer mp) {
                     videoView.start();
-                    isPlaylistMaster = true;
-                    signalr.startPlaying(track.getArtist(), track.getCoverArtUrl(), 2, track.getTitle(), track.getTrackSource().getTrackId());
+                    if (lastPlaybackType == PlaybackType.PLAYLIST) {
+                        isPlaylistMaster = true;
+                        signalr.startPlaying(track.getArtist(), track.getCoverArtUrl(), 2, track.getTitle(), track.getTrackSource().getTrackId());
+                    }
 
                     //This will update the progress bar
                     updateProgressBarThread = new Runnable() {
                         public void run() {
-                            if (songProgress != null)
-                            {
+                            if (songProgress != null) {
                                 int progress = videoView.getCurrentPosition() / 1000;
                                 songProgress.setProgress(progress);
                                 songTimeLeft.setText("-" + DateUtil.secondsToFormattedString((videoView.getDuration() - videoView.getCurrentPosition()) / 1000));
                             }
-                            if (videoView.isPlaying())
-                            {
+                            if (videoView.isPlaying()) {
                                 assert songProgress != null;
                                 songProgress.postDelayed(updateProgressBarThread, 1000);
                             }
@@ -248,15 +271,9 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
                     songProgress.postDelayed(updateProgressBarThread, 1000);
                 }
             });
-            videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener()
-            {
-                @Override
-                public void onCompletion(MediaPlayer mp)
-                {
-                    presenter.playNextSong(playlistId);
-                }
-            });
+            videoView.setOnCompletionListener(this);
             videoView.requestFocus();
+            playPauseButton.setImageResource(R.drawable.ic_pause_24dp);
         } catch (Exception e) {
             Snackbar.make(playPauseButton, "Error playing music: " + e.getMessage(), Snackbar.LENGTH_SHORT).show();
         }
@@ -271,11 +288,9 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
     @Override
     public void onNewTrackPlaying(final Track track)
     {
-        runOnUiThread(new Runnable()
-        {
+        runOnUiThread(new Runnable() {
             @Override
-            public void run()
-            {
+            public void run() {
                 onPlaySong(track);
             }
         });
@@ -292,5 +307,58 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
                 playSongFromUrl(playlink);
             }
         });
+    }
+
+    @Override
+    public void onHistoryTrackClicked(Track track, int position) {
+        lastPlaybackType = PlaybackType.HISTORY;
+        historyPosition = position;
+
+        presenter.getPlaybackTrack(track.getId());
+        if(videoView.isPlaying()) videoView.stopPlayback();
+
+        Picasso.with(this)
+                .load(track.getCoverArtUrl())
+                .into(coverArt, PicassoPalette.with(track.getCoverArtUrl(), coverArt)
+                                .intoCallBack(
+                                        new PicassoPalette.CallBack()
+                                        {
+                                            @Override
+                                            public void onPaletteLoaded(android.support.v7.graphics.Palette palette)
+                                            {
+                                                songProgress.getProgressDrawable().setColorFilter(palette.getVibrantColor(Color.BLACK), PorterDuff.Mode.SRC_IN);
+                                            }
+                                        })
+                );
+        songTitle.setText(track.getTitle());
+        songArtist.setText(track.getArtist());
+        songTimeLeft.setText("-" + DateUtil.secondsToFormattedString(track.getDuration() / 1000));
+        songProgress.setMax(track.getDuration());
+    }
+
+    @Override
+    public void onPlaybackTrackLoaded(Track track) {
+        if (track.getUrl() != null)
+        {
+            String link = track.getUrl();
+            playSongFromUrl(link);
+        }
+    }
+
+    @Override
+    public void onCompletion(MediaPlayer mediaPlayer) {
+        switch(lastPlaybackType){
+            case PLAYLIST:
+                presenter.playNextSong(playlistId);
+                break;
+            case HISTORY:
+                int nextTrackPosition = historyPosition + 1;
+                List<PlaylistTrack> history = historyFragment.getHistory();
+                if(nextTrackPosition >= history.size()) return;
+
+                Track nextTrack = history.get(nextTrackPosition).getTrack();
+                onHistoryTrackClicked(nextTrack, nextTrackPosition);
+                break;
+        }
     }
 }
