@@ -16,6 +16,7 @@ import android.text.InputType;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -53,8 +54,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Bind(R.id.toolbar) Toolbar toolbar;
     @Bind(R.id.nav_view) NavigationView navigationView;
     @Bind(R.id.drawer_layout) DrawerLayout drawer;
-    @Bind(R.id.main_fab_create_playlist) FloatingActionButton fab_create_playlist;
-    @Bind(R.id.main_fab_create_organisation) FloatingActionButton fab_create_organisation;
+    @Bind(R.id.main_create_playlist) Button fab_create_playlist;
+    @Bind(R.id.main_create_organisation) Button fab_create_organisation;
     @Bind(R.id.list_main_yourorganisations) LinearLayout list_yourorganisations;
     @Bind(R.id.list_main_yourplaylists) RecyclerView list_yourplaylists;
     @Bind(R.id.list_main_recommendedplaylists) RecyclerView list_recommendedplaylists;
@@ -106,6 +107,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
+        navigationView.setCheckedItem(R.id.nav_home);
 
         User user = userConfigurationManager.getUser();
         if(user != null){
@@ -216,16 +218,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         loadingYourOrganisations.setVisibility(View.GONE);
     }
 
-    @OnClick(R.id.main_fab_create_playlist) void onClickCreatePlaylist()
+    @OnClick(R.id.main_create_playlist) void onClickCreatePlaylist()
     {
         startActivity(new Intent(this, CreatePlaylistActivity.class));
     }
 
-    @OnClick(R.id.main_fab_join_playlist) void onClickJoinPlaylist()
+    @OnClick(R.id.main_fab) void onClickJoinPlaylist()
     {
         new MaterialDialog.Builder(this)
-            .title("Join an organisation")
-            .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD)
+            .title("Join a Playlist")
+            .inputType(InputType.TYPE_CLASS_TEXT)
+            //.inputRangeRes(1, -1, R.color.md_edittext_error)
             .input("Key", null, new MaterialDialog.InputCallback() {
                 @Override
                 public void onInput(MaterialDialog dialog, CharSequence input) {
@@ -236,7 +239,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }).show();
     }
 
-    @OnClick(R.id.main_fab_create_organisation) public void onCreateOrganisationClick(){
+    @OnClick(R.id.main_create_organisation) public void onCreateOrganisationClick(){
         startActivity(new Intent(this, CreateOrganisationActivity.class));
     }
 

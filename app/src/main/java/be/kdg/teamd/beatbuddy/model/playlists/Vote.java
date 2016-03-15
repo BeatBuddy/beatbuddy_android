@@ -20,4 +20,19 @@ public class Vote implements Serializable {
     public User getUser() {
         return user;
     }
+
+    public void setId(long id)
+    {
+        this.id = id;
+    }
+
+    public void setScore(int score)
+    {
+        this.score = score;
+    }
+
+    public void setUser(User user)
+    {
+        this.user = user;
+    }
 }

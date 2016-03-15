@@ -125,12 +125,20 @@ public class QueueFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     @Override
     public void onUpvoteTrackClicked(long trackId)
     {
+        Vote tempVote = new Vote();
+        tempVote.setScore(1);
+        updateTrackScoreLocal(tempVote, trackId);
+
         presenter.upvoteTrack(playlistId, trackId);
     }
 
     @Override
     public void onDownvoteTrackClicked(long trackId)
     {
+        Vote tempVote = new Vote();
+        tempVote.setScore(-1);
+        updateTrackScoreLocal(tempVote, trackId);
+
         presenter.downvoteTrack(playlistId, trackId);
     }
 
@@ -160,8 +168,8 @@ public class QueueFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         {
             if (track.getTrack().getId() == trackId)
             {
+                track.setScore(track.getScore() + vote.getScore() - track.getPersonalScore());
                 track.setPersonalScore(vote.getScore());
-                track.setScore(track.getScore() + vote.getScore());
                 trackAdapter.notifyDataSetChanged();
                 break;
             }

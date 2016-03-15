@@ -1,18 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="single" android:id="@+id/group_guest">
+    <group android:checkableBehavior="none" android:id="@+id/group_guest">
         <item
             android:id="@+id/nav_login"
             android:icon="@drawable/ic_logout_24dp"
             android:title="@string/login" />
     </group>
 
-    <group android:checkableBehavior="single" android:id="@+id/group_logged_in" android:visible="false">
-        <item
-            android:id="@+id/nav_my_profile"
-            android:icon="@drawable/ic_person_24dp"
-            android:title="@string/my_profile"/>
+    <group android:checkableBehavior="none" android:id="@+id/group_logged_in" android:visible="false">
         <item
             android:id="@+id/nav_logout"
             android:icon="@drawable/ic_logout_24dp"
@@ -23,6 +19,10 @@
         <item
             android:id="@+id/nav_home"
             android:icon="@drawable/home"
-            android:title="@string/home" />
+            android:title="Portal" />
+        <item
+            android:id="@+id/nav_about"
+            android:icon="@drawable/ic_info_24dp"
+            android:title="About" />
     </group>
 </menu>
