@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -112,7 +111,7 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.L
             progress_loading.setVisibility(View.VISIBLE);
 
         } else {
-            Toast.makeText(login_email.getContext(),"Google login failed", Toast.LENGTH_LONG).show();
+            Snackbar.make(login_email,"Google login failed", Snackbar.LENGTH_LONG).show();
         }
     }
 
