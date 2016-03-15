@@ -39,7 +39,6 @@ dependencies {
     testCompile 'com.github.tomakehurst:wiremock:1.58:standalone'
     testCompile 'junit:junit:4.12'
     compile('com.github.afollestad.material-dialogs:core:0.8.5.4@aar') { transitive = true }
-    compile(group: 'uz.shift', name: 'colorpicker', version: '0.5', ext: 'aar')
     compile 'com.squareup.retrofit2:retrofit:2.0.0-beta3'
     compile 'com.squareup.retrofit2:converter-gson:2.0.0-beta3'
     compile 'com.jakewharton:butterknife:7.0.1'

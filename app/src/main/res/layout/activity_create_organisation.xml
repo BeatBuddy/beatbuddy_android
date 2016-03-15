@@ -91,19 +91,6 @@
                             android:scrollbars="vertical"/>
                     </android.support.design.widget.TextInputLayout>
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginTop="8dp"
-                        android:text="Select your organisations accent color"/>
-
-                    <uz.shift.colorpicker.LineColorPicker
-                        android:id="@+id/create_org_color_picker"
-                        android:layout_width="match_parent"
-                        android:layout_marginTop="8dp"
-                        android:layout_height="60dp"
-                        app:orientation="horizontal"/>
-
                 </LinearLayout>
 
                 <Button

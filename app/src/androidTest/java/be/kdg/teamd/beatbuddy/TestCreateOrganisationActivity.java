@@ -123,8 +123,6 @@ public class TestCreateOrganisationActivity
         onView(withId(R.id.create_org_description))
                 .perform(typeText("Dit is de chiro van wijnegem"));
         closeSoftKeyboard();
-        onView(withId(R.id.create_org_color_picker))
-                .perform(click());
 
         //Select banner image intent
         Intents.init();

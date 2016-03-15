@@ -26,7 +26,6 @@ import be.kdg.teamd.beatbuddy.util.ImageEncoder;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import uz.shift.colorpicker.LineColorPicker;
 
 public class CreateOrganisationActivity extends AppCompatActivity implements CreateOrganisationPresenter.CreateOrganisationPresenterListener
 {
@@ -36,7 +35,6 @@ public class CreateOrganisationActivity extends AppCompatActivity implements Cre
     @Bind(R.id.create_org_name) EditText name;
     @Bind(R.id.create_org_description) EditText description;
     @Bind(R.id.create_org_banner) ImageView banner;
-    @Bind(R.id.create_org_color_picker) LineColorPicker colorPicker;
     @Bind(R.id.ic_createorg_loading) ProgressBar loadingProgressbar;
 
     private OrganisationRepository organisationRepository;
@@ -56,9 +54,6 @@ public class CreateOrganisationActivity extends AppCompatActivity implements Cre
 
         organisationRepository = RepositoryFactory.getOrganisationRepository();
         presenter = new CreateOrganisationPresenter(this, organisationRepository);
-
-        colorPicker.setColors(new int[] {Color.BLACK, Color.parseColor("#D50000"),Color.parseColor("#2979FF"),Color.parseColor("#00C853"), Color.parseColor("#FF9100")});
-        colorPicker.setSelectedColor(Color.BLACK);
     }
 
     public void setOrganisationRepository(OrganisationRepository organisationRepository)
@@ -86,7 +81,7 @@ public class CreateOrganisationActivity extends AppCompatActivity implements Cre
 
         presenter.createOrganisation(name.getText().toString(),
                 description.getText().toString(),
-                Integer.toHexString(colorPicker.getColor()),
+                Integer.toHexString(0),
                 bannerInBase64);
 
         loadingProgressbar.setVisibility(View.VISIBLE);

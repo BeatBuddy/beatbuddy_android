@@ -73,11 +73,14 @@
                     </RelativeLayout>
 
                     <ProgressBar
+                        style="?android:attr/progressBarStyleHorizontal"
                         android:id="@+id/loading_yourplaylists"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:indeterminate="true"
-                        android:visibility="gone" />
+                        android:visibility="gone"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"/>
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/list_main_yourplaylists"
@@ -116,11 +119,14 @@
                     </RelativeLayout>
 
                     <ProgressBar
+                        style="?android:attr/progressBarStyleHorizontal"
                         android:id="@+id/loading_yourorganisations"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:indeterminate="true"
-                        android:visibility="gone" />
+                        android:visibility="gone"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"/>
 
                     <TextView
                         android:id="@+id/text_main_notloggedin2"
@@ -145,11 +151,14 @@
                         android:text="Playlists you might enjoy" />
 
                     <ProgressBar
+                        style="?android:attr/progressBarStyleHorizontal"
                         android:id="@+id/loading_recommendations"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:indeterminate="true"
-                        android:visibility="gone" />
+                        android:visibility="gone"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"/>
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/list_main_recommendedplaylists"
