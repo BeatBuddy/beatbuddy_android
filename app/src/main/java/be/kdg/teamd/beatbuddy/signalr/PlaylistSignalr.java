@@ -54,8 +54,12 @@ public class PlaylistSignalr
             @Override
             public void onError(Throwable throwable)
             {
-                Log.d("SignalR", "Error signalr: " + throwable.getMessage());
-                listener.onErrorConnecting(throwable.getMessage());
+                String message = "Error SignalR";
+                if (throwable != null)
+                    message = throwable.getMessage();
+
+                listener.onErrorConnecting(message);
+                Log.d("SignalR", "Error signalr: " + message);
             }
         });
         try {

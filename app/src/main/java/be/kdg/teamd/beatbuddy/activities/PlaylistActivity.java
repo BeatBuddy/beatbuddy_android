@@ -249,7 +249,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
                 }
                 else
                 {
-                    presenter.playNextSong(playlistId);
+                    videoView.start();
                     signalr.resumePlaying(videoView.getCurrentPosition() / 1000);
                 }
             } else {
@@ -386,22 +386,31 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
     }
 
     @Override
-    public void onErrorConnecting(String errorMessage)
+    public void onErrorConnecting(final String errorMessage)
     {
-        new MaterialDialog.Builder(this)
-                .title("Error connectiong")
-                .content(errorMessage)
-                .positiveText("Retry")
-                .onPositive(new MaterialDialog.SingleButtonCallback()
+        runOnUiThread(
+                new Runnable()
                 {
                     @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which)
+                    public void run()
                     {
-                        setupSignalR();
+                    new MaterialDialog.Builder(PlaylistActivity.this)
+                                .title("Error connectiong")
+                                .content(errorMessage)
+                                .positiveText("Retry")
+                                .onPositive(new MaterialDialog.SingleButtonCallback()
+                                {
+                                    @Override
+                                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which)
+                                    {
+                                        setupSignalR();
+                                    }
+                                })
+                                .negativeText("Close")
+                                .show();
                     }
-                })
-                .negativeText("Close")
-                .show();
+                }
+        );
     }
 
     @Override
