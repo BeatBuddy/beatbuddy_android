@@ -19,28 +19,75 @@ public class LoginPresenter {
         this.userConfigurationManager = userConfigurationManager;
     }
 
+    public void loginGplus(String firstName, String lastName, String nickName, final String email, final String password, final boolean rememberMe, String imageUrl) {
+        userRepository.registerGplus(firstName, lastName, nickName, email, password, imageUrl).enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Response<User> response) {
+                if(!response.isSuccess()){
+                    listener.onException("Failed to register using Google plus");
+                    return;
+                }
+
+                userRepository.login(UserRepository.GRANT_TYPE, email, password).enqueue(new Callback<AccessToken>() {
+                    @Override
+                    public void onResponse(Response<AccessToken> response) {
+                        if(!response.isSuccess()){
+                            listener.onException("Failed to log in using Google plus");
+                            return;
+                        }
+
+                        final AccessToken accessToken = response.body();
+                        RepositoryFactory.setAccessToken(accessToken);
+                        userRepository = RepositoryFactory.getUserRepository();
+
+                        userRepository.userInfo(email).enqueue(new Callback<User>() {
+                            @Override
+                            public void onResponse(Response<User> response) {
+                                if (response.isSuccess()) {
+                                    userConfigurationManager.login(accessToken, response.body(), rememberMe);
+                                    listener.onLoggedIn(response.body());
+                                } else {
+                                    listener.onException("No user found with this email");
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Throwable t) {
+                                listener.onException("User info fetch failed. " + t.getMessage());
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onFailure(Throwable t) {
+                        listener.onException("Invalid username or password");
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                listener.onException("Failed to register using Google plus");
+            }
+        });
+    }
+
     public void login(final String email, String password, final boolean rememberMe) {
         userRepository.login(UserRepository.GRANT_TYPE, email, password).enqueue(new Callback<AccessToken>() {
             @Override
             public void onResponse(Response<AccessToken> response) {
-                if(response.isSuccess())
-                {
+                if (response.isSuccess()) {
                     final AccessToken accessToken = response.body();
                     RepositoryFactory.setAccessToken(accessToken);
                     userRepository = RepositoryFactory.getUserRepository();
 
-                    userRepository.userInfo(email).enqueue(new Callback<User>()
-                    {
+                    userRepository.userInfo(email).enqueue(new Callback<User>() {
                         @Override
-                        public void onResponse(Response<User> response)
-                        {
-                            if (response.isSuccess())
-                            {
+                        public void onResponse(Response<User> response) {
+                            if (response.isSuccess()) {
                                 userConfigurationManager.login(accessToken, response.body(), rememberMe);
                                 listener.onLoggedIn(response.body());
-                            }
-                            else
-                            {
+                            } else {
                                 listener.onException("No user found with this email");
                             }
                         }
@@ -50,9 +97,7 @@ public class LoginPresenter {
                             listener.onException("User info fetch failed. " + t.getMessage());
                         }
                     });
-                }
-                else
-                {
+                } else {
                     listener.onException("Invalid username or password");
                 }
             }
@@ -64,8 +109,9 @@ public class LoginPresenter {
         });
     }
 
-    public interface LoginPresenterListener{
+    public interface LoginPresenterListener {
         void onLoggedIn(User user);
+
         void onException(String message);
     }
 }

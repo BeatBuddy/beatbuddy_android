@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 23
@@ -21,7 +22,6 @@ android {
     }
 }
 
-
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
@@ -32,7 +32,7 @@ dependencies {
     androidTestCompile ('com.android.support.test.espresso:espresso-contrib:2.2'){
         exclude module: 'support-annotations' exclude module: 'support-v4' exclude module: 'support-v13' exclude module: 'recyclerview-v7'
     }
-    androidTestCompile 'com.android.support:support-annotations:23.1.1'
+    androidTestCompile 'com.android.support:support-annotations:23.2.0'
     androidTestCompile 'org.hamcrest:hamcrest-library:1.3'
     androidTestCompile 'org.mockito:mockito-core:1.+'
     testCompile 'org.mockito:mockito-core:1.+'
@@ -52,6 +52,8 @@ dependencies {
     compile 'com.android.support:cardview-v7:23.1.1'
     compile 'com.github.florent37:picassopalette:1.0.2@aar'
     compile 'com.android.support:palette-v7:23.1.1'
+    compile 'com.facebook.android:facebook-android-sdk:[4,5)'
+    compile 'com.google.android.gms:play-services-auth:8.3.0'
     compile project (path: ':signalr-client-sdk')
     compile project (path: ':signalr-client-sdk-android')
 }

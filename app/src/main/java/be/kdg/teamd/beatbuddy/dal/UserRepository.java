@@ -29,6 +29,9 @@ public interface UserRepository {
     @POST("users/register")
     Call<User> register(@Query("firstName") String firstName, @Query("lastName") String lastName, @Query("nickname") String nickname, @Query("email") String email, @Query("password") String password);
 
+    @POST("users/gplusRegister")
+    Call<User> registerGplus(@Query("firstName") String firstName, @Query("lastName") String lastName, @Query("nickname") String nickname, @Query("email") String email, @Query("password") String password, @Query("imageUrl") String imageUrl);
+
     @GET("users/userOrganisations")
     Call<List<Organisation>> getUserOrganisations();
 

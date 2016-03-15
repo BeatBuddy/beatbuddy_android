@@ -7,9 +7,6 @@ import android.provider.MediaStore;
 import android.util.Base64;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 
 /**
  * Created by Ignace on 16/02/2016.
@@ -18,6 +15,8 @@ public class ImageEncoder
 {
     public static String encodeImageUrl(String url)
     {
+        if(url == null) return null;
+
         String toEncodePart = url.substring(0, url.lastIndexOf("."));
         String encodedPart =  Uri.encode(toEncodePart, "utf-8");
         String extension = url.substring(url.lastIndexOf("."));
