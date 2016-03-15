@@ -247,8 +247,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     {
         navigationView.getMenu().setGroupVisible(R.id.group_guest, !loggedIn);
         navigationView.getMenu().setGroupVisible(R.id.group_logged_in, loggedIn);
-        fab_create_playlist.setEnabled(loggedIn);
-        fab_create_organisation.setEnabled(loggedIn);
+        fab_create_playlist.setVisibility(loggedIn ? View.VISIBLE : View.GONE);
+        fab_create_organisation.setVisibility(loggedIn ? View.VISIBLE : View.GONE);
 
         textNotLoggedInPlaylists1.setVisibility(loggedIn ? View.GONE : View.VISIBLE);
         textNotLoggedInPlaylists2.setVisibility(loggedIn ? View.GONE : View.VISIBLE);

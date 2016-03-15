@@ -47,6 +47,7 @@ public class PlaylistTrackAdapter extends RecyclerView.Adapter<PlaylistTrackAdap
 
         Picasso.with(context)
                 .load(track.getCoverArtUrl())
+                .error(R.drawable.default_cover)
                 .into(holder.coverArt);
 
         holder.songTitle.setText(track.getTitle());

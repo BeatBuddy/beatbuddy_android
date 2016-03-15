@@ -48,6 +48,7 @@ public class HistoryTrackAdapter extends RecyclerView.Adapter<HistoryTrackAdapte
 
         Picasso.with(context)
                 .load(track.getCoverArtUrl())
+                .error(R.drawable.default_cover)
                 .into(holder.coverArt);
 
         holder.songTitle.setText(track.getTitle());

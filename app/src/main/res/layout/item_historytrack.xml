@@ -13,7 +13,7 @@
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/header_default" />
+        android:src="@drawable/default_cover" />
 
     <RelativeLayout
         android:id="@+id/track_info"

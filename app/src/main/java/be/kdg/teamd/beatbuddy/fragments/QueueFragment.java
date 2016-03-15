@@ -146,14 +146,12 @@ public class QueueFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     public void onTrackUpvoted(Vote vote, long trackId)
     {
         updateTrackScoreLocal(vote, trackId);
-        Snackbar.make(recyclerView, "Upvoted: " + vote.getId(), Snackbar.LENGTH_LONG).show();
     }
 
     @Override
     public void onTrackDownvoted(Vote vote, long trackId)
     {
         updateTrackScoreLocal(vote, trackId);
-        Snackbar.make(recyclerView, "Downvoted: " + vote.getId(), Snackbar.LENGTH_LONG).show();
     }
 
     @Override

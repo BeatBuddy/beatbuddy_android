@@ -5,18 +5,22 @@ import android.graphics.PorterDuff;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.VideoView;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.florent37.picassopalette.PicassoPalette;
 import com.squareup.picasso.Picasso;
 
@@ -56,6 +60,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
     @Bind(R.id.musicplayer_song_artist) TextView songArtist;
     @Bind(R.id.musicplayer_song_timeleft) TextView songTimeLeft;
     @Bind(R.id.musicplayer_progress) ProgressBar songProgress;
+    @Bind(R.id.musicplayer_loading) ProgressBar songLoading;
 
     private UserConfigurationManager userConfigurationManager;
     private PlaylistRepository playlistRepository;
@@ -101,12 +106,17 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle(playlistKey);
 
-        signalr = new PlaylistSignalr(this);
-        signalr.connect(playlistId + "");
+        setupSignalR();
 
         if(!isTesting){
             presenter.loadPlaylist(playlistId); // TODO: join by key, not by ID
         }
+    }
+
+    private void setupSignalR()
+    {
+        signalr = new PlaylistSignalr(this);
+        signalr.connect(playlistId + "");
     }
 
     private void setupViewPager(final ViewPager viewPager)
@@ -157,18 +167,29 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
     @Override
     public void onPlaySong(Track track)
     {
+        playSong(track, 0);
+    }
+
+    private void playSong(Track track, int trackTimeToStartAt)
+    {
         this.track = track;
 
         if (track.getUrl() != null)
         {
             String link = track.getUrl();
-            playSongFromUrl(link);
+            playSongFromUrl(link, trackTimeToStartAt);
+        }
+        else
+        {
+            isPlaylistMaster = false;
+            playPauseButton.setVisibility(View.GONE);
         }
 
         lastPlaybackType = PlaybackType.PLAYLIST;
 
         Picasso.with(this)
                 .load(track.getCoverArtUrl())
+                .error(R.drawable.default_cover)
                 .into(coverArt, PicassoPalette.with(track.getCoverArtUrl(), coverArt)
                                 .intoCallBack(
                                         new PicassoPalette.CallBack()
@@ -219,10 +240,12 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
             playPauseButton.setImageResource(R.drawable.ic_pause_24dp);
 
             if(lastPlaybackType == PlaybackType.PLAYLIST){
+                songLoading.setVisibility(View.VISIBLE);
                 if (!isPlaylistMaster)
                 {
-                    // First time playing, fetching song
+                    // First time playing, fetching song, this guy will become playlist master
                     presenter.playNextSong(playlistId);
+                    isPlaylistMaster = true;
                 }
                 else
                 {
@@ -237,32 +260,67 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
     }
 
     private Runnable updateProgressBarThread;
-    private void playSongFromUrl(String url)
+    private void playSongFromUrl(final String url, final int trackTimeToStartAt)
     {
+        songLoading.setVisibility(View.VISIBLE);
+
         try {
             MediaController mediaController = new MediaController(this);
             mediaController.setAnchorView(videoView);
             final Uri video = Uri.parse(url);
             videoView.setMediaController(mediaController);
             videoView.setVideoURI(video);
-            videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            videoView.setOnErrorListener(new MediaPlayer.OnErrorListener()
+            {
                 @Override
-                public void onPrepared(MediaPlayer mp) {
+                public boolean onError(MediaPlayer mp, int what, int extra)
+                {
+                    new MaterialDialog.Builder(PlaylistActivity.this)
+                            .title("Error loading track")
+                            .content("BeatBuddy can't play the current track. Your internet connection timed out, bad KdG WiFi!\n\nErrorcode: " + what)
+                            .positiveText("Retry")
+                            .onPositive(new MaterialDialog.SingleButtonCallback()
+                            {
+                                @Override
+                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which)
+                                {
+                                    playSongFromUrl(url, trackTimeToStartAt);
+                                }
+                            })
+                            .negativeText("Close")
+                            .show();
+                    songLoading.setVisibility(View.GONE);
+                    return true;
+                }
+            });
+            videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener()
+            {
+                @Override
+                public void onPrepared(MediaPlayer mp)
+                {
+                    songLoading.setVisibility(View.GONE);
+
+                    if (trackTimeToStartAt != 0)
+                        videoView.seekTo(trackTimeToStartAt * 1000);
+
                     videoView.start();
-                    if (lastPlaybackType == PlaybackType.PLAYLIST) {
-                        isPlaylistMaster = true;
-                        signalr.startPlaying(track.getArtist(), track.getCoverArtUrl(), 2, track.getTitle(), track.getTrackSource().getTrackId());
-                    }
+
+                    if (lastPlaybackType == PlaybackType.PLAYLIST && isPlaylistMaster)
+                        signalr.startPlaying(track.getArtist(), track.getCoverArtUrl(), playlist.getPlaylistTracks().size(), track.getTitle(), track.getTrackSource().getTrackId());
 
                     //This will update the progress bar
-                    updateProgressBarThread = new Runnable() {
-                        public void run() {
-                            if (songProgress != null) {
+                    updateProgressBarThread = new Runnable()
+                    {
+                        public void run()
+                        {
+                            if (songProgress != null)
+                            {
                                 int progress = videoView.getCurrentPosition() / 1000;
                                 songProgress.setProgress(progress);
                                 songTimeLeft.setText("-" + DateUtil.secondsToFormattedString((videoView.getDuration() - videoView.getCurrentPosition()) / 1000));
                             }
-                            if (videoView.isPlaying()) {
+                            if (videoView.isPlaying())
+                            {
                                 assert songProgress != null;
                                 songProgress.postDelayed(updateProgressBarThread, 1000);
                             }
@@ -286,6 +344,24 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
     }
 
     @Override
+    public void onStopMusic()
+    {
+        //TODO: check if should show play button
+        playPauseButton.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onPlayLive(final Track track, int currentTrackProgress)
+    {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                onPlaySong(track);
+            }
+        });
+    }
+
+    @Override
     public void onNewTrackPlaying(final Track track)
     {
         runOnUiThread(new Runnable() {
@@ -304,9 +380,28 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
             @Override
             public void run()
             {
-                playSongFromUrl(playlink);
+                playSongFromUrl(playlink, 0);
             }
         });
+    }
+
+    @Override
+    public void onErrorConnecting(String errorMessage)
+    {
+        new MaterialDialog.Builder(this)
+                .title("Error connectiong")
+                .content(errorMessage)
+                .positiveText("Retry")
+                .onPositive(new MaterialDialog.SingleButtonCallback()
+                {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which)
+                    {
+                        setupSignalR();
+                    }
+                })
+                .negativeText("Close")
+                .show();
     }
 
     @Override
@@ -319,6 +414,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
 
         Picasso.with(this)
                 .load(track.getCoverArtUrl())
+                .error(R.drawable.default_cover)
                 .into(coverArt, PicassoPalette.with(track.getCoverArtUrl(), coverArt)
                                 .intoCallBack(
                                         new PicassoPalette.CallBack()
@@ -334,6 +430,8 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
         songArtist.setText(track.getArtist());
         songTimeLeft.setText("-" + DateUtil.secondsToFormattedString(track.getDuration() / 1000));
         songProgress.setMax(track.getDuration());
+
+        playPauseButton.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -341,7 +439,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
         if (track.getUrl() != null)
         {
             String link = track.getUrl();
-            playSongFromUrl(link);
+            playSongFromUrl(link, 0);
         }
     }
 
@@ -349,7 +447,8 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
     public void onCompletion(MediaPlayer mediaPlayer) {
         switch(lastPlaybackType){
             case PLAYLIST:
-                presenter.playNextSong(playlistId);
+                if (isPlaylistMaster)
+                    presenter.playNextSong(playlistId);
                 break;
             case HISTORY:
                 int nextTrackPosition = historyPosition + 1;

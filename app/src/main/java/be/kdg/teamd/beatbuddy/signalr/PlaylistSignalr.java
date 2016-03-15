@@ -14,6 +14,7 @@ import microsoft.aspnet.signalr.client.hubs.HubConnection;
 import microsoft.aspnet.signalr.client.hubs.HubProxy;
 import microsoft.aspnet.signalr.client.hubs.SubscriptionHandler;
 import microsoft.aspnet.signalr.client.hubs.SubscriptionHandler1;
+import microsoft.aspnet.signalr.client.hubs.SubscriptionHandler2;
 
 /**
  * Created by Ignace on 8/03/2016.
@@ -54,6 +55,7 @@ public class PlaylistSignalr
             public void onError(Throwable throwable)
             {
                 Log.d("SignalR", "Error signalr: " + throwable.getMessage());
+                listener.onErrorConnecting(throwable.getMessage());
             }
         });
         try {
@@ -74,6 +76,25 @@ public class PlaylistSignalr
                 listener.onNewTrackPlaying(track);
             }
         }, CurrentPlayingViewModel.class);
+        proxy.on("playLive", new SubscriptionHandler2<CurrentPlayingViewModel, Integer>() {
+            @Override
+            public void run(CurrentPlayingViewModel currentPlayingViewModel, Integer songProgressTime) {
+                Track track = new Track();
+                track.setCoverArtUrl(currentPlayingViewModel.getCoverArtUrl());
+                track.setTitle(currentPlayingViewModel.getTitle());
+                track.setArtist(currentPlayingViewModel.getArtist());
+
+                listener.onPlayLive(track, songProgressTime);
+            }
+        }, CurrentPlayingViewModel.class, Integer.class);
+        proxy.on("stopMusicPlaying", new SubscriptionHandler()
+        {
+            @Override
+            public void run()
+            {
+                listener.onStopMusic();
+            }
+        });
         proxy.on("addNewMessageToPage", new SubscriptionHandler()
         {
             @Override
@@ -188,7 +209,10 @@ public class PlaylistSignalr
     public interface PlaylistSignalrListener
     {
         void onTrackAdded();
+        void onStopMusic();
+        void onPlayLive(Track track, int currentTrackProgress);
         void onNewTrackPlaying(Track track);
         void onPlaylinkFetched(String playlink);
+        void onErrorConnecting(String errorMessage);
     }
 }

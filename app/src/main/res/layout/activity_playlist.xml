@@ -37,7 +37,7 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="4dp"
+        android:layout_height="3dp"
         android:background="@drawable/drop_shadow_top"
         android:layout_alignBottom="@+id/playlist_viewpager"
         android:layout_alignParentStart="true"/>
