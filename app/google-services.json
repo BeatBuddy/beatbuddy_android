@@ -1,0 +1,56 @@
+{
+  "project_info": {
+    "project_id": "beatbuddy-1223",
+    "project_number": "53356525906",
+    "name": "BeatBuddy"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:53356525906:android:18207e57b80eb216",
+        "client_id": "android:be.kdg.teamd.beatbuddy",
+        "client_type": 1,
+        "android_client_info": {
+          "package_name": "be.kdg.teamd.beatbuddy",
+          "certificate_hash": []
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "53356525906-5b6l9cu1b69jm0vod51jik4usifiq7gg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "be.kdg.teamd.beatbuddy",
+            "certificate_hash": "5D02D4455BF191D060F5247C6EA025D2F4C6E1ED"
+          }
+        },
+        {
+          "client_id": "53356525906-9pkgkjm1c1ie8l0q7lopd0mb86edsng4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "cloud_messaging_service": {
+          "status": 1,
+          "apns_config": []
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "google_signin_service": {
+          "status": 2
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "client_info": [],
+  "ARTIFACT_VERSION": "1"
+}
