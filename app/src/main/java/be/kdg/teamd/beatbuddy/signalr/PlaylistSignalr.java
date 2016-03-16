@@ -6,7 +6,6 @@ import java.util.concurrent.ExecutionException;
 
 import be.kdg.teamd.beatbuddy.model.playlists.CurrentPlayingViewModel;
 import be.kdg.teamd.beatbuddy.model.playlists.Track;
-import be.kdg.teamd.beatbuddy.model.playlists.TrackSource;
 import microsoft.aspnet.signalr.client.Action;
 import microsoft.aspnet.signalr.client.ErrorCallback;
 import microsoft.aspnet.signalr.client.SignalRFuture;
@@ -69,17 +68,6 @@ public class PlaylistSignalr
             e.printStackTrace();
         }
 
-        proxy.on("startMusicPlaying", new SubscriptionHandler1<CurrentPlayingViewModel>() {
-            @Override
-            public void run(CurrentPlayingViewModel currentPlayingViewModel) {
-                Track track = new Track();
-                track.setCoverArtUrl(currentPlayingViewModel.getCoverArtUrl());
-                track.setTitle(currentPlayingViewModel.getTitle());
-                track.setArtist(currentPlayingViewModel.getArtist());
-
-                listener.onNewTrackPlaying(track);
-            }
-        }, CurrentPlayingViewModel.class);
         proxy.on("playLive", new SubscriptionHandler2<CurrentPlayingViewModel, Integer>() {
             @Override
             public void run(CurrentPlayingViewModel currentPlayingViewModel, Integer songProgressTime) {
@@ -88,7 +76,7 @@ public class PlaylistSignalr
                 track.setTitle(currentPlayingViewModel.getTitle());
                 track.setArtist(currentPlayingViewModel.getArtist());
 
-                listener.onPlayLive(track, songProgressTime);
+                listener.onPlay(track);
             }
         }, CurrentPlayingViewModel.class, Integer.class);
         proxy.on("stopMusicPlaying", new SubscriptionHandler()
@@ -129,6 +117,12 @@ public class PlaylistSignalr
                 listener.onPlaylinkFetched(playlink);
             }
         }, String.class);
+        proxy.on("onPlaylinkGeneratedSync", new SubscriptionHandler2<String, Integer>() {
+            @Override
+            public void run(String playlink, Integer songProgressTime) {
+                listener.onPlaylinkFetchedSync(playlink, songProgressTime);
+            }
+        }, String.class, Integer.class);
     }
 
     public void playLive()
@@ -279,9 +273,9 @@ public class PlaylistSignalr
         void onStopMusic();
         void onPauseMusic();
         void onResumeMusic(int position);
-        void onPlayLive(Track track, int position);
-        void onNewTrackPlaying(Track track);
-        void onPlaylinkFetched(String playlink);
+        void onPlay(Track track);
         void onErrorConnecting(String errorMessage);
+        void onPlaylinkFetched(String playlink);
+        void onPlaylinkFetchedSync(String playlink, int position);
     }
 }

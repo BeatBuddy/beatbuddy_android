@@ -428,18 +428,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
     }
 
     @Override
-    public void onPlayLive(final Track track, final int position)
-    {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                playSong(track, position);
-            }
-        });
-    }
-
-    @Override
-    public void onNewTrackPlaying(final Track track)
+    public void onPlay(final Track track)
     {
         runOnUiThread(new Runnable() {
             @Override
@@ -458,6 +447,19 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
             public void run()
             {
                 playSongFromUrl(playlink, 0);
+            }
+        });
+    }
+
+    @Override
+    public void onPlaylinkFetchedSync(final String playlink, final int position)
+    {
+        runOnUiThread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                playSongFromUrl(playlink, position);
             }
         });
     }
