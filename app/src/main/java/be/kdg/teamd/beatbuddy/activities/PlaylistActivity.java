@@ -12,6 +12,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -80,6 +82,9 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
     private PlaybackType lastPlaybackType = PlaybackType.PLAYLIST;
     private int historyPosition = 0;
 
+    private Menu menu;
+    private boolean isMuted = true;
+
     public void setPlaylistRepository(PlaylistRepository playlistRepository, UserConfigurationManager userConfigurationManager) {
         this.playlistRepository = playlistRepository;
         this.userConfigurationManager = userConfigurationManager;
@@ -112,6 +117,48 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
         if(!isTesting){
             presenter.loadPlaylist(playlistId); // TODO: join by key, not by ID
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        MenuInflater inflater=getMenuInflater();
+        inflater.inflate(R.menu.menu_playlist, menu);
+        this.menu = menu;
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch (item.getItemId())
+        {
+            case R.id.playlist_mute:
+                if (isMuted) unMute(); else mute();
+                break;
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void mute()
+    {
+        isMuted = true;
+        menu.findItem(R.id.playlist_mute).setIcon(R.drawable.ic_volume_off_24dp);
+        videoView.stopPlayback();
+    }
+
+    private void unMute()
+    {
+        isMuted = false;
+        menu.findItem(R.id.playlist_mute).setIcon(R.drawable.ic_volume_up_24dp);
+
+        if (lastPlaybackType == PlaybackType.PLAYLIST)
+            signalr.playLive();
     }
 
     private void setupSignalR()
@@ -163,19 +210,6 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
 
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch (item.getItemId())
-        {
-            case android.R.id.home:
-                finish();
-                return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -292,6 +326,8 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
     private Runnable updateProgressBarThread;
     private void playSongFromUrl(final String url, final int trackTimeToStartAt)
     {
+        if (isMuted) return;
+
         songLoading.setVisibility(View.VISIBLE);
 
         try {
@@ -305,7 +341,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
                 {
                     new MaterialDialog.Builder(PlaylistActivity.this)
                             .title("Error loading track")
-                            .content("BeatBuddy can't play the current track. Your internet connection timed out, bad KdG WiFi!\n\nErrorcode: " + what)
+                            .content("Can't play the current track. Your internet connection timed out.\n\nErrorcode: " + what)
                             .positiveText("Retry")
                             .onPositive(new MaterialDialog.SingleButtonCallback()
                             {
@@ -379,12 +415,25 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
     }
 
     @Override
-    public void onPlayLive(final Track track, int currentTrackProgress)
+    public void onPauseMusic()
+    {
+        videoView.pause();
+    }
+
+    @Override
+    public void onResumeMusic(int position)
+    {
+        videoView.seekTo(position * 1000);
+        videoView.resume();
+    }
+
+    @Override
+    public void onPlayLive(final Track track, final int position)
     {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                onPlaySong(track);
+                playSong(track, position);
             }
         });
     }
@@ -443,6 +492,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
 
     @Override
     public void onHistoryTrackClicked(Track track, int position) {
+        unMute();
         lastPlaybackType = PlaybackType.HISTORY;
         historyPosition = position;
 

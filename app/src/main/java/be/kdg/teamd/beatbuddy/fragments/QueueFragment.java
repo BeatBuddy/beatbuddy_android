@@ -157,7 +157,8 @@ public class QueueFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     @Override
     public void onException(String message)
     {
-        Snackbar.make(recyclerView, message, Snackbar.LENGTH_LONG).show();
+        Snackbar.make(recyclerView, message, Snackbar.LENGTH_SHORT).show();
+        listener.onQueueRefreshRequested();
     }
 
     private void updateTrackScoreLocal(Vote vote, long trackId)

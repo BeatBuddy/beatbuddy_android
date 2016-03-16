@@ -35,7 +35,6 @@ public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private long playlistId;
     private List<PlaylistTrack> tracks = new ArrayList<>();
     private HistoryTrackAdapter trackAdapter;
-    private UserConfigurationManager userConfigurationManager;
     private HistoryPresenter presenter;
     private HistoryInteractionListener listener;
 
@@ -81,8 +80,6 @@ public class HistoryFragment extends Fragment implements SwipeRefreshLayout.OnRe
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setRefreshing(true);
         presenter.refreshHistory(playlistId);
-
-        userConfigurationManager = ((BeatBuddyApplication) getActivity().getApplication()).getUserConfigurationManager();
 
         return view;
     }

@@ -99,6 +99,20 @@ public class PlaylistSignalr
                 listener.onStopMusic();
             }
         });
+        proxy.on("pauseMusicPlaying", new SubscriptionHandler()
+        {
+            @Override
+            public void run()
+            {
+                listener.onPauseMusic();
+            }
+        });
+        proxy.on("resumeMusicPlaying", new SubscriptionHandler1<Integer>() {
+            @Override
+            public void run(Integer position) {
+                listener.onResumeMusic(position);
+            }
+        }, Integer.class);
         proxy.on("addNewMessageToPage", new SubscriptionHandler()
         {
             @Override
@@ -115,6 +129,33 @@ public class PlaylistSignalr
                 listener.onPlaylinkFetched(playlink);
             }
         }, String.class);
+    }
+
+    public void playLive()
+    {
+        SignalRFuture<Void> playLive = proxy.invoke("PlayLive", groupName);
+        playLive.done(new Action<Void>()
+        {
+            @Override
+            public void run(Void aVoid) throws Exception
+            {
+                Log.d("SignalR", "Requested to play live: " + groupName);
+            }
+        });
+        playLive.onError(new ErrorCallback()
+        {
+            @Override
+            public void onError(Throwable throwable)
+            {
+                Log.d("SignalR", "Error request to play live: " + throwable.getMessage());
+            }
+        });
+        try {
+            playLive.get();
+        } catch (InterruptedException | ExecutionException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     public void addTrack()
@@ -205,16 +246,40 @@ public class PlaylistSignalr
         }
     }
 
-    public void resumePlaying(long durationAt)
+    public void resumePlaying(final long durationAt)
     {
-        proxy.invoke("ResumePlaying", durationAt, groupName);
+        SignalRFuture<Void> resumePlaying = proxy.invoke("ResumePlaying", durationAt, groupName);
+        resumePlaying.done(new Action<Void>()
+        {
+            @Override
+            public void run(Void aVoid) throws Exception
+            {
+                Log.d("SignalR", "Resumed playing: " + durationAt + " group: " + groupName);
+            }
+        });
+        resumePlaying.onError(new ErrorCallback()
+        {
+            @Override
+            public void onError(Throwable throwable)
+            {
+                Log.d("SignalR", "Error resuming: " + throwable.getMessage());
+            }
+        });
+        try {
+            resumePlaying.get();
+        } catch (InterruptedException | ExecutionException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     public interface PlaylistSignalrListener
     {
         void onTrackAdded();
         void onStopMusic();
-        void onPlayLive(Track track, int currentTrackProgress);
+        void onPauseMusic();
+        void onResumeMusic(int position);
+        void onPlayLive(Track track, int position);
         void onNewTrackPlaying(Track track);
         void onPlaylinkFetched(String playlink);
         void onErrorConnecting(String errorMessage);
