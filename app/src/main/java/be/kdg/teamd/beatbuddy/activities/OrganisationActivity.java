@@ -12,12 +12,12 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import be.kdg.teamd.beatbuddy.R;
@@ -39,6 +39,7 @@ public class OrganisationActivity extends AppCompatActivity implements Organisat
     @Bind(R.id.toolbar) Toolbar toolbar;
     @Bind(R.id.organisation_banner) ImageView organisationBanner;
     @Bind(R.id.text_org_no_playlists) TextView textNoPlaylists;
+    @Bind(R.id.loading_playlists) ProgressBar loading_playlists;
 
     private Organisation organisation;
     private List<Playlist> playlists;
@@ -93,25 +94,27 @@ public class OrganisationActivity extends AppCompatActivity implements Organisat
     public void onOrganisationLoaded(Organisation organisation) {
         this.organisation = organisation;
         this.playlists.clear();
-        Collections.addAll(this.playlists, organisation.getPlaylists());
-        playlistAdapter.notifyDataSetChanged();
         showOrganisation();
-        if(organisation.getPlaylists().length == 0)
+        if(organisation.getPlaylists() == null || organisation.getPlaylists().size() == 0)
             textNoPlaylists.setVisibility(View.VISIBLE);
         else{
             textNoPlaylists.setVisibility(View.GONE);
             int viewHeight = (int) (SizeUtil.convertDpToPixel(172, this));
             viewHeight = viewHeight * ((playlists.size() + 1) / 2);
             recyclerView.getLayoutParams().height = viewHeight;
+            this.playlists.addAll(organisation.getPlaylists());
+            playlistAdapter.notifyDataSetChanged();
         }
 
         swipeRefreshLayout.setRefreshing(false);
+        loading_playlists.setVisibility(View.GONE);
     }
 
     @Override
     public void onException(String message) {
         Snackbar.make(swipeRefreshLayout, message, Snackbar.LENGTH_LONG).show();
         swipeRefreshLayout.setRefreshing(false);
+        loading_playlists.setVisibility(View.GONE);
     }
 
     @Override
@@ -133,6 +136,7 @@ public class OrganisationActivity extends AppCompatActivity implements Organisat
             presenter.loadOrganisation(organisationId);
         }
         swipeRefreshLayout.setRefreshing(true);
+        loading_playlists.setVisibility(View.VISIBLE);
     }
 
     @Override

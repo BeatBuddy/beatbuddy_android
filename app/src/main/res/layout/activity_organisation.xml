@@ -30,7 +30,19 @@
             android:scaleType="centerCrop"
             android:src="@drawable/header_default" />
 
+        <ProgressBar
+            android:layout_below="@+id/organisation_banner"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:id="@+id/loading_playlists"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:visibility="visible"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="0dp"/>
+
         <android.support.v4.widget.SwipeRefreshLayout
+            android:layout_marginTop="8dp"
             android:id="@+id/swiperefresh_org"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

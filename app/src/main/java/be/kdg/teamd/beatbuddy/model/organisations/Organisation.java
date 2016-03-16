@@ -1,6 +1,7 @@
 package be.kdg.teamd.beatbuddy.model.organisations;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
 
 import be.kdg.teamd.beatbuddy.model.playlists.Playlist;
@@ -13,7 +14,7 @@ public class Organisation implements Serializable {
                     bannerUrl,
                     colorScheme,
                     key;
-    private Playlist[] playlists;
+    private List<Playlist> playlists;
     private Map<User, Role> users;
 
     public String getBannerUrl() {
@@ -36,7 +37,7 @@ public class Organisation implements Serializable {
         return name;
     }
 
-    public Playlist[] getPlaylists() {
+    public List<Playlist> getPlaylists() {
         return playlists;
     }
 
