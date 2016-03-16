@@ -74,6 +74,7 @@ public class PlaylistPresenter {
                 }
                 else
                 {
+                    listener.onErrorRetrievingSong();
                     listener.onException("Error retrieving next song");
                 }
             }
@@ -109,6 +110,7 @@ public class PlaylistPresenter {
         void onPlaybackTrackLoaded(Track track);
         void onPlaylistLoaded(Playlist playlist);
         void onPlaySong(Track track);
+        void onErrorRetrievingSong();
         void onException(String message);
     }
 }

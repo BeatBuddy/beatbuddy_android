@@ -24,7 +24,7 @@
         android:layout_marginTop="4dp"
         android:layout_alignBottom="@+id/musicplayer_cover_art"
         android:id="@+id/musicplayer_song_info"
-        android:layout_toStartOf="@+id/musicplayer_play_pause"
+        android:layout_toStartOf="@+id/musicplayer_loading"
         android:layout_toEndOf="@+id/musicplayer_cover_art">
 
         <TextView
@@ -40,7 +40,7 @@
             android:id="@+id/musicplayer_song_artist"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="It's up to the playlist master to start the party"
+            android:text="You can already start adding music"
             android:layout_below="@id/musicplayer_song_title"/>
 
         <TextView
@@ -73,7 +73,8 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_alignStart="@+id/musicplayer_play_pause"
-        android:layout_alignBottom="@+id/musicplayer_song_info"/>
+        android:layout_alignBottom="@+id/musicplayer_song_info"
+        android:padding="4dp"/>
 
     <ProgressBar
         android:id="@+id/musicplayer_progress"

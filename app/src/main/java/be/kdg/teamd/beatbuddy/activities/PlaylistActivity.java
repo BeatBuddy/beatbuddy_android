@@ -182,7 +182,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
         else
         {
             isPlaylistMaster = false;
-            playPauseButton.setVisibility(View.GONE);
+            playPauseButton.setVisibility(View.INVISIBLE);
         }
 
         lastPlaybackType = PlaybackType.PLAYLIST;
@@ -217,6 +217,12 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
     }
 
     @Override
+    public void onErrorRetrievingSong() {
+        songLoading.setVisibility(View.GONE);
+        playPauseButton.setImageResource(R.drawable.ic_play_arrow_24dp);
+    }
+
+    @Override
     public void onQueueRefreshRequested() {
         presenter.loadPlaylist(playlistId);
     }
@@ -242,10 +248,10 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
             playPauseButton.setImageResource(R.drawable.ic_pause_24dp);
 
             if(lastPlaybackType == PlaybackType.PLAYLIST){
-                songLoading.setVisibility(View.VISIBLE);
                 if (!isPlaylistMaster)
                 {
                     // First time playing, fetching song, this guy will become playlist master
+                    songLoading.setVisibility(View.VISIBLE);
                     presenter.playNextSong(playlistId);
                     isPlaylistMaster = true;
                 }
@@ -253,6 +259,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
                 {
                     videoView.start();
                     signalr.resumePlaying(videoView.getCurrentPosition() / 1000);
+                    songProgress.postDelayed(updateProgressBarThread, 1000);
                 }
             } else {
                 videoView.start();
