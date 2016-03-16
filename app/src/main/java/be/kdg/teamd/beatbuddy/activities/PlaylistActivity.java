@@ -11,6 +11,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -139,6 +140,26 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
         adapter.addFrag(queueFragment, getString(R.string.queue));
         adapter.addFrag(chatFragment, getString(R.string.chat));
         adapter.addFrag(historyFragment, getString(R.string.history));
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener()
+        {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
+            {
+            }
+
+            @Override
+            public void onPageSelected(int position)
+            {
+                if (position == 0)
+                    queueFragment.setTracks(playlist.getPlaylistTracks());
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state)
+            {
+            }
+        });
 
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
