@@ -52,6 +52,7 @@ public class OrganisationLinearLayoutAdapter {
             if (!TextUtils.isEmpty(organisation.getBannerUrl()))
                 Picasso.with(linearLayout.getContext())
                         .load(context.getString(R.string.organisationImageLocation) + ImageEncoder.encodeImageUrl(organisation.getBannerUrl()))
+                        .fit()
                         .into(viewHolder.organisationBanner);
         }
 

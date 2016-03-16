@@ -115,6 +115,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             changeVisibleStates(true);
             loadUserPlaylistsAndOrganisations();
         } else {
+            changeVisibleStates(false);
             presenter.loadRecommendedPlaylists(6);
             loadingRecommendations.setVisibility(View.VISIBLE);
         }
@@ -263,7 +264,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if (user == null)
         {
-            userAvatar.setImageResource(R.mipmap.ic_launcher);
+            userAvatar.setImageResource(R.drawable.default_avatar);
             username.setText(R.string.guest);
             subname.setText(R.string.not_logged_in);
         }
@@ -272,6 +273,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             String avatarUrl = getString(R.string.avatarImageLocation) + ImageEncoder.encodeImageUrl(user.getImageUrl());
             Picasso.with(this)
                     .load(avatarUrl)
+                    .fit()
+                    .placeholder(R.drawable.default_avatar)
+                    .error(R.drawable.default_avatar)
                     .into(userAvatar);
 
             username.setText(user.getNickname());

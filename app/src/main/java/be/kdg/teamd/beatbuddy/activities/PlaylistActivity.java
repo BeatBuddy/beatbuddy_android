@@ -189,7 +189,9 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
 
         Picasso.with(this)
                 .load(track.getCoverArtUrl())
+                .placeholder(R.drawable.default_cover)
                 .error(R.drawable.default_cover)
+                .fit()
                 .into(coverArt, PicassoPalette.with(track.getCoverArtUrl(), coverArt)
                                 .intoCallBack(
                                         new PicassoPalette.CallBack()
@@ -265,10 +267,8 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
         songLoading.setVisibility(View.VISIBLE);
 
         try {
-            MediaController mediaController = new MediaController(this);
-            mediaController.setAnchorView(videoView);
             final Uri video = Uri.parse(url);
-            videoView.setMediaController(mediaController);
+            videoView.setMediaController(null);
             videoView.setVideoURI(video);
             videoView.setOnErrorListener(new MediaPlayer.OnErrorListener()
             {
@@ -423,7 +423,9 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
 
         Picasso.with(this)
                 .load(track.getCoverArtUrl())
+                .placeholder(R.drawable.default_cover)
                 .error(R.drawable.default_cover)
+                .fit()
                 .into(coverArt, PicassoPalette.with(track.getCoverArtUrl(), coverArt)
                                 .intoCallBack(
                                         new PicassoPalette.CallBack()

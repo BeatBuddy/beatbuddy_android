@@ -45,6 +45,9 @@ public class SearchTrackAdapter extends RecyclerView.Adapter<SearchTrackAdapter.
 
         Picasso.with(context)
                 .load(track.getCoverArtUrl())
+                .placeholder(R.drawable.default_cover)
+                .error(R.drawable.default_cover)
+                .fit()
                 .into(holder.coverArt);
 
         holder.songTitle.setText(track.getTitle());

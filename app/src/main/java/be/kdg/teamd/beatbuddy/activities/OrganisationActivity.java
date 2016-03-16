@@ -85,6 +85,7 @@ public class OrganisationActivity extends AppCompatActivity implements Organisat
         if(!TextUtils.isEmpty(organisation.getBannerUrl()))
             Picasso.with(this)
                     .load(getString(R.string.organisationImageLocation) + ImageEncoder.encodeImageUrl(organisation.getBannerUrl()))
+                    .fit()
                     .into(organisationBanner);
     }
 

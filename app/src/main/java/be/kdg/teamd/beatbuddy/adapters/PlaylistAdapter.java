@@ -54,6 +54,7 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.Playli
         if(!TextUtils.isEmpty(playlist.getImageUrl()))
             Picasso.with(context)
                 .load(context.getString(R.string.playlistImageLocation) + ImageEncoder.encodeImageUrl(playlist.getImageUrl()))
+                    .fit()
                     .into(holder.playlistImage);
         else
             holder.playlistImage = null;
