@@ -48,6 +48,7 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
                 .placeholder(R.drawable.default_avatar)
                 .error(R.drawable.default_avatar)
                 .fit()
+                .centerCrop()
                 .into(holder.avatar);
 
         holder.name.setText(message.getUsername());

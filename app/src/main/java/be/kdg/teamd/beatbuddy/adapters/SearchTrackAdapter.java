@@ -48,6 +48,7 @@ public class SearchTrackAdapter extends RecyclerView.Adapter<SearchTrackAdapter.
                 .placeholder(R.drawable.default_cover)
                 .error(R.drawable.default_cover)
                 .fit()
+                .centerCrop()
                 .into(holder.coverArt);
 
         holder.songTitle.setText(track.getTitle());

@@ -272,6 +272,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Picasso.with(this)
                     .load(avatarUrl)
                     .fit()
+                    .centerCrop()
                     .placeholder(R.drawable.default_avatar)
                     .error(R.drawable.default_avatar)
                     .into(userAvatar);

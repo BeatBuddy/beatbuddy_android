@@ -53,6 +53,7 @@ public class OrganisationLinearLayoutAdapter {
                 Picasso.with(linearLayout.getContext())
                         .load(context.getString(R.string.organisationImageLocation) + ImageEncoder.encodeImageUrl(organisation.getBannerUrl()))
                         .fit()
+                        .centerCrop()
                         .into(viewHolder.organisationBanner);
         }
 

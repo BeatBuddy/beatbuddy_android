@@ -50,6 +50,7 @@ public class PlaylistTrackAdapter extends RecyclerView.Adapter<PlaylistTrackAdap
                 .placeholder(R.drawable.default_cover)
                 .error(R.drawable.default_cover)
                 .fit()
+                .centerCrop()
                 .into(holder.coverArt);
 
         holder.songTitle.setText(track.getTitle());

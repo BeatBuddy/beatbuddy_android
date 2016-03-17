@@ -49,7 +49,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:paddingRight="16dp"/>
+            android:paddingRight="16dp"
+            android:visibility="gone"/>
     </RelativeLayout>
 
     <ImageView
@@ -86,5 +87,6 @@
         android:layout_toEndOf="@+id/musicplayer_cover_art"
         android:max="100"
         android:progress="0"
-        style="?android:progressBarStyleHorizontal"/>
+        style="?android:progressBarStyleHorizontal"
+        android:visibility="gone"/>
 </RelativeLayout>

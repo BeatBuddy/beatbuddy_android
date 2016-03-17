@@ -149,6 +149,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
         isMuted = true;
         menu.findItem(R.id.playlist_mute).setIcon(R.drawable.ic_volume_off_24dp);
         songTimeLeft.setVisibility(View.GONE);
+        songProgress.setVisibility(View.GONE);
         videoView.stopPlayback();
     }
 
@@ -157,6 +158,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
         isMuted = false;
         menu.findItem(R.id.playlist_mute).setIcon(R.drawable.ic_volume_up_24dp);
         songTimeLeft.setVisibility(View.VISIBLE);
+        songProgress.setVisibility(View.VISIBLE);
 
         if (lastPlaybackType == PlaybackType.PLAYLIST)
             signalr.playLive();
@@ -248,6 +250,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
                 .placeholder(R.drawable.default_cover)
                 .error(R.drawable.default_cover)
                 .fit()
+                .centerCrop()
                 .into(coverArt, PicassoPalette.with(track.getCoverArtUrl(), coverArt)
                                 .intoCallBack(
                                         new PicassoPalette.CallBack()
@@ -512,8 +515,8 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
 
     @Override
     public void onHistoryTrackClicked(Track track, int position) {
-        unMute();
         lastPlaybackType = PlaybackType.HISTORY;
+        unMute();
         historyPosition = position;
 
         presenter.getPlaybackTrack(track.getId());
@@ -524,6 +527,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
                 .placeholder(R.drawable.default_cover)
                 .error(R.drawable.default_cover)
                 .fit()
+                .centerCrop()
                 .into(coverArt, PicassoPalette.with(track.getCoverArtUrl(), coverArt)
                                 .intoCallBack(
                                         new PicassoPalette.CallBack()
