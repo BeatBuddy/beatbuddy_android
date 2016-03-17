@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -55,18 +54,17 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="4dp"
                             android:layout_centerVertical="true"
-                            android:text="Your playlists"/>
+                            android:text="@string/your_playlists"/>
 
                         <Button
                             style="@style/BorderlessButton"
                             android:textColor="@color/colorAccent"
                             android:layout_width="wrap_content"
                             android:layout_height="36dp"
-                            android:text="New"
+                            android:text="@string/create"
                             android:id="@+id/main_create_playlist"
                             android:layout_alignParentTop="true"
                             android:layout_alignParentEnd="true"
-                            android:paddingRight="4dp"
                             android:paddingEnd="4dp"/>
 
                     </RelativeLayout>
@@ -91,7 +89,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
-                        android:text="You are not logged in." />
+                        android:text="@string/you_are_not_logged_in" />
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -103,18 +101,17 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="4dp"
                             android:layout_centerVertical="true"
-                            android:text="Your organisations"/>
+                            android:text="@string/your_organisations"/>
 
                         <Button
                             style="@style/BorderlessButton"
                             android:textColor="@color/colorAccent"
                             android:layout_width="wrap_content"
                             android:layout_height="36dp"
-                            android:text="New"
+                            android:text="@string/create"
                             android:id="@+id/main_create_organisation"
                             android:layout_alignParentTop="true"
                             android:layout_alignParentEnd="true"
-                            android:paddingRight="4dp"
                             android:paddingEnd="4dp"/>
                     </RelativeLayout>
 
@@ -133,7 +130,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
-                        android:text="You are not logged in." />
+                        android:text="@string/you_are_not_logged_in" />
 
                     <LinearLayout
                         android:id="@+id/list_main_yourorganisations"
@@ -148,7 +145,7 @@
                         android:layout_marginBottom="4dp"
                         android:layout_marginStart="4dp"
                         android:layout_marginTop="16dp"
-                        android:text="Playlists you might enjoy" />
+                        android:text="@string/playlists_enjoy" />
 
                     <ProgressBar
                         style="?android:attr/progressBarStyleHorizontal"

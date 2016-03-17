@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -15,6 +16,7 @@ import java.util.List;
 import be.kdg.teamd.beatbuddy.R;
 import be.kdg.teamd.beatbuddy.model.organisations.Organisation;
 import be.kdg.teamd.beatbuddy.util.ImageEncoder;
+import be.kdg.teamd.beatbuddy.util.SizeUtil;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -59,8 +61,13 @@ public class OrganisationLinearLayoutAdapter {
 
         if(organisations.size() == 0){
             TextView view = new TextView(linearLayout.getContext());
+
+            LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+            int margin = (int) SizeUtil.convertDpToPixel(5, linearLayout.getContext());
+            params.setMargins(margin, 0, margin, 0);
+
             view.setText(R.string.user_no_organisations);
-            linearLayout.addView(view);
+            linearLayout.addView(view, params);
         }
     }
 
