@@ -1,13 +1,49 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragments.QueueFragment">
 
-    <TextView
-        android:layout_margin="32dp"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/playlist_chat"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Chat comes here!"/>
+        android:layout_height="match_parent"
+        android:layout_above="@+id/relativeLayout"
+        android:paddingTop="8dp"
+        android:clipToPadding="false"/>
 
-</FrameLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/relativeLayout"
+        android:background="#F0F0F0">
+
+        <EditText
+            android:id="@+id/chat_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Say hello.."
+            android:layout_toStartOf="@+id/chat_send"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
+            android:paddingLeft="16dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:background="@android:color/transparent"/>
+
+        <ImageView
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:id="@+id/chat_send"
+            android:src="@drawable/ic_send_24dp"
+            android:padding="16dp"
+            android:scaleType="centerCrop"
+            android:background="?android:attr/selectableItemBackground"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -149,6 +149,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
     {
         isMuted = true;
         menu.findItem(R.id.playlist_mute).setIcon(R.drawable.ic_volume_off_24dp);
+        songTimeLeft.setVisibility(View.GONE);
         videoView.stopPlayback();
     }
 
@@ -156,6 +157,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
     {
         isMuted = false;
         menu.findItem(R.id.playlist_mute).setIcon(R.drawable.ic_volume_up_24dp);
+        songTimeLeft.setVisibility(View.VISIBLE);
 
         if (lastPlaybackType == PlaybackType.PLAYLIST)
             signalr.playLive();
@@ -181,7 +183,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
         historyFragment.setArguments(arguments);
         historyFragment.setListener(this);
 
-        chatFragment = new ChatFragment();
+        chatFragment = ChatFragment.newInstance(playlistId + "");
 
         PlaylistTabAdapter adapter = new PlaylistTabAdapter(getSupportFragmentManager());
         adapter.addFrag(queueFragment, getString(R.string.queue));

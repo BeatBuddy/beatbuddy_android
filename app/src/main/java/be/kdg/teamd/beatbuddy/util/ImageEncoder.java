@@ -24,6 +24,20 @@ public class ImageEncoder
         return encodedPart + extension;
     }
 
+    public static String encodeFullImageUrl(String url, String imageLocation)
+    {
+        if(url == null) return null;
+
+        int positionEndPrefix = url.indexOf(imageLocation) + imageLocation.length();
+        String prefix = url.substring(0, positionEndPrefix);
+
+        String toEncodePart = url.substring(positionEndPrefix, url.lastIndexOf("."));
+        String encodedPart =  Uri.encode(toEncodePart, "utf-8");
+        String extension = url.substring(url.lastIndexOf("."));
+
+        return prefix + encodedPart + extension;
+    }
+
     public static String convertToBase64(Uri image, ContentResolver contentResolver) throws EncodingException
     {
         try

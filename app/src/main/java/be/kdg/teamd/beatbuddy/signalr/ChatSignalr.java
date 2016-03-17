@@ -7,6 +7,7 @@ import java.util.concurrent.ExecutionException;
 import be.kdg.teamd.beatbuddy.model.ChatViewModel;
 import be.kdg.teamd.beatbuddy.model.playlists.CurrentPlayingViewModel;
 import be.kdg.teamd.beatbuddy.model.playlists.Track;
+import be.kdg.teamd.beatbuddy.util.ImageEncoder;
 import microsoft.aspnet.signalr.client.Action;
 import microsoft.aspnet.signalr.client.ErrorCallback;
 import microsoft.aspnet.signalr.client.SignalRFuture;
@@ -15,6 +16,7 @@ import microsoft.aspnet.signalr.client.hubs.HubProxy;
 import microsoft.aspnet.signalr.client.hubs.SubscriptionHandler;
 import microsoft.aspnet.signalr.client.hubs.SubscriptionHandler1;
 import microsoft.aspnet.signalr.client.hubs.SubscriptionHandler2;
+import microsoft.aspnet.signalr.client.hubs.SubscriptionHandler3;
 
 /**
  * Created by Ignace on 8/03/2016.
@@ -64,23 +66,50 @@ public class ChatSignalr
             e.printStackTrace();
         }
 
-        proxy.on("BroadcastMessage", new SubscriptionHandler2<String, String>()
+        proxy.on("BroadcastMessage", new SubscriptionHandler3<String, String, String>()
         {
             @Override
-            public void run(String user, String message)
+            public void run(String user, String message, String avatar)
             {
+                String fullAvatarUrl = avatar;
+                if (!fullAvatarUrl.startsWith(SERVER))
+                    fullAvatarUrl = SERVER + fullAvatarUrl;
+
                 ChatViewModel chatViewModel = new ChatViewModel();
                 chatViewModel.setUsername(user);
                 chatViewModel.setMessage(message);
+                chatViewModel.setAvatarUrl(fullAvatarUrl);
 
                 listener.onMessageReceived(chatViewModel);
             }
-        }, String.class, String.class);
+        }, String.class, String.class, String.class);
     }
 
-    public void send(String username, String message)
+    public void send(String username, String message, String image)
     {
-        proxy.invoke("Send", username, message, groupName);
+        SignalRFuture<Void> sendMessage = proxy.invoke("Send", username, message, image, groupName);
+        sendMessage.done(new Action<Void>()
+        {
+            @Override
+            public void run(Void aVoid) throws Exception
+            {
+                Log.d("SignalR", "Send message to: " + groupName);
+            }
+        });
+        sendMessage.onError(new ErrorCallback()
+        {
+            @Override
+            public void onError(Throwable throwable)
+            {
+                Log.d("SignalR", "Error sending message: " + throwable.getMessage());
+            }
+        });
+        try {
+            sendMessage.get();
+        } catch (InterruptedException | ExecutionException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     public interface ChatSignalrListener
