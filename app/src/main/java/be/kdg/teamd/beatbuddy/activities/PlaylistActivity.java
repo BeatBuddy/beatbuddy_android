@@ -109,7 +109,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        setTitle(playlistKey);
+        setTitle("Loading playlist...");
 
         setupSignalR();
 
@@ -370,6 +370,8 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
 
                     if (trackTimeToStartAt != 0)
                         videoView.seekTo(trackTimeToStartAt * 1000);
+
+                    songProgress.setMax(videoView.getDuration() / 1000);
 
                     videoView.start();
 
