@@ -11,13 +11,11 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.MediaController;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.VideoView;
@@ -27,6 +25,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.florent37.picassopalette.PicassoPalette;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import be.kdg.teamd.beatbuddy.BeatBuddyApplication;
@@ -460,6 +459,23 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
             public void run()
             {
                 playSongFromUrl(playlink, position);
+            }
+        });
+    }
+
+    @Override
+    public void onScoreUpdated(final long playlistTrackId, final PlaylistTrack playlistTrack) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                List<PlaylistTrack> tracks = new ArrayList<>(queueFragment.getTracks());
+                for(PlaylistTrack track : tracks){
+                    if(track.getId() == playlistTrackId){
+                        track.setScore(playlistTrack.getScore());
+                    }
+                }
+                queueFragment.setTracks(tracks);
+                onQueueRefreshRequested();
             }
         });
     }

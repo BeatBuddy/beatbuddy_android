@@ -1,12 +1,20 @@
 package be.kdg.teamd.beatbuddy.model.playlists;
 
 import java.io.Serializable;
-import java.util.List;
 
 public class PlaylistTrack implements Serializable {
     private Track track;
     private int score;
     private int personalScore;
+    private long id;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public Track getTrack() {
         return track;

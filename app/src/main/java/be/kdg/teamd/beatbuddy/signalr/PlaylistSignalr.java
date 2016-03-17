@@ -5,6 +5,7 @@ import android.util.Log;
 import java.util.concurrent.ExecutionException;
 
 import be.kdg.teamd.beatbuddy.model.playlists.CurrentPlayingViewModel;
+import be.kdg.teamd.beatbuddy.model.playlists.PlaylistTrack;
 import be.kdg.teamd.beatbuddy.model.playlists.Track;
 import microsoft.aspnet.signalr.client.Action;
 import microsoft.aspnet.signalr.client.ErrorCallback;
@@ -123,6 +124,13 @@ public class PlaylistSignalr
                 listener.onPlaylinkFetchedSync(playlink, songProgressTime);
             }
         }, String.class, Integer.class);
+        proxy.on("scoreUpdated", new SubscriptionHandler2<Long,PlaylistTrack>() {
+            @Override
+            public void run(Long playlistTrackId, PlaylistTrack playlistTrack) {
+                Log.d("SignalR", "Track with Id " + playlistTrackId + " has its score updated to " + playlistTrack.getScore());
+                listener.onScoreUpdated(playlistTrackId, playlistTrack);
+            }
+        }, Long.class, PlaylistTrack.class);
     }
 
     public void playLive()
@@ -251,11 +259,9 @@ public class PlaylistSignalr
                 Log.d("SignalR", "Resumed playing: " + durationAt + " group: " + groupName);
             }
         });
-        resumePlaying.onError(new ErrorCallback()
-        {
+        resumePlaying.onError(new ErrorCallback() {
             @Override
-            public void onError(Throwable throwable)
-            {
+            public void onError(Throwable throwable) {
                 Log.d("SignalR", "Error resuming: " + throwable.getMessage());
             }
         });
@@ -277,5 +283,6 @@ public class PlaylistSignalr
         void onErrorConnecting(String errorMessage);
         void onPlaylinkFetched(String playlink);
         void onPlaylinkFetchedSync(String playlink, int position);
+        void onScoreUpdated(long playlistTrackId, PlaylistTrack playlistTrack);
     }
 }

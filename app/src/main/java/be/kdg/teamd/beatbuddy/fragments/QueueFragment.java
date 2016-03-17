@@ -52,6 +52,10 @@ public class QueueFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         playlistId = (long) args.get(ARG_PLAYLIST_ID);
     }
 
+    public List<PlaylistTrack> getTracks() {
+        return tracks;
+    }
+
     public void setTracks(List<PlaylistTrack> tracks) {
         if (tracks == null) return;
 
