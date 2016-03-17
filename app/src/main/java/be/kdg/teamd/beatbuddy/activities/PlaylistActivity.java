@@ -160,7 +160,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
         songTimeLeft.setVisibility(View.VISIBLE);
         songProgress.setVisibility(View.VISIBLE);
 
-        if (lastPlaybackType == PlaybackType.PLAYLIST)
+        if (lastPlaybackType == PlaybackType.PLAYLIST && !isPlaylistMaster)
             signalr.playLive();
     }
 
@@ -266,6 +266,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
         songArtist.setText(track.getArtist());
         songTimeLeft.setText("-" + DateUtil.secondsToFormattedString(track.getDuration() / 1000));
         songProgress.setMax(track.getDuration());
+        songProgress.setProgress(0);
 
         onQueueRefreshRequested();
     }
@@ -306,16 +307,19 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
         {
             playPauseButton.setImageResource(R.drawable.ic_pause_24dp);
 
-            if(lastPlaybackType == PlaybackType.PLAYLIST){
+            if(lastPlaybackType == PlaybackType.PLAYLIST)
+            {
                 if (!isPlaylistMaster)
                 {
                     // First time playing, fetching song, this guy will become playlist master
                     songLoading.setVisibility(View.VISIBLE);
                     presenter.playNextSong(playlistId);
+                    unMute();
                     isPlaylistMaster = true;
                 }
                 else
                 {
+                    unMute();
                     videoView.start();
                     signalr.resumePlaying(videoView.getCurrentPosition() / 1000);
                     songProgress.postDelayed(updateProgressBarThread, 1000);
@@ -436,10 +440,12 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
     @Override
     public void onPlay(final Track track)
     {
-        runOnUiThread(new Runnable() {
+        runOnUiThread(new Runnable()
+        {
             @Override
-            public void run() {
-                onPlaySong(track);
+            public void run()
+            {
+                if (!isPlaylistMaster) onPlaySong(track);
             }
         });
     }
@@ -485,6 +491,13 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
                 onQueueRefreshRequested();
             }
         });
+    }
+
+    @Override
+    public void syncLive()
+    {
+        if (isPlaylistMaster)
+            signalr.syncLive(videoView.getCurrentPosition() / 1000, track.getArtist(), track.getCoverArtUrl(), playlist.getPlaylistTracks().size(), track.getTitle(), track.getTrackSource().getTrackId());
     }
 
     @Override

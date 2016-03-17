@@ -45,8 +45,7 @@ public class PlaylistSignalr
             @Override
             public void run(Void aVoid) throws Exception
             {
-                proxy.invoke("JoinGroup", groupName);
-                Log.d("SignalR", "joining group with id: " + groupName);
+                joinGroup();
             }
         });
         awaitConnection.onError(new ErrorCallback()
@@ -65,7 +64,6 @@ public class PlaylistSignalr
         try {
             awaitConnection.get();
         } catch (InterruptedException | ExecutionException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
@@ -131,6 +129,40 @@ public class PlaylistSignalr
                 listener.onScoreUpdated(playlistTrackId, playlistTrack);
             }
         }, Long.class, PlaylistTrack.class);
+        proxy.on("syncLive", new SubscriptionHandler()
+        {
+            @Override
+            public void run()
+            {
+                listener.syncLive();
+            }
+        });
+    }
+
+    private void joinGroup()
+    {
+        SignalRFuture<Void> joinGroup = proxy.invoke("JoinGroup", groupName);
+        joinGroup.done(new Action<Void>()
+        {
+            @Override
+            public void run(Void aVoid) throws Exception
+            {
+                Log.d("SignalR", "Joined group: " + groupName);
+            }
+        });
+        joinGroup.onError(new ErrorCallback()
+        {
+            @Override
+            public void onError(Throwable throwable)
+            {
+                Log.d("SignalR", "Error joining group: " + throwable.getMessage());
+            }
+        });
+        try {
+            joinGroup.get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
     }
 
     public void playLive()
@@ -155,7 +187,6 @@ public class PlaylistSignalr
         try {
             playLive.get();
         } catch (InterruptedException | ExecutionException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
@@ -182,7 +213,6 @@ public class PlaylistSignalr
         try {
             addTrack.get();
         } catch (InterruptedException | ExecutionException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
@@ -216,7 +246,6 @@ public class PlaylistSignalr
         try {
             addTrack.get();
         } catch (InterruptedException | ExecutionException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
@@ -243,7 +272,6 @@ public class PlaylistSignalr
         try {
             addTrack.get();
         } catch (InterruptedException | ExecutionException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
@@ -268,7 +296,39 @@ public class PlaylistSignalr
         try {
             resumePlaying.get();
         } catch (InterruptedException | ExecutionException e) {
-            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    public void syncLive(float position, String artist, String coverArtUrl, int nextTracks, String title, String trackId)
+    {
+        CurrentPlayingViewModel currentPlayingViewModel = new CurrentPlayingViewModel();
+        currentPlayingViewModel.setArtist(artist);
+        currentPlayingViewModel.setCoverArtUrl(coverArtUrl);
+        currentPlayingViewModel.setNextTracks(nextTracks);
+        currentPlayingViewModel.setTitle(title);
+        currentPlayingViewModel.setTrackId(trackId);
+
+        SignalRFuture<Void> syncLive = proxy.invoke("SyncLive", groupName, currentPlayingViewModel, position);
+        syncLive.done(new Action<Void>()
+        {
+            @Override
+            public void run(Void aVoid) throws Exception
+            {
+                Log.d("SignalR", "Send sync live: " + groupName);
+            }
+        });
+        syncLive.onError(new ErrorCallback()
+        {
+            @Override
+            public void onError(Throwable throwable)
+            {
+                Log.d("SignalR", "Error sending sync live: " + throwable.getMessage());
+            }
+        });
+        try {
+            syncLive.get();
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
     }
@@ -284,5 +344,6 @@ public class PlaylistSignalr
         void onPlaylinkFetched(String playlink);
         void onPlaylinkFetchedSync(String playlink, int position);
         void onScoreUpdated(long playlistTrackId, PlaylistTrack playlistTrack);
+        void syncLive();
     }
 }

@@ -46,9 +46,7 @@ public class ChatSignalr
         {
             @Override
             public void run(Void aVoid) throws Exception
-            {
-                proxy.invoke("JoinGroup", groupName);
-                Log.d("SignalR", "joining group with id: " + groupName);
+            { joinGroup();
             }
         });
         awaitConnection.onError(new ErrorCallback()
@@ -62,7 +60,6 @@ public class ChatSignalr
         try {
             awaitConnection.get();
         } catch (InterruptedException | ExecutionException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
@@ -83,6 +80,32 @@ public class ChatSignalr
                 listener.onMessageReceived(chatViewModel);
             }
         }, String.class, String.class, String.class);
+    }
+
+    private void joinGroup()
+    {
+        SignalRFuture<Void> joinGroup = proxy.invoke("JoinGroup", groupName);
+        joinGroup.done(new Action<Void>()
+        {
+            @Override
+            public void run(Void aVoid) throws Exception
+            {
+                Log.d("SignalR", "Joined group: " + groupName);
+            }
+        });
+        joinGroup.onError(new ErrorCallback()
+        {
+            @Override
+            public void onError(Throwable throwable)
+            {
+                Log.d("SignalR", "Error joining group: " + throwable.getMessage());
+            }
+        });
+        try {
+            joinGroup.get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
     }
 
     public void send(String username, String message, String image)
