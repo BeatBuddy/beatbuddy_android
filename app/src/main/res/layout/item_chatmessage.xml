@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp">
+
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/chatmessage_avatar"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/default_avatar"
+        android:layout_marginRight="8dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Blink"
+        android:layout_toEndOf="@+id/chatmessage_avatar"
+        android:id="@+id/chatmessage_name"
+        android:textColor="@color/colorTextPrimary"/>
+    <TextView
+        android:id="@+id/chatmessage_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Hello from the chat-side!"
+        android:layout_below="@+id/chatmessage_name"
+        android:layout_toEndOf="@+id/chatmessage_avatar"/>
+
+</RelativeLayout>

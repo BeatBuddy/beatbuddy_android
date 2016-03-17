@@ -28,10 +28,10 @@
         android:id="@+id/header_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/header_profile_image"
+        android:layout_alignTop="@+id/chatmessage_avatar"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:layout_toEndOf="@+id/header_profile_image"
+        android:layout_toEndOf="@+id/chatmessage_avatar"
         android:text="Guest"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textSize="18sp" />
