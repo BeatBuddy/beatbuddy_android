@@ -46,4 +46,8 @@
     <string name="queue">Queue</string>
     <string name="chat">Chat</string>
     <string name="history">History</string>
+    <string name="your_playlists">Your playlists</string>
+    <string name="you_are_not_logged_in">You are not logged in.</string>
+    <string name="your_organisations">Your organisations</string>
+    <string name="playlists_enjoy">Playlists you might enjoy</string>
 </resources>
