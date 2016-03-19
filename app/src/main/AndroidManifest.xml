@@ -57,7 +57,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="be.kdg.teamd.beatbuddy.activities.PlaylistActivity" />
         </activity>
-        <activity android:name=".activities.OrganisationActivity"/>
+        <activity android:name=".activities.OrganisationActivity" />
+        <activity android:name=".activities.AboutActivity"></activity>
     </application>
 
 </manifest>

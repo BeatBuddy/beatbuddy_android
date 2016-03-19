@@ -197,6 +197,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 changeVisibleStates(false);
                 clearUserPlaylistsAndOrganisations();
                 break;
+
+            case R.id.nav_about:
+                startActivity(new Intent(this, AboutActivity.class));
+                break;
         }
 
         drawer.closeDrawer(GravityCompat.START);
