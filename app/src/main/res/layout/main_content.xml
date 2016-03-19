@@ -20,6 +20,16 @@
             app:popupTheme="@style/AppTheme.PopupOverlay"
             app:theme="@style/BeatBuddyTheme" />
 
+        <ProgressBar
+            android:id="@+id/loading_main"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="-8dp"
+            android:layout_marginTop="-9dp"
+            android:indeterminate="true"
+            android:visibility="gone" />
+
     </android.support.design.widget.AppBarLayout>
 
     <RelativeLayout
@@ -42,43 +52,44 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="12dp"
                     android:orientation="vertical"
+                    android:paddingBottom="32dp"
                     android:paddingEnd="2dp"
-                    android:paddingStart="2dp"
-                    android:paddingBottom="32dp">
+                    android:paddingStart="2dp">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
+
                         <TextView
                             style="?android:textAppearanceSearchResultTitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="4dp"
                             android:layout_centerVertical="true"
-                            android:text="@string/your_playlists"/>
+                            android:layout_marginStart="4dp"
+                            android:text="@string/your_playlists" />
 
                         <Button
+                            android:id="@+id/main_create_playlist"
                             style="@style/BorderlessButton"
-                            android:textColor="@color/colorAccent"
                             android:layout_width="wrap_content"
                             android:layout_height="36dp"
-                            android:text="@string/create"
-                            android:id="@+id/main_create_playlist"
-                            android:layout_alignParentTop="true"
                             android:layout_alignParentEnd="true"
-                            android:paddingEnd="4dp"/>
+                            android:layout_alignParentTop="true"
+                            android:paddingEnd="4dp"
+                            android:text="@string/create"
+                            android:textColor="@color/colorAccent" />
 
                     </RelativeLayout>
 
                     <ProgressBar
-                        style="?android:attr/progressBarStyleHorizontal"
                         android:id="@+id/loading_yourplaylists"
+                        style="?android:attr/progressBarStyleHorizontal"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:indeterminate="true"
-                        android:visibility="gone"
                         android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"/>
+                        android:layout_marginRight="5dp"
+                        android:indeterminate="true"
+                        android:visibility="gone" />
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/list_main_yourplaylists"
@@ -96,35 +107,36 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp">
+
                         <TextView
                             style="?android:textAppearanceSearchResultTitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="4dp"
                             android:layout_centerVertical="true"
-                            android:text="@string/your_organisations"/>
+                            android:layout_marginStart="4dp"
+                            android:text="@string/your_organisations" />
 
                         <Button
+                            android:id="@+id/main_create_organisation"
                             style="@style/BorderlessButton"
-                            android:textColor="@color/colorAccent"
                             android:layout_width="wrap_content"
                             android:layout_height="36dp"
-                            android:text="@string/create"
-                            android:id="@+id/main_create_organisation"
-                            android:layout_alignParentTop="true"
                             android:layout_alignParentEnd="true"
-                            android:paddingEnd="4dp"/>
+                            android:layout_alignParentTop="true"
+                            android:paddingEnd="4dp"
+                            android:text="@string/create"
+                            android:textColor="@color/colorAccent" />
                     </RelativeLayout>
 
                     <ProgressBar
-                        style="?android:attr/progressBarStyleHorizontal"
                         android:id="@+id/loading_yourorganisations"
+                        style="?android:attr/progressBarStyleHorizontal"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:indeterminate="true"
-                        android:visibility="gone"
                         android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"/>
+                        android:layout_marginRight="5dp"
+                        android:indeterminate="true"
+                        android:visibility="gone" />
 
                     <TextView
                         android:id="@+id/text_main_notloggedin2"
@@ -149,14 +161,14 @@
                         android:text="@string/playlists_enjoy" />
 
                     <ProgressBar
-                        style="?android:attr/progressBarStyleHorizontal"
                         android:id="@+id/loading_recommendations"
+                        style="?android:attr/progressBarStyleHorizontal"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:indeterminate="true"
-                        android:visibility="gone"
                         android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"/>
+                        android:layout_marginRight="5dp"
+                        android:indeterminate="true"
+                        android:visibility="gone" />
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/list_main_recommendedplaylists"
@@ -174,7 +186,7 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
             android:layout_margin="16dp"
-            android:src="@drawable/ic_key_24dp"/>
+            android:src="@drawable/ic_key_24dp" />
 
     </RelativeLayout>
 

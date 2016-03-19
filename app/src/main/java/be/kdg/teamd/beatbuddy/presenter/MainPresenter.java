@@ -84,6 +84,25 @@ public class MainPresenter {
         });
     }
 
+    public void loadPlaylistByKey(String key){
+        playlistRepository.lookupPlaylistByKey(key).enqueue(new Callback<Playlist>() {
+            @Override
+            public void onResponse(Response<Playlist> response) {
+                if(!response.isSuccess()){
+                    listener.onKeyPlaylistException("No playlist found with that key...");
+                    return;
+                }
+
+                listener.onKeyPlaylistLoaded(response.body());
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                listener.onKeyPlaylistException("Error loading playlist: " + t.getMessage());
+            }
+        });
+    }
+
     public interface MainPresenterListener {
         void onRecommendedPlaylistsLoaded(List<Playlist> playlists);
         void onUserPlaylistsLoaded(List<Playlist> playlists);
@@ -91,5 +110,7 @@ public class MainPresenter {
         void onRecommendedPlaylistsException(String message);
         void onUserPlaylistsException(String message);
         void onUserOrganisationsException(String message);
+        void onKeyPlaylistLoaded(Playlist playlist);
+        void onKeyPlaylistException(String message);
     }
 }

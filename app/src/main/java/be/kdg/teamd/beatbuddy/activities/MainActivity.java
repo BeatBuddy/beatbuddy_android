@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Bind(R.id.loading_yourorganisations) ProgressBar loadingYourOrganisations;
     @Bind(R.id.loading_recommendations) ProgressBar loadingRecommendations;
     @Bind(R.id.swiperefresh_main) SwipeRefreshLayout swipeRefreshLayout;
+    @Bind(R.id.loading_main) ProgressBar mainLoadingIndicator;
 
     private PlaylistRepository playlistRepository;
     private UserRepository userRepository;
@@ -230,9 +231,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             .input("Key", null, new MaterialDialog.InputCallback() {
                 @Override
                 public void onInput(MaterialDialog dialog, CharSequence input) {
-                    Intent intent = new Intent(MainActivity.this, PlaylistActivity.class);
-                    intent.putExtra(PlaylistActivity.EXTRA_PLAYLIST_KEY, input.toString());
-                    startActivity(intent);
+                    presenter.loadPlaylistByKey(input.toString());
+                    mainLoadingIndicator.setVisibility(View.VISIBLE);
                 }
             }).show();
     }
@@ -331,6 +331,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         loadingYourOrganisations.setVisibility(View.GONE);
     }
 
+    @Override
+    public void onKeyPlaylistLoaded(Playlist playlist) {
+        mainLoadingIndicator.setVisibility(View.GONE);
+        Intent intent = new Intent(MainActivity.this, PlaylistActivity.class);
+        intent.putExtra(PlaylistActivity.EXTRA_PLAYLIST, playlist);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onKeyPlaylistException(String message) {
+        Snackbar.make(drawer, message, Snackbar.LENGTH_LONG).show();
+        mainLoadingIndicator.setVisibility(View.GONE);
+    }
 
     @Override
     public void onOrganisationClicked(Organisation organisation) {
@@ -343,7 +356,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onPlaylistClicked(Playlist playlist) {
         Intent intent = new Intent(MainActivity.this, PlaylistActivity.class);
-        intent.putExtra(PlaylistActivity.EXTRA_PLAYLIST_KEY, playlist.getId() + "");
+        intent.putExtra(PlaylistActivity.EXTRA_PLAYLIST, playlist);
         startActivity(intent);
     }
 

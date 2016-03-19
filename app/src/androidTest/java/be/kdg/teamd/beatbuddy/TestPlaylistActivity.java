@@ -17,6 +17,7 @@ import java.io.IOException;
 
 import be.kdg.teamd.beatbuddy.activities.PlaylistActivity;
 import be.kdg.teamd.beatbuddy.dal.PlaylistRepository;
+import be.kdg.teamd.beatbuddy.model.playlists.Playlist;
 import be.kdg.teamd.beatbuddy.userconfiguration.FakeUserConfigurationManager;
 import okhttp3.Interceptor;
 import okhttp3.MediaType;
@@ -60,7 +61,13 @@ public class TestPlaylistActivity {
     @Test
     public void testPlaylistShown() throws NoSuchFieldException, IllegalAccessException, InterruptedException {
         Context targetContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
+
+        Playlist playlist = new Playlist();
+        playlist.setKey("chirowafels");
+        playlist.setId(4);
+
         Intent intent = new Intent(targetContext, PlaylistActivity.class);
+        intent.putExtra(PlaylistActivity.EXTRA_PLAYLIST, playlist);
         intent.putExtra(PlaylistActivity.EXTRA_PLAYLIST_KEY, "1");
         intent.putExtra(PlaylistActivity.EXTRA_PLAYLIST_TEST, true);
 

@@ -33,6 +33,43 @@ public class Playlist implements Serializable {
         return id;
     }
 
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public void setChatComments(List<Comment> chatComments) {
+        this.chatComments = chatComments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public void setMaximumVotesPerUser(int maximumVotesPerUser) {
+        this.maximumVotesPerUser = maximumVotesPerUser;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setPlaylistMaster(User playlistMaster) {
+        this.playlistMaster = playlistMaster;
+    }
+
+    public void setPlaylistTracks(List<PlaylistTrack> playlistTracks) {
+        this.playlistTracks = playlistTracks;
+    }
+
+    public void setId(long id) {
+
+        this.id = id;
+    }
+
     public String getImageUrl() {
         return imageUrl;
     }

@@ -16,10 +16,13 @@ import retrofit2.http.Query;
 
 public interface PlaylistRepository {
     @GET("Playlist/{id}")
-    Call<Playlist> getPlaylist(@Path("id") long playlistId);
+    Call<Playlist> getPlaylist(@Path("id") long id);
+
+    @GET("Playlist/lookup/{key}")
+    Call<Playlist> lookupPlaylistByKey(@Path("key") String key);
 
     @GET("Playlist/{id}/live")
-    Call<Playlist> getLivePlaylist(@Path("id") long playlistId);
+    Call<Playlist> getLivePlaylist(@Path("id") long id);
 
     @POST("Playlist/{id}/addTrack/")
     Call<Track> addTrack(@Path("id") long playlistId, @Query("trackId") String trackId);

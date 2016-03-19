@@ -121,7 +121,7 @@ public class OrganisationActivity extends AppCompatActivity implements Organisat
     @Override
     public void onPlaylistClicked(Playlist playlist) {
         Intent intent = new Intent(this, PlaylistActivity.class);
-        intent.putExtra(PlaylistActivity.EXTRA_PLAYLIST_KEY, playlist.getId() + "");
+        intent.putExtra(PlaylistActivity.EXTRA_PLAYLIST, playlist);
         startActivity(intent);
     }
 

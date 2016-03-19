@@ -52,6 +52,7 @@ import butterknife.OnClick;
 public class PlaylistActivity extends AppCompatActivity implements PlaylistPresenter.PlaylistPresenterListener, QueueFragment.QueueFragmentListener, PlaylistSignalr.PlaylistSignalrListener, HistoryFragment.HistoryInteractionListener, MediaPlayer.OnCompletionListener {
     public static final String EXTRA_PLAYLIST_KEY = "KEY";
     public static final String EXTRA_PLAYLIST_TEST = "TEST";
+    public static final String EXTRA_PLAYLIST = "PLAYLIST";
     public static final int SEC_IN_MS = 1000;
 
     @Bind(R.id.toolbar) Toolbar toolbar;
@@ -76,7 +77,6 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
     private ChatFragment chatFragment;
     private HistoryFragment historyFragment;
 
-    private long playlistId;
     private Playlist playlist;
     private boolean isPlaylistMaster;
 
@@ -103,9 +103,14 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
         userConfigurationManager = ((BeatBuddyApplication) getApplication()).getUserConfigurationManager();
         presenter = new PlaylistPresenter(this, playlistRepository, userConfigurationManager);
 
+        if(getIntent().hasExtra(EXTRA_PLAYLIST)){
+            this.playlist = (Playlist) getIntent().getSerializableExtra(EXTRA_PLAYLIST);
+        } else {
+            finish();
+        }
+
         String playlistKey = getIntent().getStringExtra(EXTRA_PLAYLIST_KEY);
         boolean isTesting = getIntent().getBooleanExtra(EXTRA_PLAYLIST_TEST, false);
-        if(playlistKey != null) playlistId = Long.parseLong(playlistKey);
 
         setupViewPager(viewPager);
 
@@ -116,7 +121,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
         setupSignalR();
 
         if(!isTesting){
-            presenter.loadPlaylist(playlistId); // TODO: join by key, not by ID
+            presenter.loadPlaylist(playlist.getId());
         }
     }
 
@@ -187,7 +192,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
     private void setupSignalR()
     {
         signalr = new PlaylistSignalr(this);
-        signalr.connect(playlistId + "");
+        signalr.connect(playlist.getId() + "");
     }
 
     private void setupViewPager(final ViewPager viewPager)
@@ -195,16 +200,16 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
         queueFragment = new QueueFragment();
         queueFragment.setListener(this);
         Bundle arguments = new Bundle();
-        arguments.putLong(QueueFragment.ARG_PLAYLIST_ID, playlistId);
+        arguments.putLong(QueueFragment.ARG_PLAYLIST_ID, playlist.getId());
         queueFragment.setArguments(arguments);
 
         historyFragment = new HistoryFragment();
         Bundle historyArguments = new Bundle();
-        historyArguments.putLong(HistoryFragment.ARG_PLAYLIST_ID, playlistId);
+        historyArguments.putLong(HistoryFragment.ARG_PLAYLIST_ID, playlist.getId());
         historyFragment.setArguments(arguments);
         historyFragment.setListener(this);
 
-        chatFragment = ChatFragment.newInstance(playlistId + "");
+        chatFragment = ChatFragment.newInstance(playlist.getId() + "");
 
         PlaylistTabAdapter adapter = new PlaylistTabAdapter(getSupportFragmentManager());
         adapter.addFrag(queueFragment, getString(R.string.queue));
@@ -307,7 +312,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
 
     @Override
     public void onQueueRefreshRequested() {
-        presenter.loadPlaylist(playlistId);
+        presenter.loadPlaylist(playlist.getId());
     }
 
     @Override
@@ -336,7 +341,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
                 {
                     // First time playing, fetching song, this guy will become playlist master
                     songLoading.setVisibility(View.VISIBLE);
-                    presenter.playNextSong(playlistId);
+                    presenter.playNextSong(playlist.getId());
                     unMute();
                     isPlaylistMaster = true;
                 }
@@ -579,7 +584,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
         switch(lastPlaybackType){
             case PLAYLIST:
                 if (isPlaylistMaster)
-                    presenter.playNextSong(playlistId);
+                    presenter.playNextSong(playlist.getId());
                 break;
             case HISTORY:
                 int nextTrackPosition = historyPosition + 1;
