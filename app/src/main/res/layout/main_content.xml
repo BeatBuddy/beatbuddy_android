@@ -43,7 +43,8 @@
                     android:layout_margin="12dp"
                     android:orientation="vertical"
                     android:paddingEnd="2dp"
-                    android:paddingStart="2dp">
+                    android:paddingStart="2dp"
+                    android:paddingBottom="32dp">
 
                     <RelativeLayout
                         android:layout_width="match_parent"

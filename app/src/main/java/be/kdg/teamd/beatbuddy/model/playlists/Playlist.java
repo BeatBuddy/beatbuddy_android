@@ -15,6 +15,7 @@ public class Playlist implements Serializable {
     private List<Comment> comments,
                       chatComments;
     private User playlistMaster;
+    private String key;
 
     public boolean isActive() {
         return active;
@@ -50,5 +51,15 @@ public class Playlist implements Serializable {
 
     public List<PlaylistTrack> getPlaylistTracks() {
         return playlistTracks;
+    }
+
+    public String getKey()
+    {
+        return key;
+    }
+
+    public void setKey(String key)
+    {
+        this.key = key;
     }
 }

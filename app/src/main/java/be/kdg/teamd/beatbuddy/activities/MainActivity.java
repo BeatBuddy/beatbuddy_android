@@ -227,7 +227,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         new MaterialDialog.Builder(this)
             .title("Join a Playlist")
             .inputType(InputType.TYPE_CLASS_TEXT)
-            //.inputRangeRes(1, -1, R.color.md_edittext_error)
             .input("Key", null, new MaterialDialog.InputCallback() {
                 @Override
                 public void onInput(MaterialDialog dialog, CharSequence input) {

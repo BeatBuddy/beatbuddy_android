@@ -1,5 +1,6 @@
 package be.kdg.teamd.beatbuddy.activities;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.media.MediaPlayer;
@@ -51,6 +52,7 @@ import butterknife.OnClick;
 public class PlaylistActivity extends AppCompatActivity implements PlaylistPresenter.PlaylistPresenterListener, QueueFragment.QueueFragmentListener, PlaylistSignalr.PlaylistSignalrListener, HistoryFragment.HistoryInteractionListener, MediaPlayer.OnCompletionListener {
     public static final String EXTRA_PLAYLIST_KEY = "KEY";
     public static final String EXTRA_PLAYLIST_TEST = "TEST";
+    public static final int SEC_IN_MS = 1000;
 
     @Bind(R.id.toolbar) Toolbar toolbar;
     @Bind(R.id.tablayout) TabLayout tabLayout;
@@ -136,12 +138,30 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
             case R.id.playlist_mute:
                 if (isMuted) unMute(); else mute();
                 break;
+            case R.id.playlist_share:
+                sharePlaylist();
+                break;
             case android.R.id.home:
                 finish();
                 return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void sharePlaylist()
+    {
+        Intent share = new Intent(android.content.Intent.ACTION_SEND);
+        share.setType("text/plain");
+        share.putExtra(Intent.EXTRA_SUBJECT, playlist.getName());
+        share.putExtra(Intent.EXTRA_TEXT, buildShareMessage(playlist.getName(), playlist.getKey()));
+
+        startActivity(Intent.createChooser(share, "Share link!"));
+    }
+
+    private String buildShareMessage(String playlistName, String key)
+    {
+        return String.format("Check out this BeatBuddy playlist called %s! http://teamd.azurewebsites.net/Playlist/View?key=%s", playlistName, key);
     }
 
     private void mute()
@@ -244,7 +264,12 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
         }
 
         lastPlaybackType = PlaybackType.PLAYLIST;
+        bindTrackInfoToPlayer(track);
+        onQueueRefreshRequested();
+    }
 
+    private void bindTrackInfoToPlayer(Track track)
+    {
         Picasso.with(this)
                 .load(track.getCoverArtUrl())
                 .placeholder(R.drawable.default_cover)
@@ -264,11 +289,9 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
                 );
         songTitle.setText(track.getTitle());
         songArtist.setText(track.getArtist());
-        songTimeLeft.setText("-" + DateUtil.secondsToFormattedString(track.getDuration() / 1000));
+        songTimeLeft.setText("-" + DateUtil.secondsToFormattedString(track.getDuration() / SEC_IN_MS));
         songProgress.setMax(track.getDuration());
         songProgress.setProgress(0);
-
-        onQueueRefreshRequested();
     }
 
     @Override
@@ -321,12 +344,12 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
                 {
                     unMute();
                     videoView.start();
-                    signalr.resumePlaying(videoView.getCurrentPosition() / 1000);
-                    songProgress.postDelayed(updateProgressBarThread, 1000);
+                    signalr.resumePlaying(videoView.getCurrentPosition() / SEC_IN_MS);
+                    songProgress.postDelayed(updateProgressBarThread, SEC_IN_MS);
                 }
             } else {
                 videoView.start();
-                songProgress.postDelayed(updateProgressBarThread, 1000);
+                songProgress.postDelayed(updateProgressBarThread, SEC_IN_MS);
             }
         }
     }
@@ -373,9 +396,9 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
                     songLoading.setVisibility(View.GONE);
 
                     if (trackTimeToStartAt != 0)
-                        videoView.seekTo(trackTimeToStartAt * 1000);
+                        videoView.seekTo(trackTimeToStartAt * SEC_IN_MS);
 
-                    songProgress.setMax(videoView.getDuration() / 1000);
+                    songProgress.setMax(videoView.getDuration() / SEC_IN_MS);
 
                     videoView.start();
 
@@ -389,18 +412,18 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
                         {
                             if (songProgress != null)
                             {
-                                int progress = videoView.getCurrentPosition() / 1000;
+                                int progress = videoView.getCurrentPosition() / SEC_IN_MS;
                                 songProgress.setProgress(progress);
-                                songTimeLeft.setText("-" + DateUtil.secondsToFormattedString((videoView.getDuration() - videoView.getCurrentPosition()) / 1000));
+                                songTimeLeft.setText("-" + DateUtil.secondsToFormattedString((videoView.getDuration() - videoView.getCurrentPosition()) / SEC_IN_MS));
                             }
                             if (videoView.isPlaying())
                             {
                                 assert songProgress != null;
-                                songProgress.postDelayed(updateProgressBarThread, 1000);
+                                songProgress.postDelayed(updateProgressBarThread, SEC_IN_MS);
                             }
                         }
                     };
-                    songProgress.postDelayed(updateProgressBarThread, 1000);
+                    songProgress.postDelayed(updateProgressBarThread, SEC_IN_MS);
                 }
             });
             videoView.setOnCompletionListener(this);
@@ -433,7 +456,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
     @Override
     public void onResumeMusic(int position)
     {
-        videoView.seekTo(position * 1000);
+        videoView.seekTo(position * SEC_IN_MS);
         videoView.resume();
     }
 
@@ -497,7 +520,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
     public void syncLive()
     {
         if (isPlaylistMaster)
-            signalr.syncLive(videoView.getCurrentPosition() / 1000, track.getArtist(), track.getCoverArtUrl(), playlist.getPlaylistTracks().size(), track.getTitle(), track.getTrackSource().getTrackId());
+            signalr.syncLive(videoView.getCurrentPosition() / SEC_IN_MS, track.getArtist(), track.getCoverArtUrl(), playlist.getPlaylistTracks().size(), track.getTitle(), track.getTrackSource().getTrackId());
     }
 
     @Override
@@ -510,7 +533,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
                     public void run()
                     {
                     new MaterialDialog.Builder(PlaylistActivity.this)
-                                .title("Error connectiong")
+                                .title("Error connecting")
                                 .content(errorMessage)
                                 .positiveText("Retry")
                                 .onPositive(new MaterialDialog.SingleButtonCallback()
@@ -535,29 +558,9 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistPrese
         historyPosition = position;
 
         presenter.getPlaybackTrack(track.getId());
-        if(videoView.isPlaying()) videoView.stopPlayback();
+        if (videoView.isPlaying()) videoView.stopPlayback();
 
-        Picasso.with(this)
-                .load(track.getCoverArtUrl())
-                .placeholder(R.drawable.default_cover)
-                .error(R.drawable.default_cover)
-                .fit()
-                .centerCrop()
-                .into(coverArt, PicassoPalette.with(track.getCoverArtUrl(), coverArt)
-                                .intoCallBack(
-                                        new PicassoPalette.CallBack()
-                                        {
-                                            @Override
-                                            public void onPaletteLoaded(android.support.v7.graphics.Palette palette)
-                                            {
-                                                songProgress.getProgressDrawable().setColorFilter(palette.getVibrantColor(Color.BLACK), PorterDuff.Mode.SRC_IN);
-                                            }
-                                        })
-                );
-        songTitle.setText(track.getTitle());
-        songArtist.setText(track.getArtist());
-        songTimeLeft.setText("-" + DateUtil.secondsToFormattedString(track.getDuration() / 1000));
-        songProgress.setMax(track.getDuration());
+        bindTrackInfoToPlayer(track);
 
         playPauseButton.setVisibility(View.VISIBLE);
     }
