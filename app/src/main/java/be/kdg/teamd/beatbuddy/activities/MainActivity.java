@@ -337,10 +337,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onKeyPlaylistLoaded(Playlist playlist) {
-        mainLoadingIndicator.setVisibility(View.GONE);
         Intent intent = new Intent(MainActivity.this, PlaylistActivity.class);
         intent.putExtra(PlaylistActivity.EXTRA_PLAYLIST, playlist);
         startActivity(intent);
+        mainLoadingIndicator.setVisibility(View.GONE);
     }
 
     @Override
