@@ -55,4 +55,5 @@
     <string name="our_team">Our team (Team D)</string>
     <string name="this_is_us">This is us:</string>
     <string name="our_team_intro">BeatBuddy is created by a youthful bunch of coders from Antwerp, as a school project for Karel de Grote-Hogeschool.</string>
+    <string name="login_chat">Log in to chat along...</string>
 </resources>

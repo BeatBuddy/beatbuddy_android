@@ -85,6 +85,7 @@ public class QueueFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
         initializeRecyclerView();
         swipeRefreshLayout.setOnRefreshListener(this);
+        swipeRefreshLayout.setRefreshing(true);
 
         userConfigurationManager = ((BeatBuddyApplication) getActivity().getApplication()).getUserConfigurationManager();
         addTrackFab.setVisibility(userConfigurationManager.isLoggedIn() ? View.VISIBLE : View.GONE);
