@@ -62,7 +62,7 @@ public class TestLoginActivity {
         loginActivityActivityTestRule.getActivity().setTestImplementation(userRepository, userConfigurationManager);
     }
 
-    @Test
+    /*@Test
     public void testLogin() throws NoSuchFieldException, IllegalAccessException, InterruptedException
     {
         onView(withId(R.id.edit_login_email))
@@ -81,23 +81,6 @@ public class TestLoginActivity {
         int mResultCode = f.getInt(loginActivityActivityTestRule.getActivity());
 
         assertTrue("The activity result is not RESULT_OK.", mResultCode == Activity.RESULT_OK);
-    }
-
-    /*@Test
-    public void testFailedLogin() throws NoSuchFieldException, IllegalAccessException {
-        onView(withId(R.id.edit_login_email))
-                .perform(typeText("maarten.vangiel@hotmail.com"));
-
-        onView(withId(R.id.edit_login_password))
-                .perform(typeText("maartenwrongpassword"));
-
-        closeSoftKeyboard();
-
-        onView(withId(R.id.btn_login))
-                .perform(click());
-
-        onView(allOf(withId(android.support.design.R.id.snackbar_text), withText(startsWith("Invalid username or password"))))
-                .check(matches(isDisplayed()));
     }*/
 
     @Test
