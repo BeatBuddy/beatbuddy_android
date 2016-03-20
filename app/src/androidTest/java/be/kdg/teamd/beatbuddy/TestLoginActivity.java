@@ -63,7 +63,8 @@ public class TestLoginActivity {
     }
 
     @Test
-    public void testLogin() throws NoSuchFieldException, IllegalAccessException {
+    public void testLogin() throws NoSuchFieldException, IllegalAccessException, InterruptedException
+    {
         onView(withId(R.id.edit_login_email))
                 .perform(typeText("maarten.vangiel@email.com"));
         closeSoftKeyboard();

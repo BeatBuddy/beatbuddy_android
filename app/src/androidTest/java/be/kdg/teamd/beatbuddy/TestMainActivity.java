@@ -9,6 +9,7 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,14 +18,17 @@ import be.kdg.teamd.beatbuddy.activities.LoginActivity;
 import be.kdg.teamd.beatbuddy.activities.MainActivity;
 import be.kdg.teamd.beatbuddy.model.users.AccessToken;
 import be.kdg.teamd.beatbuddy.model.users.User;
+import be.kdg.teamd.beatbuddy.userconfiguration.FakeUserConfigurationManager;
 import be.kdg.teamd.beatbuddy.userconfiguration.UserConfigurationManager;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.contrib.DrawerActions.openDrawer;
 import static android.support.test.espresso.intent.Intents.intending;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isEnabled;
 import static android.support.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -38,6 +42,12 @@ public class TestMainActivity {
     @Rule
     public ActivityTestRule<MainActivity> mainActivityActivityTestRule = new ActivityTestRule<MainActivity>(MainActivity.class);
 
+    @Before
+    public void setup()
+    {
+        ((BeatBuddyApplication) mainActivityActivityTestRule.getActivity().getApplication()).setUserConfigurationManager(new FakeUserConfigurationManager());
+    }
+
     @Test
     public void testDrawerLayoutVisible(){
         onView(withId(R.id.drawer_layout))
@@ -46,8 +56,8 @@ public class TestMainActivity {
 
     @Test
     public void testFabShownWhenLoggedIn(){
-        onView(withId(R.id.main_fab_create_playlist))
-                .check(matches(not(isEnabled())));
+        onView(withId(R.id.main_create_playlist))
+                .check(matches(not(isDisplayed())));
 
         openDrawer(R.id.drawer_layout);
 
@@ -60,7 +70,7 @@ public class TestMainActivity {
         user.setLastName("Van Giel");
         user.setNickname("Mavamaarten");
 
-        UserConfigurationManager userConfigurationManager = (UserConfigurationManager)mainActivityActivityTestRule.getActivity().getApplication();
+        UserConfigurationManager userConfigurationManager = ((BeatBuddyApplication) mainActivityActivityTestRule.getActivity().getApplication()).getUserConfigurationManager();
         userConfigurationManager.login(new AccessToken(), user, false);
 
         Intent resultIntent = new Intent();
@@ -73,7 +83,7 @@ public class TestMainActivity {
         onView(withText("Login"))
                 .perform(click());
 
-        onView(withId(R.id.main_fab_create_playlist))
-                .check(matches(isEnabled()));
+        onView(withId(R.id.main_create_playlist))
+                .check(matches(isDisplayed()));
     }
 }

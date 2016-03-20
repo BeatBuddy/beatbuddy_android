@@ -34,4 +34,9 @@ public class BeatBuddyApplication extends Application
     {
         return userConfigurationManager;
     }
+
+    public void setUserConfigurationManager(UserConfigurationManager userConfigurationManager)
+    {
+        this.userConfigurationManager = userConfigurationManager;
+    }
 }

@@ -147,17 +147,6 @@ public class TestCreatePlaylistActivity
         assertTrue("The activity result is not RESULT_OK.", mResultCode == Activity.RESULT_OK);
     }
 
-    @Test
-    public void testCreateEmpty() throws NoSuchFieldException, IllegalAccessException {
-        closeSoftKeyboard();
-
-        onView(withId(R.id.btn_create_playlist))
-            .perform(click());
-
-        onView(allOf(withId(android.support.design.R.id.snackbar_text), withText("Please fill in all fields")))
-                .check(matches(isDisplayed()));
-    }
-
         //from here:https://github.com/googlesamples/android-testing/blob/master/ui/espresso/IntentsAdvancedSample/app/src/androidTest/java/com/example/android/testing/espresso/intents/AdvancedSample/ImageViewHasDrawableMatcher.java
     public static BoundedMatcher<View, ImageView> hasDrawable() {
         return new BoundedMatcher<View, ImageView>(ImageView.class) {
