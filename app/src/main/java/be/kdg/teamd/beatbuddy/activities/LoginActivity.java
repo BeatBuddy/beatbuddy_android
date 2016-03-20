@@ -130,7 +130,7 @@ public class LoginActivity extends AppCompatActivity implements LoginPresenter.L
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-
+        Snackbar.make(login_email, connectionResult.getErrorMessage(), Snackbar.LENGTH_LONG).show();
     }
 
     @OnClick(R.id.gplus_button)

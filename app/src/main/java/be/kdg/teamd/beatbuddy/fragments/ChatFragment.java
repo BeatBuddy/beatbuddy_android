@@ -16,7 +16,6 @@ import java.util.List;
 import be.kdg.teamd.beatbuddy.BeatBuddyApplication;
 import be.kdg.teamd.beatbuddy.R;
 import be.kdg.teamd.beatbuddy.adapters.ChatMessageAdapter;
-import be.kdg.teamd.beatbuddy.adapters.HistoryTrackAdapter;
 import be.kdg.teamd.beatbuddy.model.ChatViewModel;
 import be.kdg.teamd.beatbuddy.signalr.ChatSignalr;
 import be.kdg.teamd.beatbuddy.userconfiguration.UserConfigurationManager;
@@ -31,6 +30,7 @@ public class ChatFragment extends Fragment implements ChatSignalr.ChatSignalrLis
 
     @Bind(R.id.playlist_chat) RecyclerView chat;
     @Bind(R.id.chat_message) EditText message;
+    @Bind(R.id.chat_send) ImageView chatSendButton;
 
     private ChatSignalr signalr;
     private String group;
@@ -58,9 +58,15 @@ public class ChatFragment extends Fragment implements ChatSignalr.ChatSignalrLis
         ButterKnife.bind(this, view);
 
         UserConfigurationManager config = ((BeatBuddyApplication) getActivity().getApplication()).getUserConfigurationManager();
-        this.username = config.getUser().getNickname();
-        this.avatarUrl = getString(R.string.avatarImageLocation) + config.getUser().getImageUrl();
-        this.group = getArguments().getString(ARG_GROUP);
+        if(config.isLoggedIn()){
+            this.username = config.getUser().getNickname();
+            this.avatarUrl = getString(R.string.avatarImageLocation) + config.getUser().getImageUrl();
+            this.group = getArguments().getString(ARG_GROUP);
+        } else {
+            message.setEnabled(false);
+            message.setHint(R.string.login_chat);
+            chatSendButton.setEnabled(false);
+        }
 
         initializeRecyclerView();
 
