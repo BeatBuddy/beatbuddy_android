@@ -319,19 +319,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onRecommendedPlaylistsException(String message) {
-        Snackbar.make(drawer, message, Snackbar.LENGTH_LONG).show();
         loadingYourPlaylists.setVisibility(View.GONE);
     }
 
     @Override
     public void onUserPlaylistsException(String message) {
-        Snackbar.make(drawer, message, Snackbar.LENGTH_LONG).show();
         loadingYourPlaylists.setVisibility(View.GONE);
     }
 
     @Override
     public void onUserOrganisationsException(String message) {
-        Snackbar.make(drawer, message, Snackbar.LENGTH_LONG).show();
         loadingYourOrganisations.setVisibility(View.GONE);
     }
 
